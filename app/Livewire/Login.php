@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Livewire;
+
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+
+class Login extends Component
+{
+
+    public $email, $password;
+    public function useAuthentication()
+    {
+        $credentials = $this->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::guard('freelancers')->attempt($credentials)) {
+            session()->regenerate();
+            session()->flash('loginSuccess', 'Information Verified!');
+            return redirect()->route('dashboard');
+        } else {
+            $this->addError('loginError', 'Invalid email or password.');
+        }
+    }
+    public function render()
+    {
+        return view('livewire.login');
+    }
+}
