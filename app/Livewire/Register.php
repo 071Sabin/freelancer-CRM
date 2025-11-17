@@ -24,8 +24,8 @@ class Register extends Component
         ]);
 
         $a = new Freelancers();
-        $a->name = $this->name;
-        $a->email = $this->email;
+        $a->name = strtolower($this->name);
+        $a->email = strtolower($this->email);
         $a->password = bcrypt($this->password);
         $a->save();
 

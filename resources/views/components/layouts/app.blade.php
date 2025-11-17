@@ -8,13 +8,19 @@
     <title>{{ config('app.name', 'ClientPivot') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    {{-- <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" /> --}}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
+
     @livewireStyles
+    @fluxAppearance
 
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* Glowing radial background utilities */
         .hero-glow {
             position: relative;
@@ -47,7 +53,7 @@
 
 </head>
 
-<body class="bg-white dark:stone-800">
+<body class="bg-white dark:stone-900">
     <!-- Navigation -->
     @if (Auth::guard('freelancers')->check() !== true)
         <nav
@@ -102,214 +108,98 @@
             {{ $slot }}
         </div>
     @elseif (Auth::guard('freelancers')->check() === true)
-        <nav class="fixed top-0 z-50 w-full bg-stone-100">
-            <div class="px-3 py-3 lg:px-5 lg:pl-3">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center justify-start rtl:justify-end">
-                        <button data-drawer-target="top-bar-sidebar" data-drawer-toggle="top-bar-sidebar"
-                            aria-controls="top-bar-sidebar" type="button"
-                            class="sm:hidden text-heading bg-transparent box-border border border-transparent font-medium leading-5 rounded-base text-sm focus:outline-none">
-                            <span class="sr-only">Open sidebar</span>
-                            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                                height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                    d="M5 7h14M5 12h14M5 17h10" />
-                            </svg>
-                        </button>
-                        <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                            <span
-                                class="self-center text-lg font-bold ml-5 whitespace-nowrap dark:text-white">ClientPivot</span>
-                        </a>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="flex items-center ms-3">
-                            <div>
-                                <button type="button"
-                                    class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                                    aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                                    <span class="sr-only">Open user menu</span>
-                                    <img class="w-8 h-8 rounded-full"
-                                        src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                        alt="user photo">
-                                </button>
-                            </div>
-                            <div class="z-50 hidden bg-gray-50 rounded-base shadow-lg w-44" id="dropdown-user">
-                                <div class="px-4 py-3 border-b border-stone-200" role="none">
-                                    <p class="text-sm font-medium text-heading" role="none">
-                                        {{ Auth::guard('freelancers')->user()->name }}
-                                    </p>
-                                    <p class="text-sm text-body truncate" role="none">
-                                        {{ Auth::guard('freelancers')->user()->email }}
-                                    </p>
-                                </div>
-                                <ul class="p-2 text-sm text-body font-medium" role="none">
-                                    <li>
-                                        <a href="{{ route('dashboard') }}"
-                                            class="inline-flex items-center w-full p-2 hover:bg-stone-200 hover:rounded-medium hover:text-heading rounded"
-                                            role="menuitem">Dashboard</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="inline-flex items-center w-full p-2 hover:bg-stone-200 hover:rounded-medium hover:text-heading rounded"
-                                            role="menuitem">Settings</a>
-                                    </li>
-                                    <li>
-                                        <a href="#"
-                                            class="inline-flex items-center w-full p-2 hover:bg-stone-200 hover:rounded-medium hover:text-heading rounded"
-                                            role="menuitem">Earnings</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" onclick="openSignoutModal(event)"
-                                            class="inline-flex items-center w-full p-2 hover:bg-stone-200 hover:rounded-medium hover:text-heading rounded">
-                                            Sign out
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="flex min-h-screen dark:bg-neutral-900">
+            <flux:sidebar sticky collapsible
+                class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
+                <flux:sidebar.header>
+                    <flux:sidebar.brand href="#" logo="https://fluxui.dev/img/demo/logo.png"
+                        logo:dark="https://fluxui.dev/img/demo/dark-mode-logo.png" name="ClientPivot" />
+                    <flux:sidebar.collapse
+                        class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
+                </flux:sidebar.header>
+                <flux:sidebar.nav>
+                    <flux:sidebar.item icon="home" href="{{ route('dashboard') }}" wire:navigate
+                        :current="request()->routeIs('dashboard')">Dashboard
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" href="#" wire:navigate
+                        :current="request()->routeIs('clients')">Clients
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="document-text" href="#" wire:navigate
+                        :current="request()->routeIs('projects')">Projects</flux:sidebar.item>
+                    <flux:sidebar.item icon="document-currency-dollar" href="#" wire:navigate
+                        :current="request()->routeIs('invoices')">Invoices
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="cog" href="#" wire:navigate
+                        :current="request()->routeIs('aibyok')">AI (BYOK)</flux:sidebar.item>
+                    <flux:sidebar.item icon="clock" href="#" wire:navigate
+                        :current="request()->routeIs('timetrack')">Time Tracking</flux:sidebar.item>
+                    <flux:sidebar.item icon="credit-card" href="#" wire:navigate
+                        :current="request()->routeIs('payments')">Payments & Gateways
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="document" href="#" wire:navigate
+                        :current="request()->routeIs('proposals')">Proposals</flux:sidebar.item>
+                    {{-- <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
+                        <flux:sidebar.item href="#">Marketing site</flux:sidebar.item>
+                        <flux:sidebar.item href="#">Android app</flux:sidebar.item>
+                        <flux:sidebar.item href="#">Brand guidelines</flux:sidebar.item>
+                    </flux:sidebar.group> --}}
+                </flux:sidebar.nav>
+                <flux:sidebar.spacer />
+                <flux:sidebar.nav>
+                    <flux:sidebar.item icon="cog-6-tooth" href="{{ route('settings') }}" wire:navigate
+                        :current="request()->routeIs('settings')">Settings
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="information-circle" href="#" wire:navigate
+                        :current="request()->routeIs('help')">Help</flux:sidebar.item>
+                </flux:sidebar.nav>
+                <flux:dropdown position="top" align="start" class="max-lg:hidden">
+                    <flux:sidebar.profile avatar="https://fluxui.dev/img/demo/user.png"
+                        name="{{ Str::title(Auth::guard('freelancers')->user()->name) }}" />
+                    <flux:menu>
+                        <flux:menu.radio.group>
+                            <flux:menu.radio checked>{{ Str::title(Auth::guard('freelancers')->user()->name) }}
+                            </flux:menu.radio>
+                            <p class="text-sm font-thin text-stone-400 dark:text-stone-700">
+                                {{ Auth::guard('freelancers')->user()->email }}</p>
+
+                        </flux:menu.radio.group>
+                        <flux:menu.separator />
+                        <flux:menu.item icon="arrow-right-start-on-rectangle">
+                            <a href="#" onclick="openSignoutModal(event)"
+                                class="inline-flex items-center w-full p-2 rounded">
+                                <span class="">Sign out</span>
+                            </a>
+                        </flux:menu.item>
+                    </flux:menu>
+                </flux:dropdown>
+            </flux:sidebar>
+            <flux:header class="lg:hidden">
+                <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+                <flux:spacer />
+                <flux:dropdown position="top" align="start">
+                    <flux:profile avatar="/img/demo/user.png" />
+                    <flux:menu>
+                        <flux:menu.radio.group>
+                            <flux:menu.radio checked>{{ Str::title(Auth::guard('freelancers')->user()->name) }}
+                            </flux:menu.radio>
+                        </flux:menu.radio.group>
+                        <flux:menu.separator />
+                        <flux:menu.item icon="arrow-right-start-on-rectangle">
+                            <a href="#" onclick="openSignoutModal(event)"
+                                class="inline-flex items-center w-full p-2 rounded">
+                                <span class="">Sign out</span>
+                            </a>
+                        </flux:menu.item>
+                    </flux:menu>
+                </flux:dropdown>
+            </flux:header>
+            <div class="w-full m-10">
+                {{ $slot }}
             </div>
-        </nav>
 
-        <aside id="top-bar-sidebar"
-            class="fixed top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0"
-            aria-label="Sidebar">
-            <div class="h-full px-3 py-4 overflow-y-auto bg-stone-100">
-                <a href="https://flowbite.com/" class="flex items-center ps-2.5 mb-5">
-                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 me-3" alt="Flowbite Logo" />
-                    <span class="self-center text-lg text-heading font-semibold whitespace-nowrap">Flowbite</span>
-                </a>
-                <ul class="space-y-4 font-medium mt-5">
+        </div>
 
-                    {{-- PRIMARY --}}
-                    <li>
-                        <a href="{{ route('dashboard') }}" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-speedometer2 me-3" aria-hidden="true"></i>
-                            <span class="ms-3">Dashboard</span>
-                        </a>
-                    </li>
 
-                    {{-- CRM / Client Manager (MVP) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-people me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">Clients</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- Project Manager (MVP) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-kanban me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">Projects</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- Invoice & Payment Manager (MVP) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-receipt me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">Invoices</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- AI & BYOK (Phase 2 / Magic) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-brightness-high me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">AI (BYOK)</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- Time & Billing / Advanced (Phase 2) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-clock-history me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">Time Tracking</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- Payments / Integrations --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-credit-card-2-back me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">Payments & Gateways</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- Proposals (Phase 2) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-file-earmark-text me-3" aria-hidden="true"></i>
-                            <div class="flex-1">
-                                <span class="ms-3">Proposals</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- Utilities --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-gear me-3" aria-hidden="true"></i>
-                            <span class="ms-3">Settings</span>
-                        </a>
-                    </li>
-
-                    {{-- Inbox / Notifications (example) --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-inbox me-3" aria-hidden="true"></i>
-                            <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-                            <span
-                                class="inline-flex items-center justify-center w-4.5 h-4.5 ms-2 text-xs font-medium text-fg-danger-strong bg-danger-soft border border-danger-subtle rounded-full">2</span>
-                        </a>
-                    </li>
-
-                    {{-- Static pages / users --}}
-                    <li>
-                        <a href="#" wire:navigate
-                            class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-stone-200 hover:rounded hover:text-fg-brand group">
-                            <i class="bi bi-people-fill me-3" aria-hidden="true"></i>
-                            <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-                        </a>
-                    </li>
-
-                    {{-- Sign out (opens your modal) --}}
-                    <li>
-                        <a href="#" onclick="openSignoutModal(event)"
-                            class="inline-flex items-center w-full p-2 hover:bg-stone-200 hover:rounded-medium hover:text-heading rounded">
-                            <i class="bi bi-box-arrow-right me-3" aria-hidden="true"></i>
-                            <span class="ms-3">Sign out</span>
-                        </a>
-                    </li>
-
-                </ul>
-
-            </div>
-        </aside>
 
         <!-- SIGNOUT MODAL -->
         <div id="signoutModal" class="fixed inset-0 hidden items-center justify-center z-[9999]">
@@ -353,29 +243,11 @@
                             Sign Out
                         </button>
                     </form>
-
                 </div>
-
-            </div>
-        </div>
-
-
-
-        <div class="p-4 sm:ml-64 mt-14">
-            <div class="p-4 rounded-base bg-stone-100 rounded-md">
-                <div class="gap-4 mb-4">
-                    {{ $slot }}
-                </div>
-
             </div>
         </div>
     @endif
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script> --}}
     <script>
         function openSignoutModal(e) {
             e.preventDefault();
@@ -392,6 +264,8 @@
 
 
     @livewireScripts
+    @fluxScripts
+
 </body>
 
 </html>
