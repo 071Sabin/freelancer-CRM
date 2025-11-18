@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('bio')->nullable();
             $table->string('password');
             $table->rememberToken(); // optional but recommended for auth
             $table->timestamps();

@@ -1,6 +1,6 @@
-<div class="w-full lg:w-1/3 bg-stone-50 dark:bg-stone-900 shadow-lg rounded-lg p-8 my-5">
+<div class="w-full lg:w-1/3 bg-neutral-50 dark:bg-neutral-900 shadow-lg rounded-lg p-8 my-5">
 
-    <h2 class="text-3xl font-semibold text-center text-stone-800 dark:text-stone-100 mb-8">
+    <h2 class="text-3xl font-semibold text-center text-neutral-800 dark:text-neutral-100 mb-8">
         Login
     </h2>
 
@@ -25,10 +25,10 @@
 
         {{-- Email --}}
         <div>
-            <label class="block mb-1 text-stone-700 dark:text-stone-300 text-sm font-medium">Email</label>
+            <label class="block mb-1 text-neutral-700 dark:text-neutral-300 text-sm font-medium">Email</label>
             <input type="email" wire:model="email"
-                class="w-full p-3 rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800
-                              text-stone-800 dark:text-stone-100 focus:ring-stone-500 focus:border-stone-500"
+                class="w-full p-3 rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800
+                              text-neutral-800 dark:text-neutral-100 focus:ring-neutral-500 focus:border-neutral-500"
                 required>
             @error('email')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -37,10 +37,10 @@
 
         {{-- Password --}}
         <div>
-            <label class="block mb-1 text-stone-700 dark:text-stone-300 text-sm font-medium">Password</label>
+            <label class="block mb-1 text-neutral-700 dark:text-neutral-300 text-sm font-medium">Password</label>
             <input type="password" wire:model.defer="password"
-                class="w-full p-3 rounded border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800
-                              text-stone-800 dark:text-stone-100 focus:ring-stone-500 focus:border-stone-500"
+                class="w-full p-3 rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800
+                              text-neutral-800 dark:text-neutral-100 focus:ring-neutral-500 focus:border-neutral-500"
                 required>
             @error('password')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -49,18 +49,19 @@
 
         {{-- Login Button --}}
         <button type="submit"
-            class="w-full py-3 font-medium text-stone-100 bg-stone-700 hover:bg-stone-800 rounded transition-colors">
+            class="w-full py-3 font-medium text-neutral-100 bg-neutral-700 hover:bg-neutral-800 rounded transition-colors">
             Login
         </button>
     </form>
 
     {{-- Forgot Password --}}
-    <p class="text-center text-sm text-stone-600 dark:text-stone-400 mt-6">
+    <p class="text-center text-sm text-neutral-600 dark:text-neutral-400 mt-6">
         Forgot password?
-        <a href="#" class="text-stone-700 dark:text-stone-200 underline hover:opacity-70">Reset Here</a>
+        <a href="#" class="text-neutral-700 dark:text-neutral-200 underline hover:opacity-70">Reset Here</a>
     </p>
-    <p class="text-center text-sm text-stone-600 dark:text-stone-400 mt-6">
+    <p class="text-center text-sm text-neutral-600 dark:text-neutral-400 mt-6">
         New Here?
-        <a href="{{ route('register') }}" class="text-stone-700 dark:text-stone-200 underline hover:opacity-70" wire:navigate>Register</a>
+        <a href="{{ route('register') }}" class="text-neutral-700 dark:text-neutral-200 underline hover:opacity-70"
+            wire:navigate>Register</a>
     </p>
 </div>

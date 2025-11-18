@@ -6,7 +6,7 @@
     'dataColor' => 'text-green-600',
 ])
 
-<div class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-stone-800 rounded-xl p-5 shadow-sm">
+<div class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 shadow-sm">
     <div class="flex items-center justify-between">
         <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ $heading }}</h3>
         {!! $icon !!}

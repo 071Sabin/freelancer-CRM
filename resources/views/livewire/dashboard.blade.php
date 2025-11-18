@@ -34,13 +34,13 @@
 
         <!-- Recent Projects -->
         <div
-            class="lg:col-span-2 bg-white dark:bg-neutral-800 border border-stone-200 dark:border-stone-800 
+            class="lg:col-span-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 
                     rounded-xl p-6 shadow-sm">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
                 Recent Projects
             </h2>
 
-            <div class="divide-y divide-stone-200 dark:divide-stone-700">
+            <div class="divide-y divide-neutral-200 dark:divide-neutral-700">
                 <div class="py-4 flex items-center justify-between">
                     <div>
                         <p class="font-medium text-gray-800 dark:text-gray-100">Website Redesign</p>
@@ -78,7 +78,7 @@
 
         <!-- Quick Actions -->
         <div
-            class="bg-white dark:bg-neutral-800 border border-stone-200 dark:border-stone-800 
+            class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 
                     rounded-xl p-6 shadow-sm">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
                 Quick Actions
@@ -89,13 +89,13 @@
                     + New Project
                 </a>
                 <a href="#"
-                    class="px-4 py-2 bg-stone-200 text-stone-900 dark:bg-stone-700 dark:text-stone-100 
-                                   text-center rounded-lg hover:bg-stone-300 dark:hover:bg-stone-600">
+                    class="px-4 py-2 bg-neutral-200 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100 
+                                   text-center rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600">
                     + New Client
                 </a>
                 <a href="#"
-                    class="px-4 py-2 bg-stone-100 dark:bg-gray-700 text-center rounded-lg 
-                                   hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200">
+                    class="px-4 py-2 bg-neutral-100 dark:bg-gray-700 text-center rounded-lg 
+                                   hover:bg-neutral-200 dark:hover:bg-gray-800 text-neutral-800 dark:text-neutral-200">
                     Generate Invoice
                 </a>
             </div>

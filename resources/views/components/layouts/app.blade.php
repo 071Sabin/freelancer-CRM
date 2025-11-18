@@ -14,7 +14,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
     @livewireStyles
-    @fluxAppearance
+    {{-- @fluxAppearance --}}
 
     <style>
         html {
@@ -53,7 +53,7 @@
 
 </head>
 
-<body class="bg-white dark:stone-900">
+<body class="bg-white dark:neutral-900">
     <!-- Navigation -->
     @if (Auth::guard('freelancers')->check() !== true)
         <nav
@@ -108,7 +108,7 @@
             {{ $slot }}
         </div>
     @elseif (Auth::guard('freelancers')->check() === true)
-        <div class="flex min-h-screen dark:bg-neutral-900">
+        <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
             <flux:sidebar sticky collapsible
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
                 <flux:sidebar.header>
@@ -121,7 +121,7 @@
                     <flux:sidebar.item icon="home" href="{{ route('dashboard') }}" wire:navigate
                         :current="request()->routeIs('dashboard')">Dashboard
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="users" href="#" wire:navigate
+                    <flux:sidebar.item icon="users" href="{{ route('clients') }}" wire:navigate
                         :current="request()->routeIs('clients')">Clients
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document-text" href="#" wire:navigate
@@ -177,7 +177,7 @@
                 <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
                 <flux:spacer />
                 <flux:dropdown position="top" align="start">
-                    <flux:profile avatar="/img/demo/user.png" />
+                    <i class="bi bi-person-circle text-2xl"></i>
                     <flux:menu>
                         <flux:menu.radio.group>
                             <flux:menu.radio checked>{{ Str::title(Auth::guard('freelancers')->user()->name) }}
@@ -193,7 +193,7 @@
                     </flux:menu>
                 </flux:dropdown>
             </flux:header>
-            <div class="w-full m-10">
+            <div class="w-full lg:m-10 p-3">
                 {{ $slot }}
             </div>
 

@@ -15,6 +15,7 @@ class Settings extends Component
     {
         $this->name = Str::title(Auth::guard('freelancers')->user()->name);
         $this->email = Auth::guard('freelancers')->user()->email;
+        $this->bio = Auth::guard('freelancers')->user()->bio ?? '';
     }
 
     public function updateInfo()
@@ -24,6 +25,7 @@ class Settings extends Component
 
             $freelancer->name = strtolower($this->name);
             $freelancer->email = strtolower($this->email);
+            $freelancer->bio = strtolower($this->bio);
             $freelancer->save();
 
             return redirect()->back()->with('success', 'Profile updated successfully.');
