@@ -15,6 +15,8 @@
             </x-success-message>
         @endif
 
+        <x-error></x-error>
+
 
         <div class="flex items-center gap-3">
             <!-- Theme toggle UI (JS toggles 'dark' on <html>) -->
@@ -90,13 +92,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="md:col-span-2 space-y-3">
                             <label class="block">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">Full name</span>
-                                <x-input-field type="text" model="name" />
+                                <x-input-field type="text" model="name" label="Full Name" required />
                             </label>
 
                             <label class="block">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">Email</span>
-                                <x-input-field type="email" model="email" />
+                                <x-input-field type="email" model="email" readonly
+                                    class="text-neutral-400 dark:text-neutral-600" label="Email" />
                             </label>
 
                             <label class="block">

@@ -2,13 +2,13 @@
 
     <!-- Page Header -->
     <div class="mb-8">
-        <x-main-heading title="Dashboard" subtitle="Overview of your clients, projects, invoices, and insights." />
+        <x-main-heading title="Dashboard 👋" subtitle="Overview of your clients, projects, invoices, and insights." />
     </div>
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
-        <x-dashboard-card heading="Total Clients" value="12" dataOverTime="+3 new this month"
+        <x-dashboard-card heading="Total Clients" value="{{ $totalClients }}" dataOverTime="+3 new this month"
             icon='<i class="bi bi-people text-gray-400 text-lg"></i>'>
         </x-dashboard-card>
 

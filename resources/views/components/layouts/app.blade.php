@@ -14,7 +14,7 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
     @livewireStyles
-    {{-- @fluxAppearance --}}
+    @fluxAppearance
 
     <style>
         html {
@@ -53,7 +53,7 @@
 
 </head>
 
-<body class="bg-white dark:neutral-900">
+<body class="bg-white dark:bg-neutral-800">
     <!-- Navigation -->
     @if (Auth::guard('freelancers')->check() !== true)
         <nav
@@ -159,9 +159,8 @@
                         <flux:menu.radio.group>
                             <flux:menu.radio checked>{{ Str::title(Auth::guard('freelancers')->user()->name) }}
                             </flux:menu.radio>
-                            <p class="text-sm font-thin text-stone-400 dark:text-stone-700">
+                            <p class="text-sm font-thin text-stone-400">
                                 {{ Auth::guard('freelancers')->user()->email }}</p>
-
                         </flux:menu.radio.group>
                         <flux:menu.separator />
                         <flux:menu.item icon="arrow-right-start-on-rectangle">
