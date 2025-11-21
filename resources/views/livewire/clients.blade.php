@@ -41,16 +41,17 @@
 
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
 
-        <div class="relative w-full sm:w-96">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+        @if (count($clientDetails) > 0)
+            <div class="relative w-full sm:w-96">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <x-input-field type="text" placeholder="Search clients..." class="pl-10" />
             </div>
-            <x-input-field type="text" placeholder="Search clients..." class="pl-10" />
-        </div>
-
+        @endif
         <button onClick="showAddClientForm()"
             class="inline-flex items-center px-4 cursor-pointer py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 w-full sm:w-auto justify-center">
             <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,88 +64,95 @@
     <div
         class="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
-                <thead class="bg-neutral-50 dark:bg-neutral-700/50">
-                    <tr>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                            Client Name</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                            Company</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                            Status</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                            Created At</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                            Hourly Rate</th>
-                        <th scope="col" class="px-6 py-3">
-                            <span
-                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
-                    @foreach ($clientDetails as $client)
-                        <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <i class="bi bi-person-circle"></i>
-                                    <div class="ml-4">
-                                        <div
-                                            class="text-sm font-medium text-neutral-900 dark:text-neutral-100 capitalize">
-                                            {{ $client->client_name }}
+            @if (count($clientDetails) > 0)
+                <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
+                    <thead class="bg-neutral-50 dark:bg-neutral-700/50">
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                Client Name</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                Company</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                Status</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                Created At</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                Hourly Rate</th>
+                            <th scope="col" class="px-6 py-3">
+                                <span
+                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Actions</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-neutral-800 divide-y divide-neutral-200 dark:divide-neutral-700">
+                        @foreach ($clientDetails as $client)
+                            <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="bi bi-person-circle"></i>
+                                        <div class="ml-4">
+                                            <div
+                                                class="text-sm font-medium text-neutral-900 dark:text-neutral-100 capitalize">
+                                                {{ $client->client_name }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-neutral-900 dark:text-neutral-100 capitalize">
-                                    {{ $client->company_name }}
-                                </div>
-                                <div class="text-sm text-neutral-500 dark:text-neutral-400">{{ $client->company_email }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                @php
-                                    $statusClasses = [
-                                        'active' =>
-                                            'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800',
-                                        'inactive' =>
-                                            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800',
-                                        'lead' =>
-                                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-                                    ];
-                                @endphp
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-neutral-900 dark:text-neutral-100 capitalize">
+                                        {{ $client->company_name }}
+                                    </div>
+                                    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+                                        {{ $client->company_email }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $statusClasses = [
+                                            'active' =>
+                                                'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800',
+                                            'inactive' =>
+                                                'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800',
+                                            'lead' =>
+                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
+                                        ];
+                                    @endphp
 
-                                <span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border
         {{ $statusClasses[$client->status] ?? 'bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600' }}">
-                                    {{ ucfirst($client->status) }}
-                                </span>
-                            </td>
+                                        {{ ucfirst($client->status) }}
+                                    </span>
+                                </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
-                                {{ $client->created_at->diffForHumans() }}
-                            </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
+                                    {{ $client->created_at->diffForHumans() }}
+                                </td>
 
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
-                                {{ Str::upper($client->currency) }} {{ $client->hourly_rate }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
+                                    {{ Str::upper($client->currency) }} {{ $client->hourly_rate }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
-                                <button wire:click="openEdit({{ $client->id }})"
-                                    class="text-neutral-600 cursor-pointer hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 mr-3">Edit</button>
-                                <button wire:click="delete({{ $client->id }})"
-                                    class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 cursor-pointer">Delete</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                    <button wire:click="openEdit({{ $client->id }})"
+                                        class="text-neutral-600 cursor-pointer hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 mr-3">Edit</button>
+                                    <button wire:click="delete({{ $client->id }})"
+                                        class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 cursor-pointer">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p
+                    class="text-neutral-400 bg-neutral-50/70 text-center dark:text-neutral-300 font-semibold text-sm dark:bg-neutral-600 rounded p-5 border-neutral-400 border">
+                    No Clients are added yet! Add one by clicking above!</p>
+            @endif
         </div>
 
         <div id="addClientForm"
@@ -170,8 +178,8 @@
                     <x-input-field model="website" type="text" placeholder="Company website"
                         label="Company Website" />
 
-                    <x-input-field model="companyphone" type="text" placeholder="Company phone" label="Company Phone"
-                        required />
+                    <x-input-field model="companyphone" type="text" placeholder="Company phone"
+                        label="Company Phone" required />
 
                     <x-input-field model="billing_address" type="textarea" placeholder="Billing Address...."
                         label="Billing Address" required />
