@@ -124,7 +124,7 @@
                     <flux:sidebar.item icon="users" href="{{ route('clients') }}" wire:navigate
                         :current="request()->routeIs('clients')">Clients
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="document-text" href="#" wire:navigate
+                    <flux:sidebar.item icon="document-text" href="{{ route('projects') }}" wire:navigate
                         :current="request()->routeIs('projects')">Projects</flux:sidebar.item>
                     <flux:sidebar.item icon="document-currency-dollar" href="#" wire:navigate
                         :current="request()->routeIs('invoices')">Invoices

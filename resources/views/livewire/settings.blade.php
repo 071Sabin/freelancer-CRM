@@ -97,11 +97,11 @@
 
                             <label class="block">
                                 <x-input-field type="email" model="email" readonly
-                                    class="text-neutral-400 dark:text-neutral-600" label="Email" />
+                                    class="text-stone-400 dark:text-neutral-600" label="Email" />
                             </label>
 
                             <label class="block">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">Bio</span>
+                                <span class="text-sm text-gray-600 dark:text-neutral-400 font-semibold">Bio</span>
                                 <textarea wire:model="bio" rows="3"
                                     class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ Auth::guard('freelancers')->user()->bio ?? '' }}</textarea>
                             </label>
