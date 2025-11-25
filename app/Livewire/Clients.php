@@ -12,6 +12,7 @@ class Clients extends Component
 
     public $editClient = [];
     public $showEditModal = false;
+    public $showAddClientForm = false;
 
     public function addClient()
     {
@@ -54,6 +55,15 @@ class Clients extends Component
     public function closeEdit()
     {
         $this->showEditModal = false;
+    }
+
+    public function toggleAddClient()
+    {
+        if($this->showAddClientForm) {
+            $this->showAddClientForm = false;
+            return;
+        }
+        $this->showAddClientForm = true;
     }
 
     public function saveClientEdit()

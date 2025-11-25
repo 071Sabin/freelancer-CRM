@@ -16,29 +16,48 @@
     {{-- calling error component from the component --}}
     <x-error></x-error>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div
             class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
             <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Total Clients</p>
-            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-                {{ count($clientDetails) }}
+            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $clientDetails->count() }}
             </p>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">All time</p>
         </div>
+
         <div
             class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
             <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Active Projects</p>
             <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-                {{ $clientDetails->where('status', 'active')->count() }}
-            </p>
+                {{ $clientDetails->where('status', 'active')->count() }}</p>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Ongoing</p>
         </div>
-        {{-- <div
-                class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
-                <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Pending Invoices</p>
-                <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-                    3
-                </p>
-            </div> --}}
+
+        <div
+            class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
+            <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Avg. Project Value</p>
+            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+                {{-- safe average: avoid division by zero --}}
+                @php
+                    $avg = $clientDetails->count()
+                        ? number_format($clientDetails->avg('projects_value') ?? 0, 2)
+                        : '0.00';
+                @endphp
+                ${{ $avg }}
+            </p>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Per client</p>
+        </div>
+
+        <div
+            class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
+            <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">New This Month</p>
+            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">
+                {{ $clientDetails->where('created_at', '>=', now()->startOfMonth())->count() }}</p>
+            <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">This month</p>
+        </div>
     </div>
+
+
 
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
 
@@ -53,7 +72,7 @@
                 <x-input-field type="text" placeholder="Search clients..." class="pl-10" />
             </div>
         @endif
-        <button onClick="showAddClientForm()"
+        <button wire:click="toggleAddClient"
             class="inline-flex items-center px-4 cursor-pointer py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 w-full sm:w-auto justify-center">
             <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -80,10 +99,13 @@
                                 Status</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                                Created At</th>
+                                Hourly Rate</th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                                Hourly Rate</th>
+                                Projects</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                                Created At</th>
                             <th scope="col" class="px-6 py-3">
                                 <span
                                     class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">Actions</span>
@@ -132,11 +154,14 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
-                                    {{ $client->created_at->diffForHumans() }}
+                                    {{ Str::upper($client->currency) }} {{ $client->hourly_rate }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
+                                    0
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
-                                    {{ Str::upper($client->currency) }} {{ $client->hourly_rate }}
+                                    {{ $client->created_at->diffForHumans() }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
@@ -156,81 +181,83 @@
             @endif
         </div>
 
-        <div id="addClientForm"
-            class="hidden border border-white fixed top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
-            <div class="bg-white dark:bg-neutral-800 rounded-lg w-1/2 p-5">
-                <div class="flex justify-between">
-                    <h3 class="text-xl font-semibold">Add New Client</h3>
-                    <button onclick="showAddClientForm()" class="">
-                        <i
-                            class="bi bi-x-lg block text-neutral-500 hover:text-red-500 font-semibold cursor-pointer"></i>
-                    </button>
-                </div>
-                <hr class="mt-5 text-neutral-300 dark:text-neutral-700">
-                <div class="grid grid-cols-2 gap-3 my-6">
-                    <x-input-field model="clientname" type="text" placeholder="Enter client name" label="Client Name"
-                        required />
-                    <x-input-field model="companyname" type="text" placeholder="Enter company name"
-                        label="Company Name" required />
+        @if ($showAddClientForm)
+            <div id="addClientForm"
+                class="border border-white fixed top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
+                <div class="bg-white dark:bg-neutral-800 rounded-lg w-1/2 p-5">
+                    <div class="flex justify-between">
+                        <h3 class="text-xl font-semibold">Add New Client</h3>
+                        <button wire:click="toggleAddClient" class="">
+                            <i
+                                class="bi bi-x-lg block text-neutral-500 hover:text-red-500 font-semibold cursor-pointer"></i>
+                        </button>
+                    </div>
+                    <hr class="mt-5 text-neutral-300 dark:text-neutral-700">
+                    <div class="grid grid-cols-2 gap-3 my-6">
+                        <x-input-field model="clientname" type="text" placeholder="Enter client name"
+                            label="Client Name" required />
+                        <x-input-field model="companyname" type="text" placeholder="Enter company name"
+                            label="Company Name" required />
 
-                    <x-input-field model="companyemail" type="email" placeholder="Company email"
-                        label="Company Email" />
+                        <x-input-field model="companyemail" type="email" placeholder="Company email"
+                            label="Company Email" />
 
-                    <x-input-field model="website" type="text" placeholder="Company website"
-                        label="Company Website" />
+                        <x-input-field model="website" type="text" placeholder="Company website"
+                            label="Company Website" />
 
-                    <x-input-field model="companyphone" type="text" placeholder="Company phone"
-                        label="Company Phone" required />
+                        <x-input-field model="companyphone" type="text" placeholder="Company phone"
+                            label="Company Phone" required />
 
-                    <x-input-field model="billing_address" type="textarea" placeholder="Billing Address...."
-                        label="Billing Address" required />
+                        <x-input-field model="billing_address" type="textarea" placeholder="Billing Address...."
+                            label="Billing Address" required />
 
 
-                    <div class="flex flex-col lg:flex-row gap-2">
-                        <x-input-field model="hrate" type="number" placeholder="Hourly rate" label="Hourly Rate"
-                            required />
+                        <div class="flex flex-col lg:flex-row gap-2">
+                            <x-input-field model="hrate" type="number" placeholder="Hourly rate"
+                                label="Hourly Rate" required />
+                            <div>
+                                <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Currency
+                                    <span class="text-red-500">*</span></label>
+                                <select wire:model="currency" id=""
+                                    class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150">
+                                    <option value="" selected>-- Select --</option>
+                                    <option value="usd">USD — $</option>
+                                    <option value="eur">EUR — €</option>
+                                    <option value="gbp">GBP — £</option>
+                                    <option value="inr">INR — ₹</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div>
-                            <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Currency <span
-                                    class="text-red-500">*</span></label>
-                            <select wire:model="currency" id=""
+                            <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">System
+                                Status <span class="text-red-500">*</span></label>
+                            <select wire:model="status" id="" required
                                 class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150">
-                                <option value="" selected>-- Select --</option>
-                                <option value="usd">USD — $</option>
-                                <option value="eur">EUR — €</option>
-                                <option value="gbp">GBP — £</option>
-                                <option value="inr">INR — ₹</option>
+                                <option value="" selected>-- Select Status --</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="lead">Lead</option>
                             </select>
                         </div>
-                    </div>
+                        <div class=" col-span-2">
+                            <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Private
+                                Notes</label>
+                            <textarea placeholder="Private notes for yourself" wire:model="privatenote"
+                                class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150"></textarea>
+                        </div>
 
-                    <div>
-                        <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">System
-                            Status <span class="text-red-500">*</span></label>
-                        <select wire:model="status" id="" required
-                            class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150">
-                            <option value="" selected>-- Select Status --</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="lead">Lead</option>
-                        </select>
                     </div>
-                    <div class=" col-span-2">
-                        <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Private
-                            Notes</label>
-                        <textarea placeholder="Private notes for yourself" wire:model="privatenote"
-                            class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150"></textarea>
+                    <div class="flex justify-between gap-6">
+                        <button class="bg-blue-500 w-1/2 text-white rounded px-3 py-2 hover:bg-blue-600 cursor-pointer"
+                            wire:click="addClient">Add Client</button>
+                        <button
+                            class="bg-neutral-500 w-1/2 text-white hover:bg-neutral-600 px-3 py-2 rounded cursor-pointer"
+                            wire:click="toggleAddClient">Cancel</button>
                     </div>
-
-                </div>
-                <div class="flex justify-between gap-6">
-                    <button class="bg-blue-500 w-1/2 text-white rounded px-3 py-2 hover:bg-blue-600 cursor-pointer"
-                        wire:click="addClient">Add Client</button>
-                    <button
-                        class="bg-neutral-500 w-1/2 text-white hover:bg-neutral-600 px-3 py-2 rounded cursor-pointer"
-                        onclick="showAddClientForm()">Cancel</button>
                 </div>
             </div>
-        </div>
+        @endif
 
         @if ($showEditModal)
             <div
@@ -318,7 +345,7 @@
                     </div>
 
                     <button type="submit"
-                        class="bg-blue-500 px-3 py-2 rounded hover:bg-blue-600 cursor-pointer mt-5">Save</button>
+                        class="bg-blue-500 px-3 py-2 text-white rounded hover:bg-blue-600 cursor-pointer mt-5">Save</button>
                 </form>
             </div>
         @endif
@@ -326,15 +353,6 @@
 
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            window.showAddClientForm = function() {
-                const form = document.getElementById('addClientForm');
-                if (form.classList.contains('hidden')) {
-                    form.classList.remove('hidden');
-                } else {
-                    form.classList.add('hidden');
-                }
-            }
-        });
+
     </script>
 </div>
