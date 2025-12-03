@@ -55,7 +55,7 @@
 
 <body class="bg-white dark:bg-neutral-800">
     <!-- Navigation -->
-    @if (Auth::guard('freelancers')->check() !== true)
+    @guest('freelancers')
         <nav
             class="w-full px-10 flex items-center justify-between mb-8 py-5 shadow-sm 
     bg-white dark:bg-neutral-900 dark:text-neutral-100 transition-colors duration-300">
@@ -73,6 +73,12 @@
                 <li>
                     <a href="#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                         Features
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('freelancers') }}"
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        Freelancers
                     </a>
                 </li>
 
@@ -107,7 +113,10 @@
         <div class="w-full mx-auto flex items-center justify-center">
             {{ $slot }}
         </div>
-    @elseif (Auth::guard('freelancers')->check() === true)
+   @endguest
+   
+    @auth('freelancers')
+        
         <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
             <flux:sidebar sticky collapsible
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
@@ -153,7 +162,8 @@
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
                 </flux:sidebar.nav>
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
-                    <flux:sidebar.profile avatar="https://fluxui.dev/img/demo/user.png"
+                    <flux:sidebar.profile
+                        avatar="{{ asset('uploads/' . Auth::guard('freelancers')->user()->profile_pic) }}"
                         name="{{ Str::title(Auth::guard('freelancers')->user()->name) }}" />
                     <flux:menu>
                         <flux:menu.radio.group>
@@ -197,8 +207,6 @@
             </div>
 
         </div>
-
-
 
         <!-- SIGNOUT MODAL -->
         <div id="signoutModal" class="fixed inset-0 hidden items-center justify-center z-[9999]">
@@ -245,7 +253,8 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endauth
+
     {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script> --}}
     <script>
         function openSignoutModal(e) {
@@ -261,10 +270,8 @@
     </script>
 
 
-
     @livewireScripts
     @fluxScripts
-
 </body>
 
 </html>

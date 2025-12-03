@@ -11,7 +11,7 @@
     </label>
 
     <input id="{{ $id }}" type="file" accept="image/*"
-        @if ($model) wire:model="{{ $model }}" @endif name="{{ $name ?? ($model ?? $id) }}"
+        @if ($model) wire:model="{{ $model }}" @endif
         {{ $attributes->merge([
             'class' => 'w-full rounded-md border border-neutral-300 dark:border-neutral-700
                          bg-white dark:bg-neutral-900

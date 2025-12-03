@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->string('bio')->nullable();
+            $table->string('profile_pic')->nullable();
             $table->string('password');
             $table->rememberToken(); // optional but recommended for auth
             $table->timestamps();

@@ -37,8 +37,16 @@
 
         {{-- Password --}}
         <div>
-            <input type="password" wire:model.defer="password" placeholder="Password" required
+            <input type="password" wire:model="password" placeholder="Password" required
                 class="w-full p-3 rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:ring-neutral-500 focus:border-neutral-500">
+            <input type="password" wire:model="password_confirmation" placeholder="Confirm Password" required
+                class="w-full mt-3 p-3 rounded border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:ring-neutral-500 focus:border-neutral-500">
+
+            <div wire:loading wire:target="password_confirmation"
+                class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                Checking password....
+            </div>
+
             @error('password')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror

@@ -4,11 +4,13 @@ use App\Http\Controllers\registerController;
 use App\Livewire\Clients;
 use App\Livewire\Counter;
 use App\Livewire\Dashboard;
+use App\Livewire\FreelancerDetails;
 use App\Livewire\Login;
 use App\Livewire\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
 use App\Livewire\Userentry;
+use App\Models\Freelancers;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,6 +20,7 @@ Route::get('/', function () {
 
 Route::get('/register', Register::class)->name('register');
 Route::get('/login', Login::class)->name('login');
+Route::get('/freelancers', FreelancerDetails::class)->name('freelancers');
 
 Route::middleware('auth:freelancers')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -26,4 +29,10 @@ Route::middleware('auth:freelancers')->group(function () {
 
     Route::get('/settings', Settings::class)->name('settings');
     Route::post('/logout', [Dashboard::class, 'logout'])->name('logout');
+    Route::get('/logout', (function () {
+        return redirect()->route('dashboard');
+    }));
+    Route::get('/', (function () {
+        return redirect()->route('dashboard');
+    }));
 });

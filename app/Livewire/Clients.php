@@ -59,7 +59,7 @@ class Clients extends Component
 
     public function toggleAddClient()
     {
-        if($this->showAddClientForm) {
+        if ($this->showAddClientForm) {
             $this->showAddClientForm = false;
             return;
         }
@@ -100,8 +100,6 @@ class Clients extends Component
         $client->private_notes = $this->editClient['private_notes']
             ? strtolower($this->editClient['private_notes'])
             : null;
-
-        $client->save();
 
         $client->save();
 

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\admins;
 use App\Models\Client;
 use App\Models\Freelancers;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -18,7 +19,9 @@ class Dashboard extends Component
 
     public function logout()
     {
-        auth()->guard('freelancers')->logout();
+        Auth::guard('freelancers')->logout();
+        session()->invalidate();
+        session()->regenerateToken();
         return redirect()->route('login');
     }
 }
