@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'ClientPivot') }}</title>
+    <title>{{ $title ?? 'ClientPivot' }}</title>
 
     <!-- Fonts -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -55,7 +55,7 @@
 
 <body class="bg-white dark:bg-neutral-800">
     <!-- Navigation -->
-    @guest('freelancers')
+    @guest('web')
         <nav
             class="w-full px-10 flex items-center justify-between mb-8 py-5 shadow-sm 
     bg-white dark:bg-neutral-900 dark:text-neutral-100 transition-colors duration-300">
@@ -113,10 +113,9 @@
         <div class="w-full mx-auto flex items-center justify-center">
             {{ $slot }}
         </div>
-   @endguest
-   
-    @auth('freelancers')
-        
+    @endguest
+
+    @auth('web')
         <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
             <flux:sidebar sticky collapsible
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
@@ -138,8 +137,8 @@
                     <flux:sidebar.item icon="document-currency-dollar" href="#" wire:navigate
                         :current="request()->routeIs('invoices')">Invoices
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="cog" href="#" wire:navigate
-                        :current="request()->routeIs('aibyok')">AI (BYOK)</flux:sidebar.item>
+                    <flux:sidebar.item icon="cog" href="#" wire:navigate :current="request()->routeIs('aibyok')">
+                        AI (BYOK)</flux:sidebar.item>
                     <flux:sidebar.item icon="clock" href="#" wire:navigate
                         :current="request()->routeIs('timetrack')">Time Tracking</flux:sidebar.item>
                     <flux:sidebar.item icon="credit-card" href="#" wire:navigate
@@ -162,15 +161,14 @@
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
                 </flux:sidebar.nav>
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
-                    <flux:sidebar.profile
-                        avatar="{{ asset('uploads/' . Auth::guard('freelancers')->user()->profile_pic) }}"
-                        name="{{ Str::title(Auth::guard('freelancers')->user()->name) }}" />
+                    <flux:sidebar.profile avatar="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
+                        name="{{ Str::title(Auth::guard('web')->user()->name) }}" />
                     <flux:menu>
                         <flux:menu.radio.group>
-                            <flux:menu.radio checked>{{ Str::title(Auth::guard('freelancers')->user()->name) }}
+                            <flux:menu.radio checked>{{ Str::title(Auth::guard('web')->user()->name) }}
                             </flux:menu.radio>
                             <p class="text-sm font-thin text-stone-400">
-                                {{ Auth::guard('freelancers')->user()->email }}</p>
+                                {{ Auth::guard('web')->user()->email }}</p>
                         </flux:menu.radio.group>
                         <flux:menu.separator />
                         <flux:menu.item icon="arrow-right-start-on-rectangle">
@@ -189,7 +187,7 @@
                     <i class="bi bi-person-circle text-2xl"></i>
                     <flux:menu>
                         <flux:menu.radio.group>
-                            <flux:menu.radio checked>{{ Str::title(Auth::guard('freelancers')->user()->name) }}
+                            <flux:menu.radio checked>{{ Str::title(Auth::guard('web')->user()->name) }}
                             </flux:menu.radio>
                         </flux:menu.radio.group>
                         <flux:menu.separator />

@@ -1,8 +1,10 @@
+@section('title', 'ClientPivot | Clients')
+
 <div class="">
 
     <div class="mb-8">
         <x-main-heading title="Clients" subtitle="Manage your business relationships and track client progress." />
-        <p class="text-sm italic text-red-400 dark:text-red-600">Refresh to activate "Add Client" form</p>
+        {{-- <p class="text-sm italic text-red-400 dark:text-red-600">Refresh to activate "Add Client" form</p> --}}
     </div>
 
     @if (session('success'))
@@ -168,7 +170,7 @@
                                     <button wire:click="openEdit({{ $client->id }})"
                                         class="text-neutral-600 cursor-pointer hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 mr-3">Edit</button>
                                     <button wire:click="delete({{ $client->id }})"
-                                        class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 cursor-pointer">Delete</button>
+                                        class="hover:text-neutral-900 dark:text-red-400 dark:hover:text-red-500 cursor-pointer text-red-500">Delete</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -352,7 +354,5 @@
 
 
     </div>
-    <script>
-
-    </script>
+    <script></script>
 </div>

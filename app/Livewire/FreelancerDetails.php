@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\DataTables\FreelancersDataTable;
-use App\Models\Freelancers;
+use App\DataTables\UserDataTable;
+use App\Models\User;
 use Livewire\Component;
 
 class FreelancerDetails extends Component
@@ -15,9 +15,9 @@ class FreelancerDetails extends Component
     {
         if ($this->sortBy == 'nameAsc') {
             $this->sortBy = 'nameDesc';
-            $this->users = Freelancers::orderBy('name', 'asc')->get();
+            $this->users = User::orderBy('name', 'asc')->get();
         } else {
-            $this->users = Freelancers::orderBy('name', 'desc')->get();
+            $this->users = User::orderBy('name', 'desc')->get();
             $this->sortBy = 'nameAsc';
         }
     }
@@ -25,7 +25,7 @@ class FreelancerDetails extends Component
 
     public function render()
     {
-        $this->users = Freelancers::all();
+        $this->users = User::all();
         return view('livewire.freelancer-details');
     }
 }

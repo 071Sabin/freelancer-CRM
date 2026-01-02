@@ -14,20 +14,20 @@ class Settings extends Component
     use WithFileUploads;
 
     public $name, $email, $bio;
-    public $profile_pic = null;
-
+    public $profile_pic;
 
     public function mount()
     {
-        $this->name = Str::title(Auth::guard('freelancers')->user()->name);
-        $this->email = Auth::guard('freelancers')->user()->email;
-        $this->bio = Auth::guard('freelancers')->user()->bio ?? '';
+        $this->name = Str::title(Auth::guard('web')->user()->name);
+        $this->email = Auth::guard('web')->user()->email;
+        $this->bio = Auth::guard('web')->user()->bio ?? '';
     }
 
     public function updateInfo()
     {
-        if (Auth::guard('freelancers')->check()) {
-            $freelancer = Auth::guard('freelancers')->user();
+        if (Auth::guard('web')->check()) {
+            $freelancer = auth()->user();
+            // dd($this->profile_pic);
 
             $this->validate([
                 'name' => 'required|string|max:255',
@@ -39,13 +39,14 @@ class Settings extends Component
             $freelancer->name = strtolower($this->name);
             $freelancer->email = strtolower($this->email);
             $freelancer->bio = strtolower($this->bio);
-            
-            if ($freelancer->profile_pic) {
-                Storage::delete($freelancer->profile_pic);
-                // $this->reset('profile_pics');
+
+            if ($this->profile_pic) {
+                if ($freelancer->profile_pic) {
+                    Storage::disk('local')->delete($freelancer->profile_pic);                   // $this->reset('profile_pics');
+                }
+                $freelancer->profile_pic = $this->profile_pic->store('profile_pics', 'local');
+
             }
-    
-            $freelancer->profile_pic = $this->profile_pic->store('profile_pics', 'local');
 
             $freelancer->save();
 

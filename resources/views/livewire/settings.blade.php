@@ -42,14 +42,14 @@
         <nav id="settings-nav" aria-label="Settings sections"
             class="mb-4 lg:mb-0 lg:w-72 shrink-0 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4">
             <div class="flex items-center gap-3 mb-4">
-                <img src="{{ asset('uploads/'. Auth::guard('freelancers')->user()->profile_pic) }}"
-                    alt="{{ Auth::guard('freelancers')->user()->name ?? 'User' }}"
+                <img src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
+                    alt="{{ Auth::guard('web')->user()->name ?? 'User' }}"
                     class="w-10 h-10 rounded-full object-cover border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700" />
                 <div>
-                    <p class="text-sm font-semibold text-gray-800 dark:text-neutral-100 title-case">
-                        {{ Auth::guard('freelancers')->user()->name ?? 'User Name' }}</p>
+                    <p class="text-sm font-semibold text-gray-800 dark:text-neutral-100">
+                        {{ Auth::guard('web')->user()->name ?? 'User Name' }}</p>
                     <p class="text-xs text-gray-500 dark:text-neutral-400">
-                        {{ Auth::guard('freelancers')->user()->email ?? 'email@example.com' }}</p>
+                        {{ Auth::guard('web')->user()->email ?? 'email@example.com' }}</p>
                 </div>
             </div>
 
@@ -103,7 +103,7 @@
                             <label class="block">
                                 <span class="text-sm text-gray-600 dark:text-neutral-400 font-semibold">Bio</span>
                                 <textarea wire:model="bio" rows="3"
-                                    class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ Auth::guard('freelancers')->user()->bio ?? '' }}</textarea>
+                                    class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ Auth::guard('web')->user()->bio ?? '' }}</textarea>
                             </label>
                         </div>
 
@@ -111,12 +111,14 @@
                             <div
                                 class="w-28 h-28 rounded-full overflow-hidden border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700">
                                 <img id="settings-avatar-preview"
-                                    src="{{ asset('uploads/'. Auth::guard('freelancers')->user()->profile_pic) }}" alt="Avatar"
-                                    class="w-full h-full object-cover" />
+                                    src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
+                                    alt="Avatar" class="w-full h-full object-cover" />
                             </div>
 
                             <label class="block w-full text-sm">
-                                <x-file-upload model="profile_pic"></x-file-upload>
+                                {{-- <input type="file" wire:model="profile_pic"> --}}
+                                <x-file-upload model="profile_pic" />
+                                <div wire:loading wire:target="profile_pic">Uploading...</div>
                                 <span class="text-xs text-gray-500 dark:text-neutral-400">Change avatar (PNG/JPG, max
                                     2MB)</span>
                             </label>

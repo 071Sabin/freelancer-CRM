@@ -4,6 +4,10 @@ namespace App\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\Attributes\Title;
+
+
+#[Title('Client Pivot | Login')]
 
 class Login extends Component
 {
@@ -16,7 +20,7 @@ class Login extends Component
             'password' => 'required',
         ]);
 
-        if (Auth::guard('freelancers')->attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             session()->regenerate();
             session()->flash('loginSuccess', 'Information Verified!');
             return redirect()->route('dashboard');

@@ -19,16 +19,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         // Client::factory(10)->create();
-        DB::table('freelancers')->insert([
+        DB::table('users')->insert([
             [
                 'name' => 'John Doe',
                 'email' => 'john@eg.com',
                 'password' => bcrypt('password'),
             ],
             [
-                'name' => 'Jane Smith',
-                'email' => 'jane@eg.com',
-                'password' => bcrypt('password'),
+                'name' => 'Sabin Panthi',
+                'email' => 'sabin@gmail.com',
+                'password' => bcrypt('sabin123'),
             ],
             [
                 'name' => 'Robert Brown',

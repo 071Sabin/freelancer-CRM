@@ -4,12 +4,15 @@ namespace App\Livewire;
 
 use App\Models\Client;
 use Livewire\Component;
+use Livewire\Attributes\Title;
+
+
+#[Title('Client Pivot | Clients')] 
 
 class Clients extends Component
 {
     public $clientname, $companyname, $companyemail, $website, $companyphone;
     public $billing_address, $hrate, $currency, $status, $privatenote;
-
     public $editClient = [];
     public $showEditModal = false;
     public $showAddClientForm = false;

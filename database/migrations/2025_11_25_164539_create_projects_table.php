@@ -23,16 +23,16 @@ return new class extends Migration
 
             // Relationship to clients table
             $table->unsignedBigInteger('client_id')->index();
-
+            $table->string('status');
             // Useful meta
             $table->timestamps();
             $table->softDeletes(); // optional but recommended for CRUD safety
           
             // Foreign key constraint (adjust onDelete behaviour if you prefer)
-            $table->foreign('client_id')
-                  ->references('id')->on('clients')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+            // $table->foreign('client_id')
+            //       ->references('id')->on('clients')
+            //       ->onDelete('cascade')
+            //       ->onUpdate('cascade');
         });
     }
 
