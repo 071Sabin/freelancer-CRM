@@ -3,14 +3,18 @@
 namespace App\Livewire;
 
 use App\Models\Client;
+
 use Livewire\Component;
 use Livewire\Attributes\Title;
 
 
-#[Title('Client Pivot | Clients')] 
+
+#[Title('Client Pivot | Clients')]
 
 class Clients extends Component
 {
+
+
     public $clientname, $companyname, $companyemail, $website, $companyphone;
     public $billing_address, $hrate, $currency, $status, $privatenote;
     public $editClient = [];
@@ -129,9 +133,14 @@ class Clients extends Component
         session()->flash('success', 'Client deleted successfully!');
     }
 
+
+
+
+
     public function render()
     {
         $clientDetails = Client::all();
         return view('livewire.clients', compact('clientDetails'));
+
     }
 }

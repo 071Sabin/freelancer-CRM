@@ -17,7 +17,6 @@
 
         <x-error></x-error>
 
-
         <div class="flex items-center gap-3">
             <!-- Theme toggle UI (JS toggles 'dark' on <html>) -->
             <div class="flex items-center gap-2">
@@ -118,7 +117,9 @@
                             <label class="block w-full text-sm">
                                 {{-- <input type="file" wire:model="profile_pic"> --}}
                                 <x-file-upload model="profile_pic" />
-                                <div wire:loading wire:target="profile_pic">Uploading...</div>
+                                <div wire:loading wire:target="profile_pic"
+                                    class="text-gray-500 font-semibold animate-pulse">
+                                    Uploading...</div>
                                 <span class="text-xs text-gray-500 dark:text-neutral-400">Change avatar (PNG/JPG, max
                                     2MB)</span>
                             </label>

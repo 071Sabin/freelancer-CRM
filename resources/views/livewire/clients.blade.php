@@ -352,7 +352,6 @@
             </div>
         @endif
 
-
     </div>
-    <script></script>
+
 </div>

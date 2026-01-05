@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -34,6 +36,9 @@ class Settings extends Component
                 'email' => 'required|email|max:255',
                 'bio' => 'nullable|string|max:500',
                 'profile_pic' => 'nullable|image|max:2048|mimes:jpeg,png,jpg'
+            ], [
+                'profile_pic.max' => 'The profile picture must not be greater than 2MB.',
+                'profile_pic.mimes' => 'The profile picture must be a file of type: jpeg, png, jpg.',
             ]);
 
             $freelancer->name = strtolower($this->name);
@@ -42,10 +47,9 @@ class Settings extends Component
 
             if ($this->profile_pic) {
                 if ($freelancer->profile_pic) {
-                    Storage::disk('local')->delete($freelancer->profile_pic);                   // $this->reset('profile_pics');
+                    Storage::disk('local')->delete($freelancer->profile_pic);
                 }
                 $freelancer->profile_pic = $this->profile_pic->store('profile_pics', 'local');
-
             }
 
             $freelancer->save();

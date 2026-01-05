@@ -20,6 +20,7 @@ Route::get('/', function () {
 
 Route::get('/register', Register::class)->name('register');
 Route::get('/login', Login::class)->name('login');
+// Route::get('/login', Login::class)->name('login');
 Route::get('/freelancers', FreelancerDetails::class)->name('freelancers');
 
 Route::middleware('auth')->group(function () {

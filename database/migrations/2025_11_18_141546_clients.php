@@ -18,11 +18,14 @@ return new class extends Migration {
             $table->string('company_website')->nullable();
             $table->string('company_phone')->nullable();
             $table->string('billing_address');
-            $table->string('hourly_rate');
+            $table->string('hourly_rate')->default('0.00');
             $table->string('currency');
-            $table->string('status');
+            $table->enum('status', ['active', 'inactive', 'blocked'])
+                ->default('active');
             $table->string('private_notes')->nullable();
             $table->timestamps();
+            $table->softDeletes(); // ✅ 
+
         });
     }
 
