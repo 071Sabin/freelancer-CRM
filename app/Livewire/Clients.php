@@ -8,15 +8,13 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 
 
-
 #[Title('Client Pivot | Clients')]
 
 class Clients extends Component
 {
-
-
     public $clientname, $companyname, $companyemail, $website, $companyphone;
-    public $billing_address, $hrate, $currency, $status, $privatenote;
+    public $billing_address, $hrate, $currency, $status, $privatenote, $clientDetails;
+    public $sortName = 'asc';
     public $editClient = [];
     public $showEditModal = false;
     public $showAddClientForm = false;
@@ -50,6 +48,17 @@ class Clients extends Component
         $client->save();
 
         session()->flash('success', 'Client added successfully!');
+    }
+
+
+    public function getClientDetailsProperty()
+    {
+        return Client::orderBy('client_name', $this->sortName)->get();
+    }
+
+    public function sortByName()
+    {
+        $this->sortName = $this->sortName === 'asc' ? 'desc' : 'asc';
     }
 
     public function openEdit($id)
@@ -132,15 +141,13 @@ class Clients extends Component
         Client::find($id)->delete();
         session()->flash('success', 'Client deleted successfully!');
     }
-
-
-
-
-
+    public function mount()
+    {
+        $this->clientDetails = Client::orderBy('client_name', 'asc')->get();
+    }
     public function render()
     {
-        $clientDetails = Client::all();
-        return view('livewire.clients', compact('clientDetails'));
-
+        // $this->clientDetails = Client::all();
+        return view('livewire.clients');
     }
 }

@@ -92,7 +92,8 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                                Client Name</th>
+                                <button wire:click="sortByName">Client Name</button>
+                            </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
                                 Company</th>
@@ -353,5 +354,7 @@
         @endif
 
     </div>
+
+
 
 </div>
