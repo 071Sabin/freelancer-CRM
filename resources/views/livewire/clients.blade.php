@@ -92,7 +92,8 @@
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                                <button wire:click="sortByName">Client Name</button>
+                                <button wire:click="sortByName">Client Name <i
+                                        class="bi bi-chevron-expand"></i></button>
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
