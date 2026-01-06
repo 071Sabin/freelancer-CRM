@@ -13,7 +13,7 @@ use Livewire\Attributes\Title;
 class Clients extends Component
 {
     public $clientname, $companyname, $companyemail, $website, $companyphone;
-    public $billing_address, $hrate, $currency, $status, $privatenote, $clientDetails;
+    public $billing_address, $hrate, $currency, $status, $privatenote;
     public $sortName = 'asc';
     public $editClient = [];
     public $showEditModal = false;
@@ -141,13 +141,11 @@ class Clients extends Component
         Client::find($id)->delete();
         session()->flash('success', 'Client deleted successfully!');
     }
-    public function mount()
-    {
-        $this->clientDetails = Client::orderBy('client_name', 'asc')->get();
-    }
+
     public function render()
     {
-        // $this->clientDetails = Client::all();
-        return view('livewire.clients');
+        return view('livewire.clients', [
+            'clientDetails' => $this->clientDetails,
+        ]);
     }
 }
