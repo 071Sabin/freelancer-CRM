@@ -15,7 +15,6 @@
 
     @livewireStyles
     @fluxAppearance
-    @filamentStyles
 
 
     <style>
@@ -272,7 +271,6 @@
 
     @livewireScripts
     @fluxScripts
-    @filamentScripts
 
 </body>
 

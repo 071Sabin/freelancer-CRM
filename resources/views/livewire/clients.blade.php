@@ -22,7 +22,7 @@
         <div
             class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
             <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Total Clients</p>
-            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $clientDetails->count() }}
+            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $clientCount }}
             </p>
             <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">All time</p>
         </div>
@@ -62,20 +62,8 @@
 
 
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-
-        @if (count($clientDetails) > 0)
-            <div class="relative w-full sm:w-96">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </div>
-                <x-input-field type="text" placeholder="Search clients..." class="pl-10" />
-            </div>
-        @endif
         <button wire:click="toggleAddClient"
-            class="inline-flex items-center px-4 cursor-pointer py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 w-full sm:w-auto justify-center">
+            class="inline-flex items-center px-4 cursor-pointer py-2 rounded-md shadow-sm text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 w-full sm:w-auto justify-center">
             <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
@@ -83,17 +71,15 @@
         </button>
     </div>
 
-    <div
-        class="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
+    <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
-            @if (count($clientDetails) > 0)
+            {{-- @if (count($clientDetails) > 0)
                 <table class="min-w-full divide-y divide-neutral-200 dark:divide-neutral-700">
                     <thead class="bg-neutral-50 dark:bg-neutral-700/50">
                         <tr>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
-                                <button wire:click="sortByName">Client Name <i
-                                        class="bi bi-chevron-expand"></i></button>
+                                Client Name
                             </th>
                             <th scope="col"
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
@@ -151,8 +137,7 @@
                                     @endphp
 
                                     <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border
-        {{ $statusClasses[$client->status] ?? 'bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600' }}">
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border {{ $statusClasses[$client->status] ?? 'bg-neutral-200 text-neutral-800 dark:bg-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600' }}">
                                         {{ ucfirst($client->status) }}
                                     </span>
                                 </td>
@@ -182,12 +167,12 @@
                 <p
                     class="text-neutral-400 bg-neutral-50/70 text-center dark:text-neutral-300 font-semibold text-sm dark:bg-neutral-600 rounded p-5 border-neutral-400 border">
                     No Clients are added yet! Add one by clicking above!</p>
-            @endif
+            @endif --}}
         </div>
 
         @if ($showAddClientForm)
             <div id="addClientForm"
-                class="border border-white fixed top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
+                class="border z-90 border-white fixed top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
                 <div class="bg-white dark:bg-neutral-800 rounded-lg w-1/2 p-5">
                     <div class="flex justify-between">
                         <h3 class="text-xl font-semibold">Add New Client</h3>
@@ -217,8 +202,8 @@
 
 
                         <div class="flex flex-col lg:flex-row gap-2">
-                            <x-input-field model="hrate" type="number" placeholder="Hourly rate"
-                                label="Hourly Rate" required />
+                            <x-input-field model="hrate" type="number" placeholder="Hourly rate" label="Hourly Rate"
+                                required />
                             <div>
                                 <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Currency
                                     <span class="text-red-500">*</span></label>
@@ -356,6 +341,24 @@
 
     </div>
 
+    @if ($clientCount > 0)
+        <div class="p-5 border-none">
+            <p>individual edit button is remaining, + separate the form add/edit modal in components so it remains clean
+            </p>
+            <livewire:clients-table />
+        </div>
+    @else
+        <div
+            class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed rounded-lg 
+            border-neutral-300 bg-neutral-50 text-neutral-500 
+            dark:border-neutral-700 dark:bg-transparent dark:text-neutral-400">
 
+            <i class="bi bi-x-circle text-5xl mb-3"></i>
+
+            <p class="text-neutral-600 dark:text-neutral-300 font-medium">
+                No Clients are added!
+            </p>
+        </div>
+    @endif
 
 </div>

@@ -13,12 +13,13 @@ use Livewire\Attributes\Title;
 class Clients extends Component
 {
     public $clientname, $companyname, $companyemail, $website, $companyphone;
-    public $billing_address, $hrate, $currency, $status, $privatenote;
-    public $sortName = 'asc';
+    public $billing_address, $hrate, $currency, $status, $privatenote, $clientDetails, $clientCount;
     public $editClient = [];
     public $showEditModal = false;
     public $showAddClientForm = false;
-
+    protected $listeners = [
+        'openEditClient' => 'openEdit',
+    ];
     public function addClient()
     {
         $this->validate([
@@ -46,19 +47,8 @@ class Clients extends Component
         $client->status = $this->status;
         $client->private_notes = strtolower($this->privatenote);
         $client->save();
-
+        $this->dispatch('refreshDatatable');
         session()->flash('success', 'Client added successfully!');
-    }
-
-
-    public function getClientDetailsProperty()
-    {
-        return Client::orderBy('client_name', $this->sortName)->get();
-    }
-
-    public function sortByName()
-    {
-        $this->sortName = $this->sortName === 'asc' ? 'desc' : 'asc';
     }
 
     public function openEdit($id)
@@ -118,7 +108,7 @@ class Clients extends Component
             : null;
 
         $client->save();
-
+        $this->dispatch('refreshDatatable');
         // $client->update([
         //     'client_name' => strtolower($this->editClient['client_name']),
         //     'company_name' => strtolower($this->companyname),
@@ -144,8 +134,8 @@ class Clients extends Component
 
     public function render()
     {
-        return view('livewire.clients', [
-            'clientDetails' => $this->clientDetails,
-        ]);
+        $this->clientCount = Client::count();
+        $this->clientDetails = Client::all();
+        return view('livewire.clients');
     }
 }
