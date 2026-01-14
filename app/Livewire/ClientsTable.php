@@ -28,7 +28,7 @@ class ClientsTable extends DataTableComponent
         // $this->setSearchIcon('bi bi-search');
 
         $this->setSearchPlaceholder('Search Clients...');
-    
+
 
         $this->setSearchFieldAttributes([
             'class' => 'px-2 rounded-lg dark:' . $this->thBg,
@@ -95,11 +95,19 @@ class ClientsTable extends DataTableComponent
             'default-colors' => true,
             'default-styling' => true,
         ]);
+
         $this->setBulkActionsMenuAttributes([
             'class' => 'dark:' . $this->tableOddRowBg,
             'default-colors' => true,
             'default-styling' => true,
         ]);
+
+        $this->setBulkActionsMenuItemAttributes([
+            'class' => 'dark:' . $this->tableOddRowBg . ' dark:hover:text-stone-200 cursor-pointer dark:hover:'. $this->tableOddRowBg,
+            'default-colors' => true,
+            'default-styling' => true,
+        ]);
+
         $this->setColumnSelectButtonAttributes([
             'class' => 'border dark:' . $this->tableOddRowBg,
             'default-colors' => true,
@@ -121,7 +129,6 @@ class ClientsTable extends DataTableComponent
         ]);
 
         $this->setBulkActionsThCheckboxAttributes([
-            'class' => '',
             'default-colors' => true,
             'default-styling' => true,
         ]);
@@ -145,8 +152,8 @@ class ClientsTable extends DataTableComponent
             //     ->sortable(),
             // Column::make("Billing address", "billing_address")
             //     ->sortable(),
-            Column::make("Hourly rate", "hourly_rate")
-                ->sortable(),
+            Column::make('Hourly rate', 'hourly_rate')->sortable(),
+
             // Column::make("Currency", "currency")
             //     ->sortable(),
             Column::make('Status', 'status')
