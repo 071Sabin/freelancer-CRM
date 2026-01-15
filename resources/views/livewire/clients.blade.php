@@ -8,11 +8,9 @@
     </div>
 
     @if (session('success'))
-        <div class="mb-6">
-            <x-success-message>
-                {{ session('success') }}
-            </x-success-message>
-        </div>
+        <x-success-message>
+            {{ session('success') }}
+        </x-success-message>
     @endif
 
     {{-- calling error component from the component --}}
@@ -77,10 +75,11 @@
             <x-show-add-client-form />
         @endif
 
-        @if ($showEditModal)
+        {{-- @if ($showEditModal)
             <x-show-edit-client-form />
-        @endif
-
+            <livewire:edit-client-form/>
+        @endif --}}
+        <livewire:edit-client-form />
     </div>
 
     @if ($clientCount > 0)

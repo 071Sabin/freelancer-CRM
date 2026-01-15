@@ -24,11 +24,11 @@ class ClientsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+
         $this->setPerPageAccepted([10, 25, 50, 100]);
         // $this->setSearchIcon('bi bi-search');
 
         $this->setSearchPlaceholder('Search Clients...');
-
 
         $this->setSearchFieldAttributes([
             'class' => 'px-2 rounded-lg dark:' . $this->thBg,
@@ -103,7 +103,7 @@ class ClientsTable extends DataTableComponent
         ]);
 
         $this->setBulkActionsMenuItemAttributes([
-            'class' => 'dark:' . $this->tableOddRowBg . ' dark:hover:text-stone-200 cursor-pointer dark:hover:'. $this->tableOddRowBg,
+            'class' => 'dark:' . $this->tableOddRowBg . ' dark:hover:text-stone-200 cursor-pointer dark:hover:' . $this->tableOddRowBg,
             'default-colors' => true,
             'default-styling' => true,
         ]);
@@ -134,12 +134,11 @@ class ClientsTable extends DataTableComponent
         ]);
     }
 
-
     public function columns(): array
     {
         return [
-            // Column::make("Id", "id")
-            //     ->sortable(),
+            Column::make("Id", "id")
+                ->sortable(),
             Column::make("Client name", "client_name")
                 ->sortable()->format(fn($value) => ucfirst($value))->searchable(),
             Column::make("Company name", "company_name")
@@ -185,11 +184,11 @@ class ClientsTable extends DataTableComponent
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
-            Column::make('Actions', 'id')
-                ->format(fn($value) => '
+            Column::make('Actions')
+                ->label(fn($row) => '
         <button
+            wire:click="$dispatch(\'edit-client\', [' . $row->id . ']).window"
             class="px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-            onclick="Livewire.emit(\'openEditClient\', ' . $value . ')"
         >
             Edit
         </button>
@@ -197,6 +196,7 @@ class ClientsTable extends DataTableComponent
                 ->html(),
         ];
     }
+
 
     public function filters(): array
     {
