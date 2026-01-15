@@ -79,7 +79,7 @@
             <x-show-edit-client-form />
             <livewire:edit-client-form/>
         @endif --}}
-        <livewire:edit-client-form />
+        <livewire:Clients.edit-client-form />
     </div>
 
     @if ($clientCount > 0)
@@ -87,7 +87,7 @@
             <p>individual edit button is remaining, + separate the form add/edit modal in components so it remains clean
             </p>
 
-            <livewire:clients-table />
+            <livewire:clients.clients-table />
         </div>
     @else
         <div

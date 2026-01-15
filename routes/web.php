@@ -1,16 +1,12 @@
 <?php
 
-use App\Http\Controllers\registerController;
-use App\Livewire\Clients;
-use App\Livewire\Counter;
+use App\Livewire\Clients\Clients;
 use App\Livewire\Dashboard;
 use App\Livewire\FreelancerDetails;
 use App\Livewire\Login;
 use App\Livewire\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
-use App\Livewire\Userentry;
-use App\Models\Freelancers;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

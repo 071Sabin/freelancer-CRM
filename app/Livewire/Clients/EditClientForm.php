@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Clients;
+
 
 use App\Models\Client;
 use Livewire\Attributes\On;
@@ -86,6 +87,6 @@ class EditClientForm extends Component
 
     public function render()
     {
-        return view('livewire.edit-client-form');
+        return view('livewire.clients.edit-client-form');
     }
 }
