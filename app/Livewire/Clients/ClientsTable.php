@@ -13,10 +13,10 @@ class ClientsTable extends DataTableComponent
 {
     protected $model = Client::class;
 
-    public $color = 'zinc';
+    public $color = 'neutral';
     public $thBg = 'bg-neutral-700/90';
-    public $tableOddRowBg = 'bg-zinc-800';
-    public $tableEvenRowBg = 'bg-zinc-700';
+    public $tableOddRowBg = 'bg-neutral-800';
+    public $tableEvenRowBg = 'bg-neutral-700';
 
     public $editClient = [];
     public $showEditModal = false;
@@ -27,12 +27,13 @@ class ClientsTable extends DataTableComponent
         $this->setPrimaryKey('id');
 
         $this->setPerPageAccepted([10, 25, 50, 100]);
-        // $this->setSearchIcon('bi bi-search');
+        // $this->setSearchIcon('heroicon-m-magnifying-glass');
+
 
         $this->setSearchPlaceholder('Search Clients...');
 
         $this->setSearchFieldAttributes([
-            'class' => 'px-2 rounded-lg dark:' . $this->thBg,
+            'class' => 'px-2 py-2 sm:w-100 lg:w-fit rounded-lg dark:' . $this->thBg,
             'default-styling' => true,
         ]);
 
@@ -69,7 +70,7 @@ class ClientsTable extends DataTableComponent
             return [
                 'default' => true,
                 'default-colors' => false,
-                'class' => $index % 2 === 0
+                'class' =>$index % 2 === 0
                     ? 'dark:' . $this->tableOddRowBg
                     : 'dark:' . $this->tableEvenRowBg,
             ];

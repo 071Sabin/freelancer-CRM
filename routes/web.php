@@ -4,7 +4,7 @@ use App\Livewire\Clients\Clients;
 use App\Livewire\Dashboard;
 use App\Livewire\FreelancerDetails;
 use App\Livewire\Login;
-use App\Livewire\Projects;
+use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
 use Illuminate\Support\Facades\Route;
