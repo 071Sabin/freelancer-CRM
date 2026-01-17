@@ -47,7 +47,8 @@ class EditClientForm extends Component
 
         $this->validate([
             'editClient.client_name' => 'required|string|max:255',
-            'editClient.company_name' => 'required|string|max:255',
+            'editClient.client_email' => 'string|max:255',
+            'editClient.company_name' => 'nullable|string|max:255',
             'editClient.company_email' => 'nullable|email|max:255',
             'editClient.company_website' => 'nullable|string|max:255',
             'editClient.company_phone' => 'required|string|max:50',
@@ -59,6 +60,9 @@ class EditClientForm extends Component
         ]);
 
         $client->client_name = strtolower($this->editClient['client_name']);
+        $client->company_email = $this->editClient['client_email']
+            ? strtolower($this->editClient['client_email'])
+            : null;
         $client->company_name = strtolower($this->editClient['company_name']);
         $client->company_email = $this->editClient['company_email']
             ? strtolower($this->editClient['company_email'])

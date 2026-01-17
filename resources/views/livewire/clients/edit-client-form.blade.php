@@ -18,7 +18,8 @@
                     <!-- Row 1 -->
                     <x-input-field type="text" model="editClient.client_name" label="Client Name"
                         placeholder="Enter client name" required />
-
+                    <x-input-field model="editClient.client_email" type="email" placeholder="Enter client email"
+                        label="Client Email" required />
                     <x-input-field type="text" model="editClient.company_name" label="Company Name"
                         placeholder="Enter company name" required />
 
@@ -110,8 +111,7 @@
                             Client Details
                         </h2>
 
-                        <button wire:click="closeView"
-                            class="text-neutral-400 hover:text-red-500 cursor-pointer"
+                        <button wire:click="closeView" class="text-neutral-400 hover:text-red-500 cursor-pointer"
                             aria-label="Close">
                             <i class="bi bi-x-lg"></i>
                         </button>

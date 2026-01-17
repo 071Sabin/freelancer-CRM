@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('client_name');
+            $table->string('client_email');
             $table->string('company_name');
             $table->string('company_email')->nullable();
             $table->string('company_website')->nullable();

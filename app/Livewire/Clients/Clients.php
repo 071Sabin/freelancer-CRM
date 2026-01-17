@@ -14,7 +14,7 @@ use Livewire\Attributes\Title;
 class Clients extends Component
 {
     public $clientname, $companyname, $companyemail, $website, $companyphone;
-    public $billing_address, $hrate, $currency, $status, $privatenote, $clientDetails, $clientCount;
+    public $billing_address, $hrate, $currency, $clientemail, $status, $privatenote, $clientDetails, $clientCount;
     
     public $editClient = [];
     public $showEditModal = false;
@@ -65,6 +65,7 @@ class Clients extends Component
 
         $client = new Client();
         $client->client_name = strtolower($this->clientname);
+        $client->client_email = strtolower($this->clientemail);
         $client->company_name = strtolower($this->companyname);
         $client->company_email = strtolower($this->companyemail);
         $client->company_website = strtolower($this->website);

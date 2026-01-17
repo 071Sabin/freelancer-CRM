@@ -14,7 +14,7 @@
     @endif
 
     {{-- calling error component from the component --}}
-    <x-error></x-error>
+    {{-- <x-error></x-error> --}}
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div

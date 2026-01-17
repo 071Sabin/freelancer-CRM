@@ -143,33 +143,47 @@ class ClientsTable extends DataTableComponent
             Column::make("Id", "id")
                 ->sortable(),
             Column::make("Client name", "client_name")
-                ->sortable()->format(fn($value) => ucfirst($value))->searchable(),
+                ->sortable()->searchable()->format(function($value, $row){
+                return '
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-medium text-stone-800 dark:text-neutral-100">
+                                ' . e(ucfirst($value)) . '
+                            </span>
+
+                            <span class="text-xs text-stone-500 dark:text-neutral-400">
+                                ' . e($row->client_email ?? '—') . '
+                            </span>
+                        </div>';
+            })->html(),
+                
+            Column::make('client Email', 'client_email')->hideIf(true),
             Column::make('Company', 'company_name')
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
                     return '
-                            <div class="flex flex-col leading-tight">
-                                <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                    ' . e(ucfirst($value)) . '
-                                </span>
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-medium text-stone-800 dark:text-neutral-100">
+                                ' . e(ucfirst($value)) . '
+                            </span>
 
-                                <span class="text-xs text-stone-500 dark:text-neutral-400">
-                                    ' . e($row->company_email ?? '—') . '
-                                </span>
-                            </div>';
-                })
-                ->html(),
+                            <span class="text-xs text-stone-500 dark:text-neutral-400">
+                                ' . e($row->company_email ?? '—') . '
+                            </span>
+                        </div>';
+            })->html(),
             Column::make("Company Email", "company_email")
                 ->hideIf(true),
             // Column::make("Company phone", "company_phone")
             //     ->sortable(),
             // Column::make("Billing address", "billing_address")
             //     ->sortable(),
-            Column::make('Hourly rate', 'hourly_rate')->sortable(),
+            Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row){
+                return strtoupper($row->currency).' '.e(strtoupper($value));
+            }),
 
-            // Column::make("Currency", "currency")
-            //     ->sortable(),
+            Column::make("Currency", "currency")
+                ->hideIf(true),
             Column::make('Status', 'status')
                 ->format(fn($value) => match ($value) {
 

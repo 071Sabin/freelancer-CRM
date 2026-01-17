@@ -11,6 +11,10 @@
         <div class="grid grid-cols-2 gap-3 my-6">
             <x-input-field model="clientname" type="text" placeholder="Enter client name" label="Client Name"
                 required />
+                
+            <x-input-field model="clientemail" type="email" placeholder="Enter client email" label="Client Email"
+                required />
+
             <x-input-field model="companyname" type="text" placeholder="Enter company name" label="Company Name"
                 required />
 
