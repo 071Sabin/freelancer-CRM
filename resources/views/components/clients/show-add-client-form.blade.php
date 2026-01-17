@@ -1,16 +1,11 @@
-<div id="addClientForm" class="fixed inset-0 z-90 bg-black/50 backdrop-blur-md
-           overflow-y-auto px-4 py-6">
-
+<div id="addClientForm" class="fixed inset-0 z-90 bg-black/50 backdrop-blur-md overflow-y-auto px-4 py-6">
     <div class="min-h-full flex items-start justify-center">
-
-        <div
-            class="bg-white dark:bg-neutral-800 rounded-lg
-                    w-full lg:w-1/2
-                    m-1 p-5">
+        <div class="bg-white dark:bg-neutral-800 rounded-lg w-full lg:w-1/2 m-1 p-5">
             <div class="flex justify-between">
                 <h3 class="text-xl font-semibold">Add New Client</h3>
-                <button wire:click="toggleAddClient" class="">
-                    <i class="bi bi-x-lg block text-neutral-500 hover:text-red-500 font-semibold cursor-pointer"></i>
+                <button wire:click="toggleAddClient" class="text-neutral-400 hover:text-red-500 cursor-pointer"
+                    aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
                 </button>
             </div>
             <hr class="mt-5 text-neutral-300 dark:text-neutral-700">
@@ -71,11 +66,9 @@
                 </div>
 
             </div>
-            <div class="flex justify-between gap-6">
-                <button class="bg-blue-500 w-1/2 text-white rounded px-3 py-2 hover:bg-blue-600 cursor-pointer"
-                    wire:click="addClient">Add Client</button>
-                <button class="bg-neutral-500 w-1/2 text-white hover:bg-neutral-600 px-3 py-2 rounded cursor-pointer"
-                    wire:click="toggleAddClient">Cancel</button>
+            <div class="flex justify-start gap-3">
+                <x-primary-button wire:click="addClient">add client</x-primary-button>
+                <x-secondary-button wire:click="toggleAddClient">cancel</x-secondary-button>
             </div>
         </div>
     </div>

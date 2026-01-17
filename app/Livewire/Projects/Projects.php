@@ -12,7 +12,7 @@ use Livewire\Attributes\Title;
 
 class Projects extends Component
 {
-    public $clients, $allProjects;
+    public $clients, $allProjects, $projectCount;
     public $showAddProjects = false;
     public $name, $value, $description, $client_id, $status;
 
@@ -60,6 +60,7 @@ class Projects extends Component
 
     public function render()
     {
+        $this->projectCount = Project::count();
         return view('livewire.projects.projects');
     }
 }

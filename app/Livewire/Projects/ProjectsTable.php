@@ -1,27 +1,23 @@
 <?php
 
-namespace App\Livewire\Clients;
-
+namespace App\Livewire\Projects;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Client;
+use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
-class ClientsTable extends DataTableComponent
+class ProjectsTable extends DataTableComponent
 {
-    protected $model = Client::class;
-
+    protected $model = Project::class;
     public $color = 'neutral';
     public $thBg = 'bg-neutral-700/90';
     public $tableOddRowBg = 'bg-neutral-800';
     public $tableEvenRowBg = 'bg-neutral-700';
-
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-
         $this->setPerPageAccepted([10, 25, 50, 100]);
         // $this->setSearchIcon('heroicon-m-magnifying-glass');
 
@@ -66,7 +62,7 @@ class ClientsTable extends DataTableComponent
             return [
                 'default' => true,
                 'default-colors' => false,
-                'class' =>$index % 2 === 0
+                'class' => $index % 2 === 0
                     ? 'dark:' . $this->tableOddRowBg
                     : 'dark:' . $this->tableEvenRowBg,
             ];
@@ -139,85 +135,46 @@ class ClientsTable extends DataTableComponent
         return [
             Column::make("Id", "id")
                 ->sortable(),
-            Column::make("Client name", "client_name")
-                ->sortable()->searchable()->format(function($value, $row){
-                return '
-                        <div class="flex flex-col leading-tight">
-                            <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e(ucfirst($value)) . '
-                            </span>
-
-                            <span class="text-xs text-stone-500 dark:text-neutral-400">
-                                ' . e($row->client_email ?? '—') . '
-                            </span>
-                        </div>';
-            })->html(),
-                
-            Column::make('client Email', 'client_email')->hideIf(true),
-            Column::make('Company', 'company_name')
-                ->sortable()
-                ->searchable()
-                ->format(function ($value, $row) {
-                    return '
-                        <div class="flex flex-col leading-tight">
-                            <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e(ucfirst($value)) . '
-                            </span>
-
-                            <span class="text-xs text-stone-500 dark:text-neutral-400">
-                                ' . e($row->company_email ?? '—') . '
-                            </span>
-                        </div>';
-            })->html(),
-            Column::make("Company Email", "company_email")
-                ->hideIf(true),
-            // Column::make("Company phone", "company_phone")
-            //     ->sortable(),
-            // Column::make("Billing address", "billing_address")
-            //     ->sortable(),
-            Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row){
-                return strtoupper($row->currency).' '.e(strtoupper($value));
-            }),
-
-            Column::make("Currency", "currency")
-                ->hideIf(true),
+            Column::make("Name", "name")
+                ->sortable()->searchable(),
+            Column::make("Value", "value")
+                ->sortable(),
             Column::make('Status', 'status')
                 ->format(fn($value) => match ($value) {
 
-                        'active' => '<span class="
+                    'completed' => '<span class="
                         inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
                         bg-green-100 text-green-700
                         border border-green-400
                         dark:bg-green-900/30 dark:text-green-300 dark:border-green-500">
-                        Active
+                        Completed
                     </span>',
 
-                        'inactive' => '<span class="
+                    'pending' => '<span class="
                         inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
                         bg-red-100 text-red-700
                         border border-red-400
                         dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">
-                        Inactive
+                        Pending
                     </span>',
 
-                        'lead' => '<span class="
+                    'in-progress' => '<span class="
                         inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
                         bg-amber-100 text-amber-700
                         border border-amber-400
                         dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-500">
-                        Lead
+                        In Progress
                     </span>',
 
                     default => '<span class="text-gray-500 dark:text-gray-400 text-xs">
                                     Unknown
                                 </span>',
                 })->html(),
-            // Column::make("Private notes", "private_notes")
-            //     ->sortable(),
             Column::make("Created at", "created_at")->format(fn($value) => $value?->diffForHumans())
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
+
             Column::make('Actions')
                 ->label(fn($row) => '
                 
@@ -225,7 +182,7 @@ class ClientsTable extends DataTableComponent
 
                         <button
                             type="button"
-                            wire:click="$dispatch(\'edit-client\', ['.$row->id.']).window"
+                            wire:click="$dispatch(\'edit-client\', [' . $row->id . ']).window"
                             class="inline-flex items-center justify-center w-9 h-9 rounded-md
                                 text-blue-600 hover:text-blue-700
                                 bg-blue-50 hover:bg-blue-100
@@ -237,7 +194,7 @@ class ClientsTable extends DataTableComponent
 
                         <button
                             type="button"
-                            wire:click="$dispatch(\'view-client\', ['.$row->id.']).window"
+                            wire:click="$dispatch(\'view-client\', [' . $row->id . ']).window"
                             class="inline-flex items-center justify-center w-9 h-9 rounded-md
                                 text-emerald-600 hover:text-emerald-700
                                 bg-emerald-50 hover:bg-emerald-100
@@ -248,13 +205,9 @@ class ClientsTable extends DataTableComponent
                         </button>
 
                     </div>
-
-                
-                ')
-                ->html(),
+                ')->html(),
         ];
     }
-
 
     public function filters(): array
     {
@@ -266,8 +219,9 @@ class ClientsTable extends DataTableComponent
                 ])
                 ->options([
                     '' => 'All',
-                    'active' => 'Active',
-                    'inactive' => 'Inactive',
+                    'completed' => 'Completed',
+                    'in-progress' => 'In Progress',
+                    'pending' => 'Pending',
                 ])
                 ->filter(function ($query, $value) {
                     if ($value === '') {
@@ -293,7 +247,7 @@ class ClientsTable extends DataTableComponent
         }
 
         DB::transaction(function () use ($ids) {
-            Client::whereIn('id', $ids)->delete();
+            Project::whereIn('id', $ids)->delete();
         });
 
         // Clear selection after delete

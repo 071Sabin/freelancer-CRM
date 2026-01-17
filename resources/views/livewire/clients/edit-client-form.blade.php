@@ -99,10 +99,8 @@
                             @enderror
                         </div>
                     </div>
-                    <button type="submit"
-                        class="bg-blue-500 px-3 py-2 text-white rounded hover:bg-blue-600 cursor-pointer mt-5">
-                        Save
-                    </button>
+
+                    <x-primary-button type="submit">save</x-primary-button>
 
                 </form>
 
@@ -237,12 +235,7 @@
 
                     {{-- Footer --}}
                     <div class="px-6 py-4 border-t border-stone-200 dark:border-neutral-700 flex justify-end">
-                        <button wire:click="$set('showDetails', false)"
-                            class="rounded-md px-4 py-2 text-sm font-medium
-                       border border-stone-300 text-stone-700 hover:bg-stone-100
-                       dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700">
-                            Close
-                        </button>
+                        <x-secondary-button wire:click="$set('showDetails', false)">close</x-secondary-button>
                     </div>
                 </div>
             </div>
