@@ -20,11 +20,11 @@ return new class extends Migration {
             $table->string('billing_address');
             $table->string('hourly_rate')->default('0.00');
             $table->string('currency');
-            $table->enum('status', ['active', 'inactive', 'blocked'])
+            $table->enum('status', ['active', 'inactive', 'lead'])
                 ->default('active');
             $table->string('private_notes')->nullable();
             $table->timestamps();
-            $table->softDeletes(); // ✅ 
+            $table->softDeletes();
 
         });
     }

@@ -1,12 +1,3 @@
-{{-- <div>
-    <p id="toastSuccess" class="fixed top-10 right-5 z-999 bg-green-600 text-white px-4 py-3">
-        {{ $slot }}
-    </p>
-</div> --}}
-
-
-
-
 
 <div class="pointer-events-none fixed inset-0 z-111 flex items-start justify-end px-4 py-6 sm:p-6">
     <div id="toastSuccess" x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show"
@@ -65,14 +56,3 @@
     </div>
 </div>
 
-
-
-
-{{-- <script>
-    const toast = document.getElementById('toastSuccess');
-    toast.classList.remove('hidden');
-
-    setTimeout(() => {
-        toast.classList.add('hidden');
-    }, 3000); // Hide after 3 seconds
-</script> --}}

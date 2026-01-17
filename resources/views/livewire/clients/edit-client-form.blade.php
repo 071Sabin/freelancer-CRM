@@ -6,7 +6,7 @@
     @endif
     @if ($open)
         <div
-            class="modal border border-white fixed z-99 top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
+            class="modal border border-white dark:border-stone-500 fixed z-99 top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
             <form wire:submit="saveClientEdit" class="bg-white dark:bg-neutral-800 rounded-lg w-1/2 p-5">
                 <h1 class="text-xl font-bold flex justify-between">Edit Client Details
                     <button wire:click="closeEdit" type="button">
@@ -92,6 +92,149 @@
                 <button type="submit"
                     class="bg-blue-500 px-3 py-2 text-white rounded hover:bg-blue-600 cursor-pointer mt-5">Save</button>
             </form>
+        </div>
+    @elseif($showDetails)
+        <div
+            class="modal border border-white dark:border-stone-500 fixed z-99 top-0 left-0 bg-black/50 backdrop-blur-md w-full h-full flex flex-wrap items-center justify-center">
+            <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+                <div
+                    class="w-full max-w-3xl rounded-xl shadow-xl
+               bg-white text-stone-800 border border-stone-200
+               dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700">
+
+                    {{-- Header --}}
+                    <div
+                        class="flex items-center justify-between px-6 py-4
+                    border-b border-stone-200 dark:border-neutral-700">
+                        <h2 class="text-lg font-semibold text-stone-800 dark:text-neutral-100">
+                            Client Details
+                        </h2>
+
+                        <button wire:click="closeView"
+                            class="text-neutral-400 hover:text-red-500 cursor-pointer"
+                            aria-label="Close">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="px-6 py-6 space-y-6">
+
+                        {{-- Deleted Warning --}}
+                        @if (!empty($viewClient['deleted_at']))
+                            <div
+                                class="rounded-md px-4 py-3 text-sm
+                           bg-red-50 text-red-700 border border-red-300
+                           dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">
+                                ⚠️ This client has been deleted.
+                            </div>
+                        @endif
+
+                        {{-- Grid --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Client
+                                    Name</p>
+                                <p class="mt-1 text-sm font-medium text-stone-800 dark:text-neutral-100">
+                                    {{ $viewClient['client_name'] }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Company
+                                    Name</p>
+                                <p class="mt-1 text-sm font-medium text-stone-800 dark:text-neutral-100">
+                                    {{ $viewClient['company_name'] }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Company
+                                    Email</p>
+                                <p class="mt-1 text-sm text-stone-700 dark:text-neutral-200">
+                                    {{ $viewClient['company_email'] ?? '—' }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Phone
+                                </p>
+                                <p class="mt-1 text-sm text-stone-700 dark:text-neutral-200">
+                                    {{ $viewClient['company_phone'] ?? '—' }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Website
+                                </p>
+                                <p class="mt-1 text-sm text-stone-700 dark:text-neutral-200">
+                                    {{ $viewClient['company_website'] ?? '—' }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Billing
+                                    Address</p>
+                                <p class="mt-1 text-sm text-stone-700 dark:text-neutral-200">
+                                    {{ $viewClient['billing_address'] }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Hourly
+                                    Rate</p>
+                                <p class="mt-1 text-sm font-medium text-stone-800 dark:text-neutral-100 uppercase">
+                                    {{ $viewClient['currency'] }} {{ $viewClient['hourly_rate'] }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Status
+                                </p>
+
+                                @php
+                                    $statusColors = [
+                                        'active' => 'bg-green-100 text-green-700 border border-green-400
+                                 dark:bg-green-900/30 dark:text-green-300 dark:border-green-500',
+
+                                        'inactive' => 'bg-red-100 text-red-700 border border-red-400
+                                 dark:bg-red-900/30 dark:text-red-300 dark:border-red-500',
+
+                                        'lead' => 'bg-amber-100 text-amber-700 border border-amber-400
+                                 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-500',
+                                    ];
+                                @endphp
+
+                                <span
+                                    class="inline-flex items-center mt-1 px-3 py-1 rounded-full text-xs font-semibold
+                               {{ $statusColors[$viewClient['status']] ?? 'bg-stone-100 text-stone-700 dark:bg-neutral-700 dark:text-neutral-300' }}">
+                                    {{ ucfirst($viewClient['status']) }}
+                                </span>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <p class="text-xs uppercase tracking-wide text-stone-500 dark:text-neutral-400">Private
+                                    Notes</p>
+                                <p class="mt-1 text-sm text-stone-700 dark:text-neutral-200 whitespace-pre-line">
+                                    {{ $viewClient['private_notes'] ?? '—' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Footer --}}
+                    <div class="px-6 py-4 border-t border-stone-200 dark:border-neutral-700 flex justify-end">
+                        <button wire:click="$set('showDetails', false)"
+                            class="rounded-md px-4 py-2 text-sm font-medium
+                       border border-stone-300 text-stone-700 hover:bg-stone-100
+                       dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     @endif
 </div>

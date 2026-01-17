@@ -23,7 +23,7 @@
 
             <x-input-field model="billing_address" type="textarea" placeholder="Billing Address...."
                 label="Billing Address" required />
-
+            
 
             <div class="flex flex-col lg:flex-row gap-2">
                 <x-input-field model="hrate" type="number" placeholder="Hourly rate" label="Hourly Rate" required />

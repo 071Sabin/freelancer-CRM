@@ -11,7 +11,9 @@ use Livewire\Component;
 class EditClientForm extends Component
 {
     public bool $open = false;
+    public bool $showDetails = false;
     public array $editClient = [];
+    public array $viewClient = [];
 
     #[On('edit-client')]
     public function openEdit(int $clientId): void
@@ -20,6 +22,17 @@ class EditClientForm extends Component
         $client = Client::findOrFail($clientId);
         $this->editClient = $client->toArray();
         $this->open = true;
+    }
+
+    #[On('view-client')]
+    public function viewClientPopup($clientId){
+        $client=Client::findOrFail($clientId);
+        $this->viewClient = $client->toArray();
+        $this->showDetails = true;
+    }
+
+    public function closeView(){
+        $this->reset(['showDetails', 'viewClient']);
     }
 
     public function closeEdit(): void
@@ -63,7 +76,7 @@ class EditClientForm extends Component
             : null;
 
         $client->save();
-        $this->dispatch('refreshDatatable');
+        $this->dispatch('refreshDatatable');    
         // $client->update([
         //     'client_name' => strtolower($this->editClient['client_name']),
         //     'company_name' => strtolower($this->companyname),

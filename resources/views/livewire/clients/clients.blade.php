@@ -84,9 +84,6 @@
 
     @if ($clientCount > 0)
         <div class="border-none">
-            <p>individual edit button is remaining, + separate the form add/edit modal in components so it remains clean
-            </p>
-
             <livewire:clients.clients-table />
         </div>
     @else

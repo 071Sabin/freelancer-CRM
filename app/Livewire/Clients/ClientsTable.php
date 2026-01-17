@@ -123,6 +123,8 @@ class ClientsTable extends DataTableComponent
             'default-styling' => true,
         ]);
 
+
+
         // this is the row per page drop down 10, 20, 30 50 etc... beside of clolumns menu
         $this->setPerPageFieldAttributes([
             'class' => 'py-2 border px-1 dark:' . $this->tableOddRowBg, // Add these classes to the dropdown
@@ -142,12 +144,24 @@ class ClientsTable extends DataTableComponent
                 ->sortable(),
             Column::make("Client name", "client_name")
                 ->sortable()->format(fn($value) => ucfirst($value))->searchable(),
-            Column::make("Company name", "company_name")
-                ->sortable()->format(fn($value) => ucfirst($value))->searchable(),
-            // Column::make("Company email", "company_email")
-            //     ->sortable(),
-            // Column::make("Company website", "company_website")
-            //     ->sortable(),
+            Column::make('Company', 'company_name')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row) {
+                    return '
+                            <div class="flex flex-col leading-tight">
+                                <span class="font-medium text-stone-800 dark:text-neutral-100">
+                                    ' . e(ucfirst($value)) . '
+                                </span>
+
+                                <span class="text-xs text-stone-500 dark:text-neutral-400">
+                                    ' . e($row->company_email ?? '—') . '
+                                </span>
+                            </div>';
+                })
+                ->html(),
+            Column::make("Company Email", "company_email")
+                ->hideIf(true),
             // Column::make("Company phone", "company_phone")
             //     ->sortable(),
             // Column::make("Billing address", "billing_address")
@@ -159,21 +173,29 @@ class ClientsTable extends DataTableComponent
             Column::make('Status', 'status')
                 ->format(fn($value) => match ($value) {
 
-                    'active' => '<span class="
-                                    inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
-                                    bg-green-100 text-green-700
-                                    border border-green-400
-                                    dark:bg-green-900/30 dark:text-green-300 dark:border-green-500">
-                                    Active
-                                </span>',
+                        'active' => '<span class="
+                        inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
+                        bg-green-100 text-green-700
+                        border border-green-400
+                        dark:bg-green-900/30 dark:text-green-300 dark:border-green-500">
+                        Active
+                    </span>',
 
-                    'inactive' => '<span class="
-                                    inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
-                                    bg-red-100 text-red-700
-                                    border border-red-400
-                                    dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">
-                                    Inactive
-                                </span>',
+                        'inactive' => '<span class="
+                        inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
+                        bg-red-100 text-red-700
+                        border border-red-400
+                        dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">
+                        Inactive
+                    </span>',
+
+                        'lead' => '<span class="
+                        inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
+                        bg-amber-100 text-amber-700
+                        border border-amber-400
+                        dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-500">
+                        Lead
+                    </span>',
 
                     default => '<span class="text-gray-500 dark:text-gray-400 text-xs">
                                     Unknown
@@ -187,13 +209,37 @@ class ClientsTable extends DataTableComponent
                 ->sortable(),
             Column::make('Actions')
                 ->label(fn($row) => '
-        <button
-            wire:click="$dispatch(\'edit-client\', [' . $row->id . ']).window"
-            class="px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-            Edit
-        </button>
-    ')
+                
+                    <div class="flex items-center justify-center gap-1">
+
+                        <button
+                            type="button"
+                            wire:click="$dispatch(\'edit-client\', ['.$row->id.']).window"
+                            class="inline-flex items-center justify-center w-9 h-9 rounded-md
+                                text-blue-600 hover:text-blue-700
+                                bg-blue-50 hover:bg-blue-100
+                                dark:text-blue-400 dark:bg-blue-900/30 dark:hover:bg-blue-900/50
+                                transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            title="Edit Client">
+                            <i class="bi bi-pencil-square text-base"></i>
+                        </button>
+
+                        <button
+                            type="button"
+                            wire:click="$dispatch(\'view-client\', ['.$row->id.']).window"
+                            class="inline-flex items-center justify-center w-9 h-9 rounded-md
+                                text-emerald-600 hover:text-emerald-700
+                                bg-emerald-50 hover:bg-emerald-100
+                                dark:text-emerald-400 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50
+                                transition focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                            title="View Client">
+                            <i class="bi bi-eye text-base"></i>
+                        </button>
+
+                    </div>
+
+                
+                ')
                 ->html(),
         ];
     }
