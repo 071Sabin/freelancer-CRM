@@ -55,6 +55,7 @@
     @if ($showAddProjects)
         <x-projects.show-add-project-form :clients="$clients" />
     @endif
+    <livewire:projects.edit-project-form />
 
     @if ($projectCount > 0)
         <livewire:projects.projects-table />

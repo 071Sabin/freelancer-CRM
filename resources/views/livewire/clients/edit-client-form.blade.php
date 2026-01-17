@@ -5,8 +5,7 @@
         </x-success-message>
     @endif
     @if ($open)
-        <div class="modal fixed inset-0 z-99 bg-black/50 backdrop-blur-md
-           overflow-y-auto px-4 py-6">
+        <div class="modal fixed inset-0 z-99 bg-black/50 backdrop-blur-md overflow-y-auto px-4 py-6">
 
             <div class="min-h-full flex items-start justify-center">
 

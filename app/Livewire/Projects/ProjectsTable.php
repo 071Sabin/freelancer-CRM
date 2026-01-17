@@ -182,25 +182,25 @@ class ProjectsTable extends DataTableComponent
 
                         <button
                             type="button"
-                            wire:click="$dispatch(\'edit-client\', [' . $row->id . ']).window"
+                            wire:click="$dispatch(\'edit-project\', [' . $row->id . ']).window"
                             class="inline-flex items-center justify-center w-9 h-9 rounded-md
                                 text-blue-600 hover:text-blue-700
                                 bg-blue-50 hover:bg-blue-100
                                 dark:text-blue-400 dark:bg-blue-900/30 dark:hover:bg-blue-900/50
                                 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            title="Edit Client">
+                            title="Edit Project">
                             <i class="bi bi-pencil-square text-base"></i>
                         </button>
 
                         <button
                             type="button"
-                            wire:click="$dispatch(\'view-client\', [' . $row->id . ']).window"
+                            wire:click="$dispatch(\'view-project\', [' . $row->id . ']).window"
                             class="inline-flex items-center justify-center w-9 h-9 rounded-md
                                 text-emerald-600 hover:text-emerald-700
                                 bg-emerald-50 hover:bg-emerald-100
                                 dark:text-emerald-400 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50
                                 transition focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                            title="View Client">
+                            title="View Project">
                             <i class="bi bi-eye text-base"></i>
                         </button>
 

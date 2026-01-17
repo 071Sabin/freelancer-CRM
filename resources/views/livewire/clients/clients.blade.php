@@ -71,11 +71,8 @@
             <x-clients.show-add-client-form />
         @endif
 
-        {{-- @if ($showEditModal)
-            <x-show-edit-client-form />
-            <livewire:edit-client-form/>
-        @endif --}}
         <livewire:clients.edit-client-form />
+        
     </div>
 
     @if ($clientCount > 0)
