@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/clients', Clients::class)->name('clients');
     Route::get('/projects', Projects::class)->name('projects');
+    
 
     Route::get('/settings', Settings::class)->name('settings');
     Route::post('/logout', [Dashboard::class, 'logout'])->name('logout');

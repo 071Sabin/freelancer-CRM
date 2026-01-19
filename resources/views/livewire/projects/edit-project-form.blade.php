@@ -22,7 +22,7 @@
                         </button>
                     </h1>
 
-                    <x-hr-divider/>
+                    <x-hr-divider />
 
                     <div class="lg:grid grid-cols-2 gap-3">
 
@@ -64,10 +64,11 @@
                             <select wire:model="editProject.status"
                                 class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-150"
                                 required>
-                                <option value="">-- Select Status --</option>
-                                <option value="pending">Pending</option>
+                                <option value="active">Active</option>
                                 <option value="in-progress">In Progress</option>
+                                <option value="on-hold">On Hold</option>
                                 <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
                             </select>
                             @error('editProject.status')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

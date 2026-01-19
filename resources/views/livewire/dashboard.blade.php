@@ -13,12 +13,13 @@
         </x-dashboard-card>
 
         <!-- Projects -->
-        <x-dashboard-card heading="Projects In-Progress" value="{{ $progressProjects }}" dataOverTime="2 in progress"
-            icon='<i class="bi bi-kanban text-gray-400 text-lg"></i>' dataColor="text-blue-500">
+        <x-dashboard-card heading="Active Projects" value="{{ $activeProjects }}"
+            dataOverTime="{{ $progressProjects }} in progress" icon='<i class="bi bi-kanban text-gray-400 text-lg"></i>'
+            dataColor="text-blue-500">
         </x-dashboard-card>
 
         <!-- Revenue -->
-        <x-dashboard-card heading="Total Revenue" value="$4,250" dataOverTime="+12% growth"
+        <x-dashboard-card heading="Total Revenue" value="$0" dataOverTime="+12% growth"
             icon='<i class="bi bi-currency-dollar text-gray-400 text-lg"></i>'>
         </x-dashboard-card>
 
@@ -41,40 +42,35 @@
             </h2>
 
             <div class="divide-y divide-neutral-200 dark:divide-neutral-700">
-                <div class="py-4 flex items-center justify-between">
-                    <div>
-                        <p class="font-medium text-gray-800 dark:text-gray-100">Website Redesign</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Client: Alpha Co.</p>
-                    </div>
-                    <span
-                        class="px-2.5 py-1 rounded text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-                        In Progress
-                    </span>
-                </div>
+                @foreach ($recentProjects as $rp)
+                    <div class="py-4 flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-gray-800 dark:text-gray-100 capitalize">{{ $rp->name }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 capitalize">Client:
+                                {{ $rp->client->client_name }}</p>
+                        </div>
 
-                <div class="py-4 flex items-center justify-between">
-                    <div>
-                        <p class="font-medium text-gray-800 dark:text-gray-100">Logo Design</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Client: Freelance Hub</p>
+                        {{-- this php is to set the recent projects status colors, in dashboard --}}
+                        @php
+                            $statusClasses = match ($rp->status) {
+                                'active' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+                                'in-progress' => 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+                                'on-hold' => 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300',
+                                'completed' => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+                                'cancelled' => 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300',
+                                default => 'bg-gray-100 text-gray-500 dark:bg-gray-900 dark:text-gray-400',
+                            };
+                        @endphp
+                        <span class="px-2.5 py-1 rounded text-xs font-semibold capitalize {{ $statusClasses }}">
+                            {{ str_replace('-', ' ', $rp->status) }}
+                        </span>
                     </div>
-                    <span
-                        class="px-2.5 py-1 rounded text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                        Completed
-                    </span>
-                </div>
-
-                <div class="py-4 flex items-center justify-between">
-                    <div>
-                        <p class="font-medium text-gray-800 dark:text-gray-100">SEO Optimization</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Client: Bright Foods</p>
-                    </div>
-                    <span
-                        class="px-2.5 py-1 rounded text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300">
-                        Pending
-                    </span>
-                </div>
+                @endforeach
             </div>
         </div>
+        
+        
+
 
         <!-- Quick Actions -->
         <div
@@ -85,7 +81,7 @@
             </h2>
 
             <div class="flex flex-col gap-3">
-                <a href="#" class="px-4 py-2 bg-indigo-600 text-white text-center rounded-lg hover:bg-indigo-700">
+                <a href="{{ route('projects') }}" class="px-4 py-2 bg-indigo-600 text-white text-center rounded-lg hover:bg-indigo-700">
                     + New Project
                 </a>
                 <a href="{{ route('clients') }}" wire:navigate

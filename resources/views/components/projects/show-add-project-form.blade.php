@@ -13,7 +13,7 @@
                 </button>
             </div>
 
-            <x-hr-divider/>
+            <x-hr-divider />
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
@@ -63,9 +63,11 @@
                             class="text-red-500">*</span></label>
                     <select wire:model="status"
                         class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
                         <option value="in-progress">In Progress</option>
+                        <option value="on-hold">On Hold</option>
                         <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                     @error('status')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
