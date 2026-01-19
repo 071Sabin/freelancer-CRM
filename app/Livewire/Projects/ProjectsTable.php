@@ -22,7 +22,7 @@ class ProjectsTable extends DataTableComponent
         // $this->setSearchIcon('heroicon-m-magnifying-glass');
 
 
-        $this->setSearchPlaceholder('Search Clients...');
+        $this->setSearchPlaceholder('Search Projects...');
 
         $this->setSearchFieldAttributes([
             'class' => 'px-2 py-2 sm:w-100 lg:w-fit rounded-lg dark:' . $this->thBg,

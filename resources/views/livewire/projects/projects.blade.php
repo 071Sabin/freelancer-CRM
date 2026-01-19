@@ -20,15 +20,14 @@
         <div
             class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
             <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Total Projects</p>
-            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">0
-            </p>
+            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $projectCount }}</p>
             <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">All time</p>
         </div>
 
         <div
             class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
             <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Active Projects</p>
-            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">0</p>
+            <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">{{ $progressProjects }}</p>
             <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">Ongoing</p>
         </div>
 

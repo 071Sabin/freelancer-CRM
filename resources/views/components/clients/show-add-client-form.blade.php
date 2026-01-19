@@ -3,12 +3,14 @@
         <div class="bg-white dark:bg-neutral-800 rounded-lg w-full lg:w-1/2 m-1 p-5">
             <div class="flex justify-between">
                 <h3 class="text-xl font-semibold">Add New Client</h3>
-                <button wire:click="toggleAddClient" class="text-neutral-400 hover:text-red-500 cursor-pointer"
-                    aria-label="Close">
+                <button wire:click="toggleAddClient" type="button"
+                    class="text-neutral-400 hover:text-red-500 cursor-pointer" aria-label="Close">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
-            <hr class="mt-5 text-neutral-300 dark:text-neutral-700">
+            
+            <x-hr-divider/>
+
             <div class="lg:grid grid-cols-2 gap-3 my-6">
                 <x-input-field model="clientname" type="text" placeholder="Enter client name" label="Client Name"
                     required />

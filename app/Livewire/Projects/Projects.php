@@ -12,9 +12,9 @@ use Livewire\Attributes\Title;
 
 class Projects extends Component
 {
-    public $clients, $allProjects, $projectCount;
+    public $clients, $allProjects, $projectCount, $progressProjects;
     public $showAddProjects = false;
-    public $name, $value, $description, $client_id, $status;
+    public $name, $value, $description, $client_id, $status = 'pending';
 
     public function createProject()
     {
@@ -27,13 +27,15 @@ class Projects extends Component
         ]);
 
         $p = new Project();
-        $p->name = $this->name;
-        $p->description = $this->description;
+        $p->name = strtolower($this->name);
+        $p->description = strtolower($this->description);
         $p->value = $this->value;
         $p->client_id = $this->client_id;
         $p->status = $this->status;
-        
+
         $p->save();
+        $this->showAddProjectsForm();
+        $this->dispatch('refreshDatatable');
 
         // Reset form fields
         $this->reset(['name', 'description', 'value', 'client_id', 'status']);
@@ -52,6 +54,7 @@ class Projects extends Component
     {
         if ($this->showAddProjects) {
             $this->showAddProjects = false;
+            $this->reset(['name', 'description', 'value', 'client_id', 'status']);
             return;
         }
         $this->showAddProjects = true;
@@ -61,6 +64,7 @@ class Projects extends Component
     public function render()
     {
         $this->projectCount = Project::count();
+        $this->progressProjects = Project::where('status', 'in-progress')->count();
         return view('livewire.projects.projects');
     }
 }

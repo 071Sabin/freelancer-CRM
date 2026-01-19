@@ -9,19 +9,19 @@
 
             <div class="min-h-full flex items-start justify-center">
 
-                <form wire:submit="saveClientEdit"
-                    class="bg-white dark:bg-neutral-800 rounded-lg
-                   w-full max-w-3xl lg:max-w-5xl
-                   p-5">
+                <form wire:submit="saveClientEdit" class="bg-white dark:bg-neutral-800 rounded-lg w-full max-w-3xl p-5">
 
                     <h1 class="text-xl font-bold flex justify-between">
                         Edit Client Details
-                        <button wire:click="closeEdit" type="button">
-                            <i class="bi bi-x-lg text-red-500 cursor-pointer"></i>
+
+                        <button wire:click="closeEdit" type="button"
+                            class="text-neutral-400 hover:text-red-500 cursor-pointer">
+                            <i class="bi bi-x-lg"></i>
                         </button>
+
                     </h1>
 
-                    <hr class="text-neutral-300 dark:bg-neutral-700 my-5">
+                    <x-hr-divider/>
 
                     <div class="lg:grid grid-cols-2 gap-3">
                         <!-- Row 1 -->

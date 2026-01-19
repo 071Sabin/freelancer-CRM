@@ -12,17 +12,17 @@
 
                 <form wire:submit="saveProjectEdit"
                     class="bg-white dark:bg-neutral-800 rounded-lg
-                   w-full max-w-3xl lg:max-w-5xl
+                   w-full max-w-3xl
                    p-5">
 
                     <h1 class="text-xl font-bold flex justify-between">
                         Edit Project Details
-                        <button wire:click="closeEditProject" type="button">
+                        <button wire:click="closeEdit" type="button">
                             <i class="bi bi-x-lg text-red-500 cursor-pointer"></i>
                         </button>
                     </h1>
 
-                    <hr class="text-neutral-300 dark:bg-neutral-700 my-5">
+                    <x-hr-divider/>
 
                     <div class="lg:grid grid-cols-2 gap-3">
 

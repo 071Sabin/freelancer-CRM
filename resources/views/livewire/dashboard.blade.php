@@ -13,7 +13,7 @@
         </x-dashboard-card>
 
         <!-- Projects -->
-        <x-dashboard-card heading="Active Projects" value="5" dataOverTime="2 in progress"
+        <x-dashboard-card heading="Projects In-Progress" value="{{ $progressProjects }}" dataOverTime="2 in progress"
             icon='<i class="bi bi-kanban text-gray-400 text-lg"></i>' dataColor="text-blue-500">
         </x-dashboard-card>
 

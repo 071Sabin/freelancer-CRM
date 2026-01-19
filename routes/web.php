@@ -7,10 +7,15 @@ use App\Livewire\Login;
 use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if(Auth::user()){
+        return redirect()->route('dashboard');
+    }
     return view('welcome');
+
 })->name('welcome');
 
 

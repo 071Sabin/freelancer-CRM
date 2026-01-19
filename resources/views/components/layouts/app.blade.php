@@ -78,19 +78,21 @@
                 </li>
                 <li>
                     <a href="{{ route('freelancers') }}"
-                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" wire:navigate>
                         Freelancers
                     </a>
                 </li>
 
                 <li>
-                    <a href="#pricing" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    <a href="#pricing" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                        wire:navigate>
                         Pricing
                     </a>
                 </li>
 
                 <li>
-                    <a href="#about" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    <a href="#about" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                        wire:navigate>
                         About
                     </a>
                 </li>
@@ -104,10 +106,7 @@
 
             <!-- Mobile Menu Button -->
             <button
-                class="md:hidden p-2 rounded-xl border 
-        border-neutral-300 dark:border-neutral-700
-        hover:bg-neutral-100 dark:hover:bg-neutral-800 
-        transition-colors duration-300">
+                class="md:hidden p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-300">
                 ☰
             </button>
         </nav>
@@ -231,23 +230,10 @@
 
                 <!-- Buttons -->
                 <div class="flex justify-end gap-3">
-
-                    <!-- Cancel -->
-                    <button onclick="closeSignoutModal()"
-                        class="px-4 py-2 rounded-lg text-sm font-medium
-                       bg-stone-200 hover:bg-stone-300 dark:bg-stone-700 dark:hover:bg-stone-600
-                       text-stone-800 dark:text-stone-100">
-                        Cancel
-                    </button>
-
-                    <!-- Sign Out -->
+                    <x-secondary-button onclick="closeSignoutModal()">cancel</x-secondary-button>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit"
-                            class="px-4 py-2 rounded-lg text-sm font-medium
-                           bg-red-600 hover:bg-red-700 text-white">
-                            Sign Out
-                        </button>
+                        <x-danger-button type="submit">sign out</x-danger-button>
                     </form>
                 </div>
             </div>
