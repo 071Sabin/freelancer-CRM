@@ -144,7 +144,7 @@ class ClientsTable extends DataTableComponent
                 return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e(ucfirst($value)) . '
+                                ' . e(ucwords($value)) . '
                             </span>
 
                             <span class="text-xs text-stone-500 dark:text-neutral-400">
@@ -161,7 +161,7 @@ class ClientsTable extends DataTableComponent
                     return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e(ucfirst($value)) . '
+                                ' . e(ucwords($value)) . '
                             </span>
 
                             <span class="text-xs text-stone-500 dark:text-neutral-400">

@@ -1,4 +1,3 @@
-@section('title', 'ClientPivot | Clients')
 
 <div class="">
 
@@ -52,7 +51,7 @@
             class="p-6 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 shadow-sm">
             <p class="text-sm font-medium text-neutral-500 dark:text-neutral-400">New This Month</p>
             <p class="mt-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100">
-                {{ $clientDetails->where('created_at', '>=', now()->startOfMonth())->count() }}</p>
+                {{ $thisMonthClients }}</p>
             <p class="mt-1 text-xs text-neutral-500 dark:text-neutral-400">This month</p>
         </div>
     </div>
@@ -70,9 +69,8 @@
         @if ($showAddClientForm)
             <x-clients.show-add-client-form />
         @endif
-
         <livewire:clients.edit-client-form />
-        
+
     </div>
 
     @if ($clientCount > 0)

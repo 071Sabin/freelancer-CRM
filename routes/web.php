@@ -3,6 +3,7 @@
 use App\Livewire\Clients\Clients;
 use App\Livewire\Dashboard;
 use App\Livewire\FreelancerDetails;
+use App\Livewire\Invoices\Invoice;
 use App\Livewire\Login;
 use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/clients', Clients::class)->name('clients');
     Route::get('/projects', Projects::class)->name('projects');
+    Route::get('/invoices', Invoice::class)->name('invoices');
     
 
     Route::get('/settings', Settings::class)->name('settings');

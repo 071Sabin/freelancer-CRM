@@ -70,7 +70,7 @@
             </div>
 
             <!-- Desktop Links -->
-            <ul class="hidden md:flex items-center gap-8 text-lg font-medium">
+            <ul class="hidden md:flex items-center gap-8 text-md font-medium">
                 <li>
                     <a href="#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                         Features
@@ -97,9 +97,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('register') }}"
-                        class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" wire:navigate>
-                        Register
+                    <a href="{{ route('login') }}" wire:navigate
+                        class="px-6 py-4 rounded-xl text-white font-semibold bg-indigo-600 hover:bg-indigo-700
+                   dark:bg-indigo-500 dark:hover:bg-indigo-600 transition shadow-lg shadow-indigo-600/20">
+                        Get Started
                     </a>
                 </li>
             </ul>
@@ -120,8 +121,7 @@
             <flux:sidebar sticky collapsible
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
                 <flux:sidebar.header>
-                    <flux:sidebar.brand href="#" logo="https://fluxui.dev/img/demo/logo.png"
-                        logo:dark="https://fluxui.dev/img/demo/dark-mode-logo.png" name="ClientPivot" />
+                    <flux:sidebar.brand href="{{ route('dashboard') }}" logo="{{asset('/uploads/clientpivot-logo-cropped.png')}}" name="ClientPivot" />
                     <flux:sidebar.collapse
                         class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
                 </flux:sidebar.header>
@@ -134,7 +134,7 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document-text" href="{{ route('projects') }}" wire:navigate
                         :current="request()->routeIs('projects')">Projects</flux:sidebar.item>
-                    <flux:sidebar.item icon="document-currency-dollar" href="#" wire:navigate
+                    <flux:sidebar.item icon="document-currency-dollar" href="{{ route('invoices') }}" wire:navigate
                         :current="request()->routeIs('invoices')">Invoices
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="cog" href="#" wire:navigate :current="request()->routeIs('aibyok')">

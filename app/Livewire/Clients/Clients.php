@@ -13,7 +13,7 @@ use Livewire\Attributes\Title;
 
 class Clients extends Component
 {
-    public $clientname, $companyname, $companyemail, $website, $companyphone;
+    public $clientname, $companyname, $companyemail, $website, $companyphone, $thisMonthClients;
     public $billing_address, $hrate, $currency, $clientemail, $status, $privatenote, $clientDetails, $clientCount;
     
     public $editClient = [];
@@ -89,6 +89,8 @@ class Clients extends Component
     {
         $this->clientCount = Client::count();
         $this->clientDetails = Client::all();
+        // this displays the count of clients this month of this year.
+        $this->thisMonthClients = Client::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
         return view('livewire.clients.clients');
     }
 }

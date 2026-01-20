@@ -12,7 +12,7 @@ use Livewire\Attributes\Title;
 
 class Projects extends Component
 {
-    public $clients, $allProjects, $projectCount, $progressProjects;
+    public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
     public $showAddProjects = false;
     public $name, $value, $description, $client_id, $status = 'pending';
 
@@ -47,6 +47,9 @@ class Projects extends Component
     {
         $this->clients = Client::all();
         $this->allProjects = Project::all();
+        $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
     }
 
 

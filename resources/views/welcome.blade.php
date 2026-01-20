@@ -18,7 +18,7 @@
 
         <!-- CTA Buttons -->
         <div class="flex flex-wrap items-center gap-4 mt-10">
-            <a href="#get-started"
+            <a href="{{route('login')}}" wire:navigate
                 class="px-8 py-4 rounded-xl text-white font-semibold bg-indigo-600 hover:bg-indigo-700
                    dark:bg-indigo-500 dark:hover:bg-indigo-600 transition shadow-lg shadow-indigo-600/20">
                 Get Started

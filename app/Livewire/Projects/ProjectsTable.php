@@ -5,6 +5,7 @@ namespace App\Livewire\Projects;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Project;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
@@ -130,13 +131,24 @@ class ProjectsTable extends DataTableComponent
         ]);
     }
 
+    public function query(): Builder
+    {
+        return Project::query()
+            ->with('client'); // ✅ avoid N+1 queries
+    }
+
     public function columns(): array
     {
         return [
             Column::make("Id", "id")
                 ->sortable(),
             Column::make("Name", "name")
-                ->sortable()->searchable(),
+                ->sortable()->searchable()->format(function ($value, $row) {
+                    return (ucwords($value));
+                }),
+            Column::make('Client', 'client.client_name')->searchable()->sortable()->format(function ($value) {
+                return (e(ucwords($value)));
+            }),
             Column::make("Value", "value")
                 ->sortable(),
 
@@ -247,13 +259,15 @@ class ProjectsTable extends DataTableComponent
                     'completed' => 'Completed',
                     'cancelled' => 'Cancelled',
                 ])
-
-                ->filter(function ($query, $value) {
+                // Explicitly qualify `projects.status` to avoid SQL ambiguity when joins exist.
+                // This filter applies ONLY to the project lifecycle status, not client status.
+                ->filter(function (Builder $query, $value) {
                     if ($value === '') {
-                        return;
-                    }
-                    $query->where('status', $value);
-                }),
+                        return $query; // No filter applied when "All" is selected
+                }
+                    return $query->where('projects.status', $value);
+                })
+
         ];
     }
 
