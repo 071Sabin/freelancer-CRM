@@ -36,7 +36,8 @@ Read-heavy table (dashboards)
 *****************************************************************************
 =============================================================================
 TABLE: invoice_items
-// this table is to create different items in invooice like backend, ui fix and how much each of these cost then total of those.
+// this table is to create different items in invooice like backend, ui fix and how much each of these cost then total
+of those.
 // trying to keep all these in single table will corrupt the data.
 
 id
@@ -126,4 +127,3 @@ Trust in financial data
 =============================================================================
 *****************************************************************************
 =============================================================================
-

@@ -2,18 +2,17 @@
 
 namespace App\Livewire\Invoices;
 
+use App\Models\Invoice as ModelsInvoice;
 use App\Models\InvoiceSetting;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('ClientPivot | Invoice')]
+#[Title('ClientPivot | Invoices')]
 class Invoice extends Component
 {
-
-
-    public $client_id;
-    public $project_id;
+    public $client_id="", $invoices;
+    public $project_id="";
     public $issue_date;
     public $due_date;
 
@@ -48,7 +47,7 @@ class Invoice extends Component
         );
 
         // Create draft invoice
-        $invoice = Invoice::create([
+        $invoice = ModelsInvoice::create([
             'user_id'        => $user->id,
             'client_id'      => $this->client_id,
             'project_id'     => $this->project_id,
@@ -67,11 +66,12 @@ class Invoice extends Component
         $settings->increment('next_number');
 
         // Redirect to edit screen
-        return redirect()->route('invoices.edit', $invoice->id());
+        return redirect()->route('invoices');
     }
 
     public function render()
     {
+        $this->invoices=Invoice::all();
         return view('livewire.invoices.invoice');
     }
 }
