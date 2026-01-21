@@ -248,8 +248,6 @@ class ClientsTable extends DataTableComponent
                         </button>
 
                     </div>
-
-                
                 ')
                 ->html(),
         ];

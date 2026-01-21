@@ -80,20 +80,7 @@ class EditClientForm extends Component
             : null;
 
         $client->save();
-        $this->dispatch('refreshDatatable');    
-        // $client->update([
-        //     'client_name' => strtolower($this->editClient['client_name']),
-        //     'company_name' => strtolower($this->companyname),
-        //     'company_email' => strtolower($this->companyemail),
-        //     'company_website' => strtolower($this->companywebsite),
-        //     'company_phone' => $this->companyphone,
-        //     'billing_address' => strtolower($this->billingaddress),
-        //     'hourly_rate' => $this->hourlyrate,
-        //     'currency' => $this->currency,
-        //     'status' => strtolower($this->status),
-        //     'private_notes' => strtolower($this->privatenotes),
-        // ]);
-
+        $this->dispatch('refreshDatatable');
 
         // $this->dispatch('client-updated');
         $this->closeEdit();

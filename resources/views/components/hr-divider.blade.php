@@ -1,1 +1,1 @@
-<hr class="text-neutral-300 dark:text-neutral-600 my-5">
+<hr class="text-neutral-200 dark:text-neutral-600 my-5">

@@ -13,7 +13,6 @@ use Livewire\Attributes\Title;
 class Projects extends Component
 {
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
-    public $showAddProjects = false;
     public $name, $value, $description, $client_id, $status = 'pending';
 
     public function createProject()
@@ -41,33 +40,17 @@ class Projects extends Component
         $this->reset(['name', 'description', 'value', 'client_id', 'status']);
         return back()->with('success', 'Project created successfully!');
     }
-
-
-    public function mount()
-    {
-        $this->clients = Client::all();
-        $this->allProjects = Project::all();
-        $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-    }
-
-
-    public function showAddProjectsForm()
-    {
-        if ($this->showAddProjects) {
-            $this->showAddProjects = false;
-            $this->reset(['name', 'description', 'value', 'client_id', 'status']);
-            return;
-        }
-        $this->showAddProjects = true;
-    }
-
+    
 
     public function render()
     {
         $this->projectCount = Project::count();
         $this->progressProjects = Project::where('status', 'in-progress')->count();
+        $this->clients = Client::all();
+        $this->allProjects = Project::all();
+        $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
         return view('livewire.projects.projects');
     }
 }

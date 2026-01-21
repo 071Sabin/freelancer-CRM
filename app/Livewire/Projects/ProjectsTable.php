@@ -152,7 +152,7 @@ class ProjectsTable extends DataTableComponent
             Column::make("Value", "value")
                 ->sortable(),
 
-            Column::make('Status', 'status')
+            Column::make('Status', 'status')->sortable()
                 ->format(fn($value) => match ($value) {
 
                     'active' => '
@@ -266,10 +266,14 @@ class ProjectsTable extends DataTableComponent
                         return $query; // No filter applied when "All" is selected
                 }
                     return $query->where('projects.status', $value);
-                })
+                }),
+            
+                
 
         ];
     }
+
+    
 
     public function bulkActions(): array
     {

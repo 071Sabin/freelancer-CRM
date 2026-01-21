@@ -74,7 +74,51 @@
         </div>
 
     </div>
+    <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
+        <flux:modal.trigger name="create-invoice">
+            <x-primary-button><i class="bi bi-plus-lg font-bold"></i> create invoice</x-primary-button>
+        </flux:modal.trigger>
+    </div>
 
+
+    <flux:modal name="create-invoice" class="max-w-lg">
+
+        <form wire:submit.prevent="create" class="space-y-6">
+
+            <div>
+                <flux:heading size="lg">Create Invoice</flux:heading>
+                <flux:text class="text-neutral-500">
+                    Create a draft invoice to start adding items and taxes.
+                </flux:text>
+            </div>
+
+            <flux:select label="Client" wire:model.defer="client_id" placeholder="Select client">
+                @foreach (\App\Models\Client::all() as $client)
+                    <option value="{{ $client->id }}">
+                        {{ $client->name }}
+                    </option>
+                @endforeach
+            </flux:select>
+
+            <flux:select label="Project" wire:model.defer="project_id" placeholder="Select project">
+                @foreach (\App\Models\Project::all() as $project)
+                    <option value="{{ $project->id }}">
+                        {{ $project->name }}
+                    </option>
+                @endforeach
+            </flux:select>
+
+            <flux:input type="date" label="Issue Date" wire:model.defer="issue_date" />
+
+            <flux:input type="date" label="Due Date" wire:model.defer="due_date" />
+
+            <div class="flex justify-end gap-3">
+                <x-primary-button type="submit">create invoice</x-primary-button>
+            </div>
+
+        </form>
+
+    </flux:modal>
 
 
 

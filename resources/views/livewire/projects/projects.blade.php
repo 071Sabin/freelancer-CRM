@@ -42,18 +42,16 @@
 
 
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-        {{-- <button wire:click="showAddProjectsForm"
-            class="inline-flex items-center px-4 cursor-pointer py-2 rounded-md shadow-sm text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 w-full sm:w-auto justify-center">
-            
-        </button> --}}
-        <x-primary-button wire:click="showAddProjectsForm">
-            <i class="bi bi-plus-lg font-bold"></i> Add Project
-        </x-primary-button>
+        <flux:modal.trigger name="add-project">
+            <x-primary-button>
+                <i class="bi bi-plus-lg font-bold"></i> Add Project
+            </x-primary-button>
+        </flux:modal.trigger>
     </div>
 
-    @if ($showAddProjects)
-        <x-projects.show-add-project-form :clients="$clients" />
-    @endif
+
+    <x-projects.show-add-project-form :clients="$clients" />
+
     <livewire:projects.edit-project-form />
 
 

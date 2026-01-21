@@ -1,4 +1,3 @@
-
 <div class="">
 
     <div class="mb-8">
@@ -59,16 +58,18 @@
 
 
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-        <x-primary-button wire:click="toggleAddClient">
-            <i class="bi bi-plus-lg font-bold"></i> add client
-        </x-primary-button>
+        <flux:modal.trigger name="add-client">
+            <x-primary-button>
+                <i class="bi bi-plus-lg font-bold"></i> add client
+            </x-primary-button>
+        </flux:modal.trigger>
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
 
-        @if ($showAddClientForm)
-            <x-clients.show-add-client-form />
-        @endif
+
+        <x-clients.show-add-client-form />
+
         <livewire:clients.edit-client-form />
 
     </div>

@@ -17,13 +17,12 @@ class Clients extends Component
     public $billing_address, $hrate, $currency, $clientemail, $status, $privatenote, $clientDetails, $clientCount;
     
     public $editClient = [];
-    public $showEditModal = false;
-    public $showAddClientForm = false;
 
     protected function resetAddClientForm()
     {
         $this->reset([
             'clientname',
+            'clientemail',
             'companyname',
             'companyemail',
             'website',
@@ -39,19 +38,11 @@ class Clients extends Component
         $this->resetValidation();
     }
 
-    public function toggleAddClient()
-    {
-        if ($this->showAddClientForm) {
-            $this->showAddClientForm = false;
-            return;
-        }
-        $this->showAddClientForm = true;
-    }
-
     public function addClient()
     {
         $this->validate([
             'clientname' => 'required|string|max:255',
+            'clientemail' => 'nullable|email|max:255',
             'companyname' => 'required|string|max:255',
             'companyemail' => 'nullable|email|max:255',
             'website' => 'nullable|string|max:255',
@@ -80,7 +71,6 @@ class Clients extends Component
         $this->dispatch('refreshDatatable');
 
         $this->resetAddClientForm();
-        $this->showAddClientForm = false;
 
         session()->flash('success', 'Client added successfully!');
     }
