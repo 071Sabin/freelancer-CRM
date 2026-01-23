@@ -5,6 +5,7 @@ namespace App\Livewire\Invoices;
 use App\Models\Invoice as ModelsInvoice;
 use App\Models\InvoiceSetting;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 

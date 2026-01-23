@@ -135,7 +135,7 @@
                     <flux:sidebar.item icon="document-text" href="{{ route('projects') }}" wire:navigate
                         :current="request()->routeIs('projects')">Projects</flux:sidebar.item>
                     <flux:sidebar.item icon="document-currency-dollar" href="{{ route('invoices') }}" wire:navigate
-                        :current="request()->routeIs('invoices')">Invoices
+                        :current="request()->routeIs('invoices.*')">Invoices
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="cog" href="#" wire:navigate :current="request()->routeIs('aibyok')">
                         AI (BYOK)</flux:sidebar.item>
