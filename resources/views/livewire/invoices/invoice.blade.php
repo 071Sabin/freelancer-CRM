@@ -1,9 +1,7 @@
 <div class="">
 
-    <div class="mb-8">
         <x-main-heading title="Invoices"
             subtitle="Create, send, and track invoices with clear payment status and totals." />
-    </div>
 
     @if (session('success'))
         <x-success-message>

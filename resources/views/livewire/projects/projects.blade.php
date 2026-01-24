@@ -1,8 +1,8 @@
 <div class="">
 
-    <div class="mb-8">
-        <x-main-heading title="Projects" subtitle="Add and manage your projects." />
-    </div>
+
+    <x-main-heading title="Projects" subtitle="Add and manage your projects." />
+
 
     @if (session('success'))
         <div class="mb-6">

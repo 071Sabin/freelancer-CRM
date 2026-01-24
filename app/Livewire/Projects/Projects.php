@@ -13,7 +13,7 @@ use Livewire\Attributes\Title;
 class Projects extends Component
 {
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
-    public $name, $value, $description, $client_id, $status = 'pending';
+    public $name, $value, $description, $client_id, $status = 'active';
 
     public function createProject()
     {
@@ -33,7 +33,6 @@ class Projects extends Component
         $p->status = $this->status;
 
         $p->save();
-        $this->showAddProjectsForm();
         $this->dispatch('refreshDatatable');
 
         // Reset form fields

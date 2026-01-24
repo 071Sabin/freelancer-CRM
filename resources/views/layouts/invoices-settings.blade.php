@@ -1,32 +1,57 @@
 @component('layouts.app')
+    <div class="">
 
-    <flux:heading size="xl">Invoice Settings</flux:heading>
-    <flux:text class="mb-6 text-neutral-500">
-        this is general setting page, all general settings goes here!
-    </flux:text>
+        <x-main-heading title="Invoices" subtitle="Create, send, and track invoices with clear payment status and totals." />
 
-    <div class="flex w-full p-0">
 
-        <!-- Invoices Sidebar -->
-        <flux:sidebar.nav class="">
+        <flux:breadcrumbs class="mb-5">
+            <flux:breadcrumbs.item href="{{route('invoices')}}" wire:navigate>Invoices</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{route('invoices.settings.general')}}" wire:navigate>Settings</flux:breadcrumbs.item>
+        </flux:breadcrumbs>
+        {{-- Layout --}}
+        <div class="flex flex-col lg:flex-row lg:items-start gap-y-10 lg:gap-x-12">
 
-            <flux:sidebar.item icon="document-text"
-                :current="request()->routeIs('invoices.settings.general') && !request()->routeIs('invoices.settings.*')">
-                general
-            </flux:sidebar.item>
+            {{-- Sidebar --}}
+            <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-6">
 
-            <flux:sidebar.item icon="cog-6-tooth" :current="request()->routeIs('invoices.settings')">
-                Settings
-            </flux:sidebar.item>
+                <flux:sidebar.nav class="space-y-1">
 
-        </flux:sidebar.nav>
+                    <div class="px-2 pb-3">
+                        <flux:heading class="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
+                            Invoice Settings
+                        </flux:heading>
+                    </div>
 
-        <flux:separator vertical class="mx-3" />
+                    {{-- Mobile separator --}}
+                    <div class="block lg:hidden border-t border-zinc-200 dark:border-zinc-700 mb-3"></div>
 
-        <!-- Feature Content -->
-        <flux:main>
-            {{ $slot }}
-        </flux:main>
+                    <flux:sidebar.item href="{{ route('invoices.settings.general') }}" icon="cog-6-tooth" wire:navigate
+                        :current="request()->routeIs('invoices.settings.general')">
+                        General
+                    </flux:sidebar.item>
 
+                    <flux:sidebar.item href="{{ route('invoices.settings.payments') }}" icon="currency-dollar" wire:navigate
+                        :current="request()->routeIs('invoices.settings.payments')" disabled>
+                        Payments
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item href="{{ route('invoices.settings.branding') }}" icon="paint-brush" wire:navigate
+                        :current="request()->routeIs('invoices.settings.branding')" disabled>
+                        Branding
+                    </flux:sidebar.item>
+
+                </flux:sidebar.nav>
+            </aside>
+            <flux:separator vertical class="" />
+            <flux:separator class="lg:hidden" />
+
+
+            <flux:main class="flex-1 min-w-0">
+                <div class="max-w-4xl space-y-8">
+                    {{ $slot }}
+                </div>
+            </flux:main>
+
+        </div>
     </div>
 @endcomponent

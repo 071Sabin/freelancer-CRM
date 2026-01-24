@@ -100,7 +100,9 @@
                     </div>
 
                     <x-primary-button type="submit">save</x-primary-button>
-
+                <flux:text wire:dirty class="text-amber-500 text-sm font-medium animate-pulse">
+                    Unsaved changes...
+                </flux:text>
                 </form>
 
             </div>

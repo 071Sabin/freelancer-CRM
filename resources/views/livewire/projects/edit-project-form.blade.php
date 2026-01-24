@@ -77,9 +77,11 @@
 
                     </div>
 
-                    <x-primary-button type="submit" class="mt-4">
-                        Save
-                    </x-primary-button>
+                    <x-primary-button type="submit">Save</x-primary-button>
+
+                    <flux:text wire:dirty class="text-amber-500 text-sm font-medium animate-pulse">
+                        Unsaved changes...
+                    </flux:text>
 
                 </form>
 

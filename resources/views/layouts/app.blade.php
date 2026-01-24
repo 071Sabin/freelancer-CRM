@@ -55,6 +55,7 @@
 </head>
 
 <body class="bg-white dark:bg-neutral-800">
+
     <!-- Navigation -->
     @guest('web')
         <nav
@@ -121,7 +122,8 @@
             <flux:sidebar sticky collapsible
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
                 <flux:sidebar.header>
-                    <flux:sidebar.brand href="{{ route('dashboard') }}" logo="{{asset('uploads/clientpivot-logo-cropped.png')}}" name="ClientPivot" />
+                    <flux:sidebar.brand href="{{ route('dashboard') }}"
+                        logo="{{ asset('uploads/clientpivot-logo-cropped.png') }}" name="ClientPivot" />
                     <flux:sidebar.collapse
                         class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
                 </flux:sidebar.header>

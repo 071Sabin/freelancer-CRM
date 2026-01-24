@@ -1,9 +1,7 @@
 <div class="w-full">
 
-    <!-- Page Header -->
-    <div class="mb-8">
-        <x-main-heading title="Dashboard 👋" subtitle="Overview of your clients, projects, invoices, and insights." />
-    </div>
+    <x-main-heading title="Dashboard 👋" subtitle="Overview of your clients, projects, invoices, and insights." />
+
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -68,8 +66,8 @@
                 @endforeach
             </div>
         </div>
-        
-        
+
+
 
 
         <!-- Quick Actions -->
@@ -81,7 +79,8 @@
             </h2>
 
             <div class="flex flex-col gap-3">
-                <a href="{{ route('projects') }}" wire:navigate class="px-4 py-2 bg-indigo-600 text-white text-center rounded-lg hover:bg-indigo-700">
+                <a href="{{ route('projects') }}" wire:navigate
+                    class="px-4 py-2 bg-indigo-600 text-white text-center rounded-lg hover:bg-indigo-700">
                     + New Project
                 </a>
                 <a href="{{ route('clients') }}" wire:navigate

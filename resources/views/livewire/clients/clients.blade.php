@@ -1,9 +1,6 @@
 <div class="">
 
-    <div class="mb-8">
-        <x-main-heading title="Clients" subtitle="Manage your business relationships and track client progress." />
-        {{-- <p class="text-sm italic text-red-400 dark:text-red-600">Refresh to activate "Add Client" form</p> --}}
-    </div>
+    <x-main-heading title="Clients" subtitle="Manage your business relationships and track client progress." />
 
     @if (session('success'))
         <x-success-message>
