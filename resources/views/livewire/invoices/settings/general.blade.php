@@ -14,7 +14,7 @@
     <flux:separator variant="subtle" />
 
     <form wire:submit.prevent="save">
-
+        <p>this is general</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
 
             <div class="md:col-span-1">

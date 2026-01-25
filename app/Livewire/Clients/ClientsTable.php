@@ -13,10 +13,10 @@ class ClientsTable extends DataTableComponent
 {
     protected $model = Client::class;
 
-    public $color = 'neutral';
-    public $thBg = 'bg-neutral-700/90';
-    public $tableOddRowBg = 'bg-neutral-800';
-    public $tableEvenRowBg = 'bg-neutral-700';
+    // public $color = 'neutral';
+    // public $thBg = 'bg-neutral-700/90';
+    // public $tableOddRowBg = 'bg-neutral-800';
+    // public $tableEvenRowBg = 'bg-neutral-700';
 
     public function configure(): void
     {
@@ -28,110 +28,110 @@ class ClientsTable extends DataTableComponent
 
         $this->setSearchPlaceholder('Search Clients...');
 
-        $this->setSearchFieldAttributes([
-            'class' => 'px-2 py-2 sm:w-100 lg:w-fit rounded-lg dark:' . $this->thBg,
-            'default-styling' => true,
-        ]);
+        // $this->setSearchFieldAttributes([
+        //     'class' => 'px-2 py-2 sm:w-100 lg:w-fit rounded-lg dark:' . $this->thBg,
+        //     'default-styling' => true,
+        // ]);
 
 
-        $this->setComponentWrapperAttributes([
-            'default' => true,
-            'default-colors' => false,
-        ]);
+        // $this->setComponentWrapperAttributes([
+        //     'default' => true,
+        //     'default-colors' => false,
+        // ]);
 
-        $this->setTableWrapperAttributes([
-            'default' => true,
-            'default-colors' => false,
-            'class' => 'dark:border-stone-500 dark:' . $this->tableOddRowBg,
-        ]);
+        // $this->setTableWrapperAttributes([
+        //     'default' => true,
+        //     'default-colors' => false,
+        //     'class' => 'dark:border-stone-500 dark:' . $this->tableOddRowBg,
+        // ]);
 
-        $this->setTableAttributes([
-            'default' => true,
-            'default-colors' => false,
-            'class' => 'dark:' . $this->tableEvenRowBg,
-        ]);
+        // $this->setTableAttributes([
+        //     'default' => true,
+        //     'default-colors' => false,
+        //     'class' => 'dark:' . $this->tableEvenRowBg,
+        // ]);
 
-        $this->setThAttributes(function (Column $column) {
+        // $this->setThAttributes(function (Column $column) {
 
-            return ['class' => 'py-4 dark:' . $this->thBg, 'default' => true];
-        });
+        //     return ['class' => 'py-4 dark:' . $this->thBg, 'default' => true];
+        // });
 
-        $this->setTbodyAttributes([
-            'default' => true,
-            'default-colors' => false,
-            'class' => 'dark:' . $this->tableEvenRowBg,
-        ]);
+        // $this->setTbodyAttributes([
+        //     'default' => true,
+        //     'default-colors' => false,
+        //     'class' => 'dark:' . $this->tableEvenRowBg,
+        // ]);
 
-        $this->setTrAttributes(function ($row, $index) {
-            return [
-                'default' => true,
-                'default-colors' => false,
-                'class' =>$index % 2 === 0
-                    ? 'dark:' . $this->tableOddRowBg
-                    : 'dark:' . $this->tableEvenRowBg,
-            ];
-        });
+        // $this->setTrAttributes(function ($row, $index) {
+        //     return [
+        //         'default' => true,
+        //         'default-colors' => false,
+        //         'class' =>$index % 2 === 0
+        //             ? 'dark:' . $this->tableOddRowBg
+        //             : 'dark:' . $this->tableEvenRowBg,
+        //     ];
+        // });
 
-        $this->setTdAttributes(function (Column $column) {
-            if ($column->getTitle() == 'reorder') {
-                return [
-                    'class' => 'dark:' . $this->tableEvenRowBg,
-                    'default' => false,
-                    // 'default-colors' => false,
-                ];
-            }
-            return ['default' => true];
-        });
+        // $this->setTdAttributes(function (Column $column) {
+        //     if ($column->getTitle() == 'reorder') {
+        //         return [
+        //             'class' => 'dark:' . $this->tableEvenRowBg,
+        //             'default' => false,
+        //             // 'default-colors' => false,
+        //         ];
+        //     }
+        //     return ['default' => true];
+        // });
 
-        $this->setBulkActionsThAttributes([
-            'class' => 'dark:' . $this->thBg,
-            'default' => true
-        ]);
+        // $this->setBulkActionsThAttributes([
+        //     'class' => 'dark:' . $this->thBg,
+        //     'default' => true
+        // ]);
 
-        $this->setBulkActionsButtonAttributes([
-            'class' => 'border dark:' . $this->tableOddRowBg,
-            'default-colors' => true,
-            'default-styling' => true,
-        ]);
+        // $this->setBulkActionsButtonAttributes([
+        //     'class' => 'border dark:' . $this->tableOddRowBg,
+        //     'default-colors' => true,
+        //     'default-styling' => true,
+        // ]);
 
-        $this->setBulkActionsMenuAttributes([
-            'class' => 'dark:' . $this->tableOddRowBg,
-            'default-colors' => true,
-            'default-styling' => true,
-        ]);
+        // $this->setBulkActionsMenuAttributes([
+        //     'class' => 'dark:' . $this->tableOddRowBg,
+        //     'default-colors' => true,
+        //     'default-styling' => true,
+        // ]);
 
-        $this->setBulkActionsMenuItemAttributes([
-            'class' => 'dark:' . $this->tableOddRowBg . ' dark:hover:text-stone-200 cursor-pointer dark:hover:' . $this->tableOddRowBg,
-            'default-colors' => true,
-            'default-styling' => true,
-        ]);
+        // $this->setBulkActionsMenuItemAttributes([
+        //     'class' => 'dark:' . $this->tableOddRowBg . ' dark:hover:text-stone-200 cursor-pointer dark:hover:' . $this->tableOddRowBg,
+        //     'default-colors' => true,
+        //     'default-styling' => true,
+        // ]);
 
-        $this->setColumnSelectButtonAttributes([
-            'class' => 'border dark:' . $this->tableOddRowBg,
-            'default-colors' => true,
-            'default-styling' => true,
-        ]);
-
-
-        // this is the bg of pop over after clicking filter button
-        $this->setFilterPopoverAttributes([
-            'class' => 'dark:' . $this->tableOddRowBg,
-            'default-colors' => true,
-            'default-styling' => true,
-        ]);
+        // $this->setColumnSelectButtonAttributes([
+        //     'class' => 'border dark:' . $this->tableOddRowBg,
+        //     'default-colors' => true,
+        //     'default-styling' => true,
+        // ]);
 
 
+        // // this is the bg of pop over after clicking filter button
+        // $this->setFilterPopoverAttributes([
+        //     'class' => 'dark:' . $this->tableOddRowBg,
+        //     'default-colors' => true,
+        //     'default-styling' => true,
+        // ]);
 
-        // this is the row per page drop down 10, 20, 30 50 etc... beside of clolumns menu
-        $this->setPerPageFieldAttributes([
-            'class' => 'py-2 border px-1 dark:' . $this->tableOddRowBg, // Add these classes to the dropdown
-            'default-styles' => true, // Output the default styling
-        ]);
 
-        $this->setBulkActionsThCheckboxAttributes([
-            'default-colors' => true,
-            'default-styling' => true,
-        ]);
+
+        // // this is the row per page drop down 10, 20, 30 50 etc... beside of clolumns menu
+        // $this->setPerPageFieldAttributes([
+        //     'class' => 'py-2 border px-1 dark:' . $this->tableOddRowBg, // Add these classes to the dropdown
+        //     'default-styles' => true, // Output the default styling
+        // ]);
+
+        // $this->setBulkActionsThCheckboxAttributes([
+        //     'default-colors' => true,
+        //     'default-styling' => true,
+        // ]);
     }
 
     public function columns(): array
@@ -258,10 +258,6 @@ class ClientsTable extends DataTableComponent
     {
         return [
             SelectFilter::make('Status', 'status')
-                ->setInputAttributes([
-                    'class' => 'px-1 shadow-none py-2 dark:' . $this->tableEvenRowBg . ' dark:text-' . $this->color . '-200',
-                    'default-styling' => true,
-                ])
                 ->options([
                     '' => 'All',
                     'active' => 'Active',
