@@ -8,7 +8,7 @@
 
         <flux:breadcrumbs class="mb-5">
             <flux:breadcrumbs.item href="{{route('invoices')}}" wire:navigate>Invoices</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="{{route('invoices.settings.general')}}" wire:navigate>Settings</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{route('invoices.settings.general')}}" wire:navigate><span class="text-blue-500">Settings</span></flux:breadcrumbs.item>
         </flux:breadcrumbs>
         {{-- Layout --}}
         <div class="flex flex-col lg:flex-row lg:items-start gap-y-3 lg:gap-x-12">

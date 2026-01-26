@@ -3,7 +3,6 @@
 use App\Livewire\Clients\Clients;
 use App\Livewire\Dashboard;
 use App\Livewire\FreelancerDetails;
-use App\Livewire\Invoices\Invoice;
 use App\Livewire\Invoices\Settings\Branding;
 use App\Livewire\Invoices\Settings\General;
 use App\Livewire\Invoices\Settings\Payments;
@@ -11,6 +10,9 @@ use App\Livewire\Login;
 use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
+
+use App\Livewire\Invoices\Invoice;
+use App\Livewire\Invoices\InvoiceIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -32,8 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/clients', Clients::class)->name('clients');
     Route::get('/projects', Projects::class)->name('projects');
-    Route::get('/invoices', Invoice::class)->name('invoices');
-
+    Route::get('/invoices', InvoiceIndex::class)->name('invoices');
+    Route::get('/invoices/{invoice}/edit', InvoiceIndex::class)->name('invoices.edit');
     Route::prefix('invoices/settings')
         ->name('invoices.settings.')
         ->group(function () {

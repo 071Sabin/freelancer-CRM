@@ -1,7 +1,6 @@
 <div class="">
 
-        <x-main-heading title="Invoices"
-            subtitle="Create, send, and track invoices with clear payment status and totals." />
+    <x-main-heading title="Invoices" subtitle="Create, send, and track invoices with clear payment status and totals." />
 
     @if (session('success'))
         <x-success-message>
@@ -77,41 +76,48 @@
         </a>
     </div>
 
-    <flux:modal name="create-invoice" class="max-w-lg">
+    <div>
 
-        <form wire:submit.prevent="create" class="space-y-6">
+        <flux:modal name="create-invoice" class="max-w-lg">
+            <form wire:submit.prevent="create" class="space-y-6">
+                <div>
+                    <flux:heading size="lg">Create New Invoice</flux:heading>
+                    <flux:text class="text-neutral-500">
+                        Start by selecting a client. You can add items in the next step.
+                    </flux:text>
+                </div>
 
-            <div>
-                <flux:heading size="lg">Create Invoice</flux:heading>
-                <flux:text class="text-neutral-500">
-                    Create a draft invoice to start adding items and taxes.
-                </flux:text>
-            </div>
+                <flux:select label="Client" wire:model="client_id" placeholder="Select client">
+                    @foreach ($clients as $client)
+                        <flux:select.option value="{{ $client->id }}">
+                            {{ $client->client_name }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
 
-            <flux:select label="Client" wire:model="client_id" placeholder="Select client">
-                @foreach (\App\Models\Client::all() as $client)
-                    <flux:select.option value="{{ $client->id }}">
-                        {{ $client->client_name }}
-                    </flux:select.option>
-                @endforeach
-            </flux:select>
+                <flux:select label="Project" wire:model="project_id" placeholder="Select project">
+                    @foreach ($projects as $project)
+                        <flux:select.option value="{{ $project->id }}">
+                            {{ $project->name }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
 
-            <flux:select label="Project" wire:model="project_id" placeholder="Select project">
-                @foreach (\App\Models\Project::all() as $project)
-                    <option value="{{ $project->id }}">
-                        {{ $project->name }}
-                    </option>
-                @endforeach
-            </flux:select>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input type="date" label="Issue Date" wire:model.defer="issue_date" />
+                    <flux:input type="date" label="Due Date" wire:model.defer="due_date" />
+                </div>
 
-            <flux:input type="date" label="Issue Date" wire:model.defer="issue_date" />
+                <div class="flex justify-end gap-3">
+                    <x-primary-button type="submit">
+                        Create & Add Items
+                    </x-primary-button>
+                </div>
+            </form>
+        </flux:modal>
 
-            <flux:input type="date" label="Due Date" wire:model.defer="due_date" />
+    </div>
 
-            <div class="flex justify-end gap-3">
-                <x-primary-button type="submit">create invoice</x-primary-button>
-            </div>
-        </form>
-    </flux:modal>
+    {{-- <livewire:invoices.invoice-table /> --}}
 
 </div>

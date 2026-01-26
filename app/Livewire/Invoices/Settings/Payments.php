@@ -47,8 +47,6 @@ class Payments extends Component
         );
     }
 
-
-
     public function render()
     {
         return view('livewire.invoices.settings.payments');
