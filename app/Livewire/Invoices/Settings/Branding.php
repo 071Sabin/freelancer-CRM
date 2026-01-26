@@ -30,9 +30,13 @@ class Branding extends Component
     {
         if ($this->logo) {
             $this->settings->update([
-                'logo_path' => $this->logo->store('invoice-logos', 'public'),
+                'logo_path' => $this->logo->store('invoice-logos'),
             ]);
         }
+        session()->flash(
+            'success',
+            'Branding invoice settings saved successfully.'
+        );
     }
 
 

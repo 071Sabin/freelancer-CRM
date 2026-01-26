@@ -41,6 +41,10 @@ class Payments extends Component
     public function save()
     {
         $this->settings->update($this->validate());
+        session()->flash(
+            'success',
+            'Payment invoice settings saved successfully.'
+        );
     }
 
 

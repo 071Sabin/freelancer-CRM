@@ -1,5 +1,9 @@
 <div class="space-y-10 pb-10">
-
+    @if (session('success'))
+        <x-success-message>
+            {{ session('success') }}
+        </x-success-message>
+    @endif
     <div>
         <flux:heading size="xl">Branding</flux:heading>
         <flux:subheading>
@@ -33,7 +37,7 @@
                                 @if ($logo)
                                     <img src="{{ $logo->temporaryUrl() }}" class="h-full w-full object-contain p-2" />
                                 @elseif ($settings->logo_path)
-                                    <img src="{{ asset('storage/' . $settings->logo_path) }}"
+                                    <img src="{{ asset('uploads/'. $settings->logo_path) }}"
                                         class="h-full w-full object-contain p-2" />
                                 @else
                                     <svg class="h-8 w-8 text-zinc-300" fill="none" viewBox="0 0 24 24"

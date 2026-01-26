@@ -1,5 +1,9 @@
 <div class="space-y-10 pb-10">
-
+    @if (session('success'))
+        <x-success-message>
+            {{ session('success') }}
+        </x-success-message>
+    @endif
     <div>
         <flux:heading size="xl">Payment Settings</flux:heading>
         <flux:subheading>
