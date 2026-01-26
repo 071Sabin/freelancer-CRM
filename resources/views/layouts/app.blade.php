@@ -8,14 +8,17 @@
     <title>{{ $title ?? 'ClientPivot' }}</title>
 
     <!-- Fonts -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
+
     @livewireStyles
     @fluxAppearance
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    @vite('resources/css/app.css')
+
 
     <style>
         html {
@@ -119,7 +122,7 @@
 
     @auth('web')
         <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
-            <flux:sidebar sticky collapsible
+            <flux:sidebar sticky collapsible="mobile"
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
                 <flux:sidebar.header>
                     <flux:sidebar.brand href="{{ route('dashboard') }}"

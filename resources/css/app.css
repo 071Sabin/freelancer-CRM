@@ -1,3 +1,58 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
+
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* 👇 Default Sources */
+@source "../../resources/views/**/*.blade.php";
+@source "../../vendor/livewire/flux/resources/views/**/*.blade.php";
+
+/* 👇 RAPPSOFT */
+@source "./vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php";
+
+/* 👇 Livewire Components */
+@source "../../app/Livewire/**/*.php";
+
+@theme {
+    /* Flux v2 Styling Setup 
+       Yahan hum colors define karte hain.
+    */
+
+    /* Font Family */
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+    /* COLOR CONFIGURATION
+       Flux 'neutral' use karta hai. Hum 'neutral' ko default 'gray' banayenge 
+       taaki dark mode sahi chale.
+    */
+    --color-neutral-50: #fafafa;
+    --color-neutral-100: #f4f4f5;
+    --color-neutral-200: #e4e4e7;
+    --color-neutral-300: #d4d4d8;
+    --color-neutral-400: #a1a1aa;
+    --color-neutral-500: #71717a;
+    --color-neutral-600: #52525b;
+    --color-neutral-700: #3f3f46;
+    --color-neutral-800: #27272a;
+    --color-neutral-900: #18181b;
+    --color-neutral-950: #09090b;
+
+    /* Agar tujhe 'gray' class use karni hai par color 'neutral' chahiye */
+    --color-gray-50: var(--color-neutral-50);
+    --color-gray-100: var(--color-neutral-100);
+    --color-gray-200: var(--color-neutral-200);
+    --color-gray-300: var(--color-neutral-300);
+    --color-gray-400: var(--color-neutral-400);
+    --color-gray-500: var(--color-neutral-500);
+    --color-gray-600: var(--color-neutral-600);
+    --color-gray-700: var(--color-neutral-700);
+    --color-gray-800: var(--color-neutral-800);
+    --color-gray-900: var(--color-neutral-900);
+    --color-gray-950: var(--color-neutral-950);
+}

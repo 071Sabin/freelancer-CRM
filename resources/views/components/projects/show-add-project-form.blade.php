@@ -73,7 +73,6 @@
         <div class="mt-5 flex items-center justify-between">
             <div class="space-x-2">
                 <x-primary-button type="submit">Create</x-primary-button>
-                <x-secondary-button wire:click="showAddProjectsForm">Cancel</x-secondary-button>
             </div>
         </div>
 

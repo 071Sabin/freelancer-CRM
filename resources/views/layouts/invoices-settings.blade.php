@@ -9,7 +9,7 @@
             <flux:breadcrumbs.item href="{{route('invoices.settings.general')}}" wire:navigate>Settings</flux:breadcrumbs.item>
         </flux:breadcrumbs>
         {{-- Layout --}}
-        <div class="flex flex-col lg:flex-row lg:items-start gap-y-10 lg:gap-x-12">
+        <div class="flex flex-col lg:flex-row lg:items-start gap-y-3 lg:gap-x-12">
 
             {{-- Sidebar --}}
             <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-6">

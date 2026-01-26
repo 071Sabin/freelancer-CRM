@@ -31,23 +31,26 @@
                     <div
                         class="p-6 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-between gap-6">
 
-                        <div class="shrink-0 relative group">
-                            <div
-                                class="h-24 w-24 rounded-lg bg-white border border-zinc-200 flex items-center justify-center overflow-hidden shadow-sm">
-                                @if ($logo)
-                                    <img src="{{ $logo->temporaryUrl() }}" class="h-full w-full object-contain p-2" />
-                                @elseif ($settings->logo_path)
-                                    <img src="{{ asset('uploads/'. $settings->logo_path) }}"
-                                        class="h-full w-full object-contain p-2" />
-                                @else
-                                    <svg class="h-8 w-8 text-zinc-300" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                    </svg>
-                                @endif
+                        <flux:modal.trigger name="show-brand-logo">
+                            <div class="shrink-0 relative group cursor-pointer">
+                                <div
+                                    class="h-24 w-24 rounded-lg bg-white border border-zinc-200 flex items-center justify-center overflow-hidden shadow-sm">
+                                    @if ($logo)
+                                        <img src="{{ $logo->temporaryUrl() }}"
+                                            class="h-full w-full object-contain p-2" />
+                                    @elseif ($settings->logo_path)
+                                        <img src="{{ asset('uploads/' . $settings->logo_path) }}"
+                                            class="h-full w-full object-contain p-2" />
+                                    @else
+                                        <svg class="h-8 w-8 text-zinc-300" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                        </svg>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
+                        </flux:modal.trigger>
 
                         <div class="flex-1">
                             <h3 class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Current Logo</h3>
@@ -71,6 +74,70 @@
                         </svg>
                         Uploading and optimizing...
                     </div>
+
+
+                    <flux:modal name="show-brand-logo"
+                        class="min-w-[20rem] md:w-[32rem] p-0 overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl">
+
+                        {{-- Header --}}
+                        <div
+                            class="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800/50 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-base font-semibold text-zinc-900 dark:text-white">
+                                    Brand Asset
+                                </h3>
+                                <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                                    Current active logo for this environment.
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Content Area --}}
+                        <div class="p-6">
+                            @if ($settings->logo_path)
+                                {{-- Image Container: specialized for asset previewing --}}
+                                <div
+                                    class="group relative flex items-center justify-center w-full min-h-[200px] bg-zinc-50 dark:bg-zinc-950/50 rounded-lg border border-zinc-200/60 dark:border-zinc-800 overflow-hidden">
+
+                                    {{-- Checkerboard Background for Transparency --}}
+                                    <div class="absolute inset-0 opacity-[0.4] pointer-events-none"
+                                        style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 10px 10px;">
+                                    </div>
+
+                                    {{-- The Image --}}
+                                    <img src="{{ asset('uploads/' . $settings->logo_path) }}" alt="Brand Logo"
+                                        class="relative z-10 max-h-64 max-w-full object-contain drop-shadow-sm transition-transform duration-500 hover:scale-105">
+                                </div>
+
+                                {{-- Metadata / Download Action (Optional but pro) --}}
+                                <div class="mt-4 flex items-center justify-between">
+
+                                    <a href="{{ asset('uploads/' . $settings->logo_path) }}" download
+                                        class="text-xs font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors">
+                                        Download Original
+                                    </a>
+                                </div>
+                            @else
+                                {{-- Empty State: High polish --}}
+                                <div
+                                    class="flex flex-col items-center justify-center py-10 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50/50 dark:bg-zinc-900/50">
+                                    <div class="rounded-full bg-zinc-100 dark:bg-zinc-800 p-3 mb-3">
+                                        <svg class="w-6 h-6 text-zinc-400" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-sm font-medium text-zinc-900 dark:text-zinc-100">No logo uploaded
+                                    </h4>
+                                    <p class="text-xs text-zinc-500 mt-1 max-w-[200px]">
+                                        Go to settings to upload a brand identifier for your organization.
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+
+                    </flux:modal>
 
                 </div>
             </div>

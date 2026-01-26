@@ -4,6 +4,8 @@ namespace App\Livewire\Invoices\Settings;
 
 use App\Models\InvoiceSetting;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
@@ -29,10 +31,21 @@ class Branding extends Component
     public function save()
     {
         if ($this->logo) {
+
+            // delete old logo if exists
+            if ($this->settings->logo_path) {
+                Storage::delete($this->settings->logo_path);
+            }
+
+            // store new logo
+            $path = $this->logo->store('invoice-logos');
+
+            // update db
             $this->settings->update([
-                'logo_path' => $this->logo->store('invoice-logos'),
+                'logo_path' => $path,
             ]);
         }
+
         session()->flash(
             'success',
             'Branding invoice settings saved successfully.'
