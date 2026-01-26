@@ -1,4 +1,6 @@
+
 @component('layouts.app')
+<x-slot:title>ClientPivot | Invoice Settings</x-slot>
     <div class="">
 
         <x-main-heading title="Invoices" subtitle="Create, send, and track invoices with clear payment status and totals." />
