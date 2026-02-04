@@ -20,6 +20,9 @@ class Payments extends Component
     public ?float $default_discount_rate = null;
     public int $payment_terms_days = 14;
     public bool $allow_partial_payments = false;
+    public string $default_late_fee_type = 'percentage';
+    public ?float $default_late_fee_rate = null;
+    public ?float $default_late_fee_amount = null;
 
     protected function rules(): array
     {
@@ -28,19 +31,34 @@ class Payments extends Component
             'default_discount_rate' => 'nullable|numeric|min:0|max:100',
             'payment_terms_days' => 'required|integer|min:0',
             'allow_partial_payments' => 'boolean',
+
+            'default_late_fee_type' => 'nullable|in:percentage,fixed',
+            'default_late_fee_rate' => 'nullable|numeric|min:0',
+            'default_late_fee_amount' => 'nullable|numeric|min:0',
+
         ];
     }
 
     public function mount()
     {
         $this->settings = InvoiceSetting::where('user_id', Auth::id())->firstOrFail();
+        $this->default_late_fee_type   = $this->settings->default_late_fee_type ?? $this->default_late_fee_type;
+        $this->default_late_fee_rate   = $this->settings->default_late_fee_rate ?? $this->default_late_fee_rate;
+        $this->default_late_fee_amount = $this->settings->default_late_fee_amount ?? $this->default_late_fee_amount;
+        $this->default_discount_rate = $this->settings->default_discount_rate ?? $this->default_discount_rate;
 
         $this->fill($this->settings->only(['default_tax_rate']));
     }
 
     public function save()
     {
-        $this->settings->update($this->validate());
+        $payload = $this->validate();
+
+        // Ensure checkbox/toggle always has a value
+        $payload['allow_partial_payments'] = (bool) ($payload['allow_partial_payments'] ?? false);
+
+        $this->settings->update($payload);
+
         session()->flash(
             'success',
             'Payment invoice settings saved successfully.'

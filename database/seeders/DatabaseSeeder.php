@@ -122,5 +122,68 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        DB::table('clients')->insert([
+            [
+                'client_name'     => 'John Doe',
+                'client_email'    => 'john@example.com',
+                'company_name'    => 'Doe Pvt Ltd',
+                'company_email'   => 'info@doe.com',
+                'company_website' => 'https://doe.com',
+                'company_phone'   => '+91 9876543210',
+                'billing_address' => 'Mumbai, India',
+                'hourly_rate'     => '25.00',
+                'currency'        => 'INR',
+                'status'          => 'active',
+                'private_notes'   => 'Priority client',
+                'created_at'      => now(),
+                'updated_at'      => now(),
+            ],
+            [
+                'client_name'     => 'Jane Smith',
+                'client_email'    => 'jane@example.com',
+                'company_name'    => 'Smith Solutions',
+                'company_email'   => 'contact@smith.com',
+                'company_website' => null,
+                'company_phone'   => null,
+                'billing_address' => 'Delhi, India',
+                'hourly_rate'     => '40.00',
+                'currency'        => 'USD',
+                'status'          => 'lead',
+                'private_notes'   => null,
+                'created_at'      => now(),
+                'updated_at'      => now(),
+            ],
+        ]);
+
+
+        DB::table('projects')->insert([
+            [
+                'name'        => 'Website Redesign',
+                'description' => 'Complete redesign of company website UI/UX.',
+                'value'       => 1500.00,
+                'client_id'   => 1,
+                'status'      => 'active',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+            [
+                'name'        => 'Mobile App Development',
+                'description' => 'Build cross-platform mobile application.',
+                'value'       => 3200.00,
+                'client_id'   => 2,
+                'status'      => 'pending',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+            [
+                'name'        => 'SEO Optimization',
+                'description' => null,
+                'value'       => 800.00,
+                'client_id'   => 1,
+                'status'      => 'completed',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+        ]);
     }
 }

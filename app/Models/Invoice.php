@@ -3,26 +3,76 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'client_id',
         'project_id',
+        'approved_by',
+        'uuid',
         'invoice_number',
+        'type',
         'status',
+        'reference',
+        'public_token',
         'issue_date',
         'due_date',
+        'approved_at',
+        'viewed_at',
+        'canceled_at',
+        'voided_at',
         'currency',
+        'base_currency',
+        'exchange_rate',
         'subtotal',
         'tax_total',
         'discount_total',
+        'shipping_total',
+        'adjustment_total',
         'total',
+        'paid_total',
+        'balance_due',
+        'is_tax_inclusive',
         'notes',
         'terms',
+        'payment_terms',
+        'due_days',
         'sent_at',
         'paid_at',
+        'client_snapshot',
+        'company_snapshot',
+        'billing_address',
+        'shipping_address',
+        'metadata',
+    ];
+
+    protected $casts = [
+        'approved_at' => 'datetime',
+        'viewed_at' => 'datetime',
+        'canceled_at' => 'datetime',
+        'voided_at' => 'datetime',
+        'sent_at' => 'datetime',
+        'paid_at' => 'datetime',
+        'client_snapshot' => 'array',
+        'company_snapshot' => 'array',
+        'billing_address' => 'array',
+        'shipping_address' => 'array',
+        'metadata' => 'array',
+        'is_tax_inclusive' => 'boolean',
+        'exchange_rate' => 'decimal:6',
+        'subtotal' => 'decimal:2',
+        'tax_total' => 'decimal:2',
+        'discount_total' => 'decimal:2',
+        'shipping_total' => 'decimal:2',
+        'adjustment_total' => 'decimal:2',
+        'total' => 'decimal:2',
+        'paid_total' => 'decimal:2',
+        'balance_due' => 'decimal:2',
     ];
 
     // Relationships
@@ -41,6 +91,11 @@ class Invoice extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
     public function items()
     {
         return $this->hasMany(InvoiceItem::class);
@@ -54,5 +109,25 @@ class Invoice extends Model
     public function activityLogs()
     {
         return $this->hasMany(InvoiceActivityLog::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(InvoicePayment::class);
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(InvoiceAttachment::class);
+    }
+
+    public function customFields()
+    {
+        return $this->hasMany(InvoiceCustomField::class);
+    }
+
+    public function statusHistories()
+    {
+        return $this->hasMany(InvoiceStatusHistory::class);
     }
 }

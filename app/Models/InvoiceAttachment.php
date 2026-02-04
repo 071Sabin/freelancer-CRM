@@ -4,28 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InvoiceActivityLog extends Model
+class InvoiceAttachment extends Model
 {
-    public $timestamps = false;
-
     protected $fillable = [
         'invoice_id',
         'user_id',
-        'action',
-        'channel',
-        'ip_address',
-        'user_agent',
-        'actor_type',
-        'actor_id',
-        'subject_type',
-        'subject_id',
+        'disk',
+        'path',
+        'filename',
+        'mime_type',
+        'size',
+        'is_public',
         'meta',
-        'changes',
     ];
 
     protected $casts = [
+        'is_public' => 'boolean',
         'meta' => 'array',
-        'changes' => 'array',
     ];
 
     public function invoice()

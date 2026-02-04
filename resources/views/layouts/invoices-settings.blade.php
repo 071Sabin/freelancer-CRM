@@ -14,15 +14,13 @@
         <div class="flex flex-col lg:flex-row lg:items-start gap-y-3 lg:gap-x-12">
 
             {{-- Sidebar --}}
-            <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-6">
-
-                <flux:sidebar.nav class="space-y-1">
-
+            <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-6 ">
                     <div class="px-2 pb-3">
                         <flux:heading class="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                             Invoice Settings
                         </flux:heading>
                     </div>
+                <flux:sidebar.nav class="space-y-1 bg-neutral-100 rounded-lg p-3 dark:bg-neutral-800">
 
                     {{-- Mobile separator --}}
                     <div class="block lg:hidden border-t border-zinc-200 dark:border-zinc-700 mb-3"></div>

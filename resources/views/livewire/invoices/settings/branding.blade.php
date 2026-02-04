@@ -75,6 +75,9 @@
                         Uploading and optimizing...
                     </div>
 
+                    <div class="rounded-xl border border-dashed border-zinc-200 dark:border-zinc-800 p-4 text-xs text-zinc-500">
+                        Tip: Your logo will be used on invoices and client emails. Use a transparent PNG if possible.
+                    </div>
 
                     <flux:modal name="show-brand-logo"
                         class="min-w-[20rem] md:w-[32rem] p-0 overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl">

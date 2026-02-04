@@ -1,4 +1,4 @@
-<div class="">
+<div class="space-y-6">
 
     <x-main-heading title="Invoices" subtitle="Create, send, and track invoices with clear payment status and totals." />
 
@@ -8,7 +8,7 @@
         </x-success-message>
     @endif
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- Total Invoices -->
         <div
@@ -67,13 +67,17 @@
         </div>
 
     </div>
-    <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-        <flux:modal.trigger name="create-invoice">
-            <x-primary-button><i class="bi bi-plus-lg font-bold"></i> create invoice</x-primary-button>
-        </flux:modal.trigger>
-        <a href="{{ route('invoices.settings.general') }}" wire:navigate>
-            <flux:icon.cog-6-tooth />
-        </a>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+
+        <div class="flex items-center justify-end gap-3 w-full">
+            <flux:modal.trigger name="create-invoice">
+                <x-primary-button><i class="bi bi-plus-lg font-bold"></i> create invoice</x-primary-button>
+            </flux:modal.trigger>
+            <a href="{{ route('invoices.settings.general') }}" wire:navigate
+                class="text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
+                <flux:icon.cog-6-tooth />
+            </a>
+        </div>
     </div>
 
     <div>

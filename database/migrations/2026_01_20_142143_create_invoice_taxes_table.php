@@ -19,10 +19,20 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('name');          // GST, VAT, etc.
-            $table->decimal('rate', 5, 2);   // percentage
+            $table->string('tax_code')->nullable();
+            $table->string('type')->default('percentage'); // percentage, fixed
+            $table->string('scope')->default('invoice');   // invoice, item
+            $table->decimal('rate', 5, 2)->nullable();     // percentage
             $table->decimal('amount', 12, 2);
+            $table->boolean('is_inclusive')->default(false);
+            $table->boolean('is_compound')->default(false);
+            $table->string('jurisdiction')->nullable();
+            $table->unsignedInteger('priority')->default(0);
+            $table->json('metadata')->nullable();
 
             $table->timestamps();
+
+            $table->index(['invoice_id', 'scope']);
         });
     }
 

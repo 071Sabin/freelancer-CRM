@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoice_activity_logs', function (Blueprint $table) {
+        Schema::create('invoice_status_histories', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('invoice_id')
@@ -23,20 +23,14 @@ return new class extends Migration
                 ->constrained()
                 ->nullOnDelete();
 
-            $table->string('action'); // created, updated, sent, viewed, paid, voided
-            $table->string('channel')->nullable(); // web, email, api
-            $table->string('ip_address', 45)->nullable();
-            $table->string('user_agent')->nullable();
-            $table->string('actor_type')->nullable();
-            $table->unsignedBigInteger('actor_id')->nullable();
-            $table->string('subject_type')->nullable();
-            $table->unsignedBigInteger('subject_id')->nullable();
+            $table->string('from_status')->nullable();
+            $table->string('to_status');
+            $table->string('reason')->nullable();
             $table->json('meta')->nullable();
-            $table->json('changes')->nullable();
 
             $table->timestamp('created_at')->useCurrent();
 
-            $table->index(['invoice_id', 'action']);
+            $table->index(['invoice_id', 'to_status']);
         });
     }
 
@@ -45,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoice_activity_logs');
+        Schema::dropIfExists('invoice_status_histories');
     }
 };
