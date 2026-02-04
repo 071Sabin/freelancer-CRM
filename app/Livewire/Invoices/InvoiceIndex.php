@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // Transaction ke liye zaroori hai
+use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -63,16 +64,43 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
                 'user_id'        => $user->id,
                 'client_id'      => $this->client_id,
                 'project_id'     => $this->project_id,
+                'approved_by'    => null,
+                'uuid'           => (string) Str::uuid(),
                 'invoice_number' => $invoiceNumber,
+                'type'           => 'invoice',
                 'status'         => 'draft',
+                'reference'      => null,
+                'public_token'   => Str::random(64),
                 'issue_date'     => $this->issue_date,
                 'due_date'       => $this->due_date,
+                'approved_at'    => null,
+                'viewed_at'      => null,
+                'canceled_at'    => null,
+                'voided_at'      => null,
                 'currency'       => $settings->default_currency,
+                'base_currency'  => null,
+                'exchange_rate'  => null,
                 // Default values migration me set hain, par explicit rehna safe hai
                 'subtotal'       => 0,
                 'tax_total'      => 0,
                 'discount_total' => 0,
+                'shipping_total' => 0,
+                'adjustment_total' => 0,
                 'total'          => 0,
+                'paid_total'     => 0,
+                'balance_due'    => 0,
+                'is_tax_inclusive' => (bool) $settings->default_tax_inclusive,
+                'notes'          => $settings->default_notes,
+                'terms'          => $settings->default_terms,
+                'payment_terms'  => $settings->default_payment_terms,
+                'due_days'       => $settings->default_due_days,
+                'sent_at'        => null,
+                'paid_at'        => null,
+                'client_snapshot' => null,
+                'company_snapshot' => null,
+                'billing_address' => null,
+                'shipping_address' => null,
+                'metadata'       => null,
             ]);
 
             // 4. Increment Number
