@@ -122,6 +122,8 @@
 
     </div>
 
-    {{-- <livewire:invoices.invoice-table /> --}}
+<livewire:invoices.invoice-table />
+
+
 
 </div>

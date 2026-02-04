@@ -206,10 +206,11 @@
                     </flux:menu>
                 </flux:dropdown>
             </flux:header>
-            <div class="w-full lg:m-10 p-3">
-                {{ $slot }}
+            <div class="flex-1 min-w-0 lg:m-10 p-3">
+                <div class="w-full overflow-x-auto">
+                    {{ $slot }}
+                </div>
             </div>
-
         </div>
 
         <!-- SIGNOUT MODAL -->

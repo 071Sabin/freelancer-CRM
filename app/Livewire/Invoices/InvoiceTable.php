@@ -5,6 +5,9 @@ namespace App\Livewire\Invoices;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Invoice;
+use App\Models\Project;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
 
 class InvoiceTable extends DataTableComponent
 {
@@ -15,46 +18,62 @@ class InvoiceTable extends DataTableComponent
         $this->setPrimaryKey('id');
     }
 
+
+    public function query(): Builder
+    {
+        return Project::query()
+            ->with('client'); // ✅ avoid N+1 queries
+    }
+
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
-                ->sortable(),
-            Column::make("User id", "user_id")
-                ->sortable(),
-            Column::make("Client id", "client_id")
-                ->sortable(),
-            Column::make("Project id", "project_id")
-                ->sortable(),
-            Column::make("Invoice number", "invoice_number")
-                ->sortable(),
+
+            Column::make("Invoice #", "invoice_number")
+                ->sortable()
+                ->searchable(),
+
+            Column::make("Client", "client.client_name")
+                ->sortable()
+                ->searchable(),
+
+            Column::make("Project", "project.name")
+                ->sortable()->format(function($value){return(e(ucwords($value)));}),
+
             Column::make("Status", "status")
+                ->sortable()
+                ->format(
+                    fn($value, $row) =>
+                    view('components.badges.invoice-status', [
+                        'status' => $value
+                    ])
+                ),
+
+            Column::make("Issue Date", "issue_date")
                 ->sortable(),
-            Column::make("Issue date", "issue_date")
+
+            Column::make("Due Date", "due_date")
                 ->sortable(),
-            Column::make("Due date", "due_date")
-                ->sortable(),
+
             Column::make("Currency", "currency")
                 ->sortable(),
-            Column::make("Subtotal", "subtotal")
-                ->sortable(),
-            Column::make("Tax total", "tax_total")
-                ->sortable(),
-            Column::make("Discount total", "discount_total")
-                ->sortable(),
+
             Column::make("Total", "total")
                 ->sortable(),
-            Column::make("Notes", "notes")
+
+            Column::make("Paid", "paid_total")
                 ->sortable(),
-            Column::make("Terms", "terms")
+
+            Column::make("Balance", "balance_due")
                 ->sortable(),
-            Column::make("Sent at", "sent_at")
+
+            Column::make("Sent", "sent_at")
                 ->sortable(),
-            Column::make("Paid at", "paid_at")
+
+            Column::make("Paid At", "paid_at")
                 ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
+
+            Column::make("Created", "created_at")
                 ->sortable(),
         ];
     }

@@ -44,17 +44,6 @@
                             wire:model.defer="allow_partial_payments" 
                         />
                     </div>
-
-                    {{-- 
-                    <div class="sm:col-span-2 pt-2">
-                        <flux:toggle 
-                            label="Allow Partial Payments" 
-                            description="Let clients pay invoices in installments."
-                            wire:model.defer="allow_partial_payments" 
-                        />
-                    </div> 
-                    --}}
-
                 </div>
             </div>
         </div>
