@@ -7,7 +7,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Invoice;
 use App\Models\Project;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-
+use Illuminate\Support\Facades\DB;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class InvoiceTable extends DataTableComponent
 {
@@ -74,7 +75,62 @@ class InvoiceTable extends DataTableComponent
                 ->sortable(),
 
             Column::make("Created", "created_at")
-                ->sortable(),
+                ->sortable()->format(fn($value) => $value?->diffForHumans()),
+        ];
+    }
+
+    public function bulkActions(): array
+    {
+        return [
+            'deleteSelected' => 'Delete Selected',
+        ];
+    }
+
+    public function deleteSelected(): void
+    {
+        $ids = $this->getSelected();
+
+        if (empty($ids)) {
+            return;
+        }
+
+        DB::transaction(function () use ($ids) {
+            invoice::whereIn('id', $ids)->delete();
+        });
+
+        // Clear selection after delete
+        $this->clearSelected();
+    }
+
+    public function filters(): array
+    {
+        return [
+            SelectFilter::make('Status', 'status')
+                ->options([
+                    '' => 'All',
+                    'draft' => 'Draft',
+                    'sent' => 'Sent',
+                    'partially_paid' => 'Partially Paid',
+                    'paid' => 'Paid',
+                    'overdue' => 'Overdue',
+                    'void' => 'Void',
+                    'canceled' => 'Canceled',
+                ])
+                ->filter(function ($query, $value) {
+                    if ($value === '') {
+                        return;
+                    }
+
+                    // special logic for overdue (enterprise behavior)
+                    if ($value === 'overdue') {
+                        $query
+                            ->whereNotIn('status', ['paid', 'void', 'canceled'])
+                            ->whereDate('due_date', '<', now());
+                        return;
+                    }
+
+                    $query->where('status', $value);
+                }),
         ];
     }
 }

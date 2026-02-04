@@ -31,7 +31,7 @@
                     <flux:input type="number" step="0.01" label="Default Tax Rate"
                         wire:model.defer="default_tax_rate" icon="percent-badge" placeholder="0.00" />
 
-                    <flux:input type="number" label="Payment Terms (Days)" wire:model.defer="payment_terms_days"
+                    <flux:input type="number" label="Payment Terms (Days)" wire:model.defer="default_due_days"
                         description="Days until invoice is due." placeholder="14" />
 
                     <flux:input type="number" step="0.01" label="Default Discount Rate"

@@ -108,8 +108,15 @@
                 </flux:select>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <flux:input type="date" label="Issue Date" wire:model.defer="issue_date" />
-                    <flux:input type="date" label="Due Date" wire:model.defer="due_date" />
+                    <flux:input type="date" label="Issue Date" wire:model.live="issue_date" />
+                    <div>
+                        <flux:input type="date" label="Due Date" wire:model.defer="due_date" />
+                        @if ($due_date_notice)
+                            <p class="mt-2 text-xs text-yellow-500 dark:text-yellow-400">
+                                {{ $due_date_notice }}
+                            </p>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-3">
@@ -122,7 +129,17 @@
 
     </div>
 
-<livewire:invoices.invoice-table />
+    @if ($total_invoices == 0)
+        <x-empty-state title="No Invoices Yet"
+            subtitle="You haven't created any invoices yet. Start by creating a new invoice to manage your billing.">
+            <x-slot:icon>
+                <i class="bi bi-file-text text-2xl"></i>
+            </x-slot:icon>
+        </x-empty-state>
+    @else
+        <livewire:invoices.invoice-table />
+    @endif
+
 
 
 

@@ -18,7 +18,7 @@ class Payments extends Component
 
     public ?float $default_tax_rate;
     public ?float $default_discount_rate = null;
-    public int $payment_terms_days = 14;
+    public int $default_due_days;
     public bool $allow_partial_payments = false;
     public string $default_late_fee_type = 'percentage';
     public ?float $default_late_fee_rate = null;
@@ -29,13 +29,12 @@ class Payments extends Component
         return [
             'default_tax_rate' => 'nullable|numeric|min:0|max:100',
             'default_discount_rate' => 'nullable|numeric|min:0|max:100',
-            'payment_terms_days' => 'required|integer|min:0',
+            'default_due_days' => 'required|integer|min:0',
             'allow_partial_payments' => 'boolean',
 
             'default_late_fee_type' => 'nullable|in:percentage,fixed',
             'default_late_fee_rate' => 'nullable|numeric|min:0',
             'default_late_fee_amount' => 'nullable|numeric|min:0',
-
         ];
     }
 
@@ -46,8 +45,10 @@ class Payments extends Component
         $this->default_late_fee_rate   = $this->settings->default_late_fee_rate ?? $this->default_late_fee_rate;
         $this->default_late_fee_amount = $this->settings->default_late_fee_amount ?? $this->default_late_fee_amount;
         $this->default_discount_rate = $this->settings->default_discount_rate ?? $this->default_discount_rate;
-
-        $this->fill($this->settings->only(['default_tax_rate']));
+        $this->default_due_days = $this->settings->default_due_days ?? $this->default_due_days;
+        $this->default_tax_rate = $this->settings->default_tax_rate ?? 0.00;
+        
+        // $this->fill($this->settings->only(['default_tax_rate']));
     }
 
     public function save()

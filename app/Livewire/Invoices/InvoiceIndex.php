@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB; // Transaction ke liye zaroori hai
 use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Carbon\Carbon;
+
 
 #[Title('ClientPivot | Invoices')]
 class InvoiceIndex extends Component // Renamed to avoid conflict with Model
@@ -20,6 +22,9 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public $project_id = "";
     public $issue_date;
     public $due_date;
+    public ?string $due_date_notice = null;
+    public $total_invoices;
+
 
     protected $rules = [
         'client_id'  => 'required|exists:clients,id',
@@ -27,6 +32,25 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         'issue_date' => 'required|date',
         'due_date'   => 'required|date|after_or_equal:issue_date',
     ];
+
+    // updating issue date & due date to issue_date + 14 days = due_date
+    public function updatedIssueDate($value)
+    {
+        if (!$value) {
+            $this->due_date = null;
+            return;
+        }
+
+        // get default payment terms from settings
+        $settings = InvoiceSetting::where('user_id', Auth::id())->first();
+
+        $days = $settings?->default_payment_terms ?? $this->default_payment_terms ?? 14;
+
+        $this->due_date = Carbon::parse($value)
+            ->addDays($days)
+            ->format('Y-m-d');
+        $this->due_date_notice = "Default due date of {$days} days added automatically.";
+    }
 
     public function create()
     {
@@ -110,6 +134,11 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             // Hum 'invoices' route pe nahi, 'invoices.edit' pe bhejenge
             return redirect()->route('invoices.edit', ['invoice' => $invoice->id]);
         });
+    }
+
+    public function mount()
+    {
+        $this->total_invoices = Invoice::where('user_id', Auth::id())->count();
     }
 
     public function render()

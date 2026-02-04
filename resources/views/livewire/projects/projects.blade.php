@@ -58,16 +58,15 @@
     @if ($projectCount > 0)
         <livewire:projects.projects-table />
     @else
-        <div
-            class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed rounded-lg 
-            border-neutral-300 bg-neutral-50 text-neutral-500 
-            dark:border-neutral-700 dark:bg-transparent dark:text-neutral-400">
+        <x-empty-state title="No Projects Yet" subtitle="Create your first project to start managing work.">
+            <x-slot:icon>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                </svg>
 
-            <i class="bi bi-x-circle text-5xl mb-3"></i>
-
-            <p class="text-neutral-600 dark:text-neutral-300 font-medium">
-                No Projects are added!
-            </p>
-        </div>
+            </x-slot:icon>
+        </x-empty-state>
     @endif
 </div>

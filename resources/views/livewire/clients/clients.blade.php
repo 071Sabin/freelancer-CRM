@@ -76,17 +76,16 @@
             <livewire:clients.clients-table />
         </div>
     @else
-        <div
-            class="flex flex-col items-center justify-center py-12 px-4 border-2 border-dashed rounded-lg 
-            border-neutral-300 bg-neutral-50 text-neutral-500 
-            dark:border-neutral-700 dark:bg-transparent dark:text-neutral-400">
+        <x-empty-state title="No Clients Yet" subtitle="Add a client to start creating invoices and projects.">
+            <x-slot:icon>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
 
-            <i class="bi bi-x-circle text-5xl mb-3"></i>
-
-            <p class="text-neutral-600 dark:text-neutral-300 font-medium">
-                No Clients are added!
-            </p>
-        </div>
+            </x-slot:icon>
+        </x-empty-state>
     @endif
 
 </div>
