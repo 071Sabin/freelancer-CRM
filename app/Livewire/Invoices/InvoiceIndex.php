@@ -44,7 +44,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         // get default payment terms from settings
         $settings = InvoiceSetting::where('user_id', Auth::id())->first();
 
-        $days = $settings?->default_payment_terms ?? $this->default_payment_terms ?? 14;
+        $days = $settings?->default_due_days ?? 14;
 
         $this->due_date = Carbon::parse($value)
             ->addDays($days)
