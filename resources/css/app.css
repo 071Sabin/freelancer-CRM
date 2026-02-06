@@ -8,6 +8,7 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@variant dark (&:where(.dark, .dark *));
 
 /* 👇 Default Sources */
 @source "../../resources/views/**/*.blade.php";

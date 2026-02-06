@@ -41,9 +41,6 @@
         <nav id="settings-nav" aria-label="Settings sections"
             class="mb-4 lg:mb-0 lg:w-72 shrink-0 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4">
             <div class="flex items-center gap-3 mb-4">
-                {{-- <img src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
-                    alt="{{ Auth::guard('web')->user()->name ?? 'User' }}"
-                    class="w-10 h-10 rounded-full object-cover border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700" /> --}}
                 <flux:profile :chevron="false" circle
                     :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null" />
                 <div>
@@ -102,49 +99,99 @@
                             </label>
 
                             <label class="block">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400 font-semibold">Bio</span>
+                                <div class="flex justify-between">
+                                    <p class="text-sm text-gray-600 dark:text-neutral-400 font-semibold">Bio</p>
+                                    <p class="text-xs text-neutral-500">Optional</p>
+                                </div>
+
                                 <textarea wire:model="bio" rows="3"
                                     class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ Auth::guard('web')->user()->bio ?? '' }}</textarea>
                             </label>
                         </div>
 
-                        <div class="flex flex-col items-center gap-3">
-                            @php($user = Auth::guard('web')->user())
+                        <div
+                            class="bg-neutral-50/50 dark:bg-neutral-900/50 rounded-xl border border-neutral-100 dark:border-neutral-800 p-6 flex flex-col items-center text-center">
 
-                            <div
-                                class="w-28 h-28 rounded-full overflow-hidden border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700 flex items-center justify-center">
+                            <div class="relative mb-4 group">
+                                <div
+                                    class="w-28 h-28 rounded-full ring-4 ring-white dark:ring-neutral-800 shadow-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700 relative">
 
-                                @if ($user->profile_pic)
-                                    <img id="settings-avatar-preview" src="{{ asset('uploads/' . $user->profile_pic) }}"
-                                        alt="Avatar" class="w-full h-full object-cover" />
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="w-10 h-10 text-neutral-400 dark:text-neutral-300">
-                                        <path fill-rule="evenodd"
-                                            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                @endif
+                                    <div wire:loading wire:target="profile_pic"
+                                        class="absolute inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center">
+                                        <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                    </div>
+
+                                    @if ($profile_pic)
+                                        <img src="{{ $profile_pic->temporaryUrl() }}"
+                                            class="w-full h-full object-cover animate-fade-in">
+                                    @elseif(Auth::guard('web')->user()->profile_pic)
+                                        <img src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
+                                            class="w-full h-full object-cover">
+                                    @else
+                                        <div
+                                            class="w-full h-full flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500">
+                                            <svg class="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <span
+                                    class="absolute bottom-1 right-1 h-5 w-5 rounded-full border-[3px] border-white dark:border-neutral-900 bg-green-500"></span>
                             </div>
 
-                            <label class="block w-full text-sm">
-                                {{-- <input type="file" wire:model="profile_pic"> --}}
-                                <x-file-upload model="profile_pic" />
-                                <div wire:loading wire:target="profile_pic"
-                                    class="text-gray-500 font-semibold animate-pulse">
-                                    Uploading...</div>
-                                <span class="text-xs text-gray-500 dark:text-neutral-400">Change avatar (PNG/JPG, max
-                                    2MB)</span>
-                            </label>
-
-
                             <div class="w-full">
-                                <button type="submit"
-                                    class="w-full px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save
-                                    changes</button>
+                                <label for="profile_upload"
+                                    class="cursor-pointer inline-flex items-center justify-center w-full px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all active:scale-95">
+                                    <svg class="w-4 h-4 mr-2 text-neutral-500 dark:text-neutral-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                    </svg>
+                                    Upload New Photo
+                                </label>
+
+                                <input type="file" id="profile_upload" wire:model="profile_pic" class="hidden"
+                                    accept="image/png, image/jpeg">
+                            </div>
+
+                            <div class="mt-4 space-y-1">
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                                    Recommended: 400x400px
+                                </p>
+                                <p class="text-[10px] uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                    JPG or PNG, Max 2MB
+                                </p>
+                                @error('profile_pic')
+                                    <p
+                                        class="text-xs text-red-500 mt-2 font-medium bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
                             </div>
                         </div>
                     </div>
+                    <button type="submit" wire:loading.attr="disabled"
+                        class="inline-flex items-center rounded-md bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        <svg wire:loading wire:target="updateInfo" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Save Changes
+                    </button>
                 </form>
             </section>
 
@@ -271,45 +318,88 @@
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Appearance</h2>
                 <p class="text-sm text-gray-500 dark:text-neutral-400 mb-4">Customize the theme and layout.</p>
 
-                <form action="#" method="POST" class="space-y-4">
-                    <fieldset>
-                        <legend class="text-sm font-medium text-gray-700 dark:text-neutral-200 mb-2">Theme</legend>
-                        <div class="flex gap-3 items-center">
-                            <label class="inline-flex items-center gap-2">
-                                <input type="radio" name="theme" value="system" class="form-radio" checked>
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">System</span>
-                            </label>
+                <div x-data="themeSwitcher()" x-init="initTheme()" class="space-y-4">
 
-                            <label class="inline-flex items-center gap-2">
-                                <input type="radio" name="theme" value="light" class="form-radio">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">Light</span>
-                            </label>
+                    <label class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                        Interface Theme
+                    </label>
 
-                            <label class="inline-flex items-center gap-2">
-                                <input type="radio" name="theme" value="dark" class="form-radio">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">Dark</span>
-                            </label>
-                        </div>
-                    </fieldset>
+                    <div class="grid grid-cols-3 gap-4">
 
-                    {{-- <fieldset>
-                        <legend class="text-sm font-medium text-gray-700 dark:text-neutral-200 mb-2">Layout</legend>
-                        <label class="inline-flex items-center gap-2">
-                            <input type="checkbox" name="compact" class="form-checkbox">
-                            <span class="text-sm text-gray-600 dark:text-neutral-400">Compact sidebar</span>
-                        </label>
+                        <button @click="setTheme('light')"
+                            :class="theme === 'light'
+                                ?
+                                'ring-2 ring-indigo-600 bg-neutral-50 dark:bg-neutral-800' :
+                                'border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'"
+                            class="relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            role="radio" aria-label="Light Theme">
+                            <div
+                                class="w-8 h-8 rounded-full bg-white border border-neutral-200 flex items-center justify-center shadow-sm mb-3 text-amber-500">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <span class="text-sm font-medium text-neutral-900 dark:text-neutral-200">Light</span>
+                            <div x-show="theme === 'light'" class="absolute top-2 right-2 text-indigo-600">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
 
-                        <label class="inline-flex items-center gap-2">
-                            <input type="checkbox" name="condensed" class="form-checkbox">
-                            <span class="text-sm text-gray-600 dark:text-neutral-400">Condensed header</span>
-                        </label>
-                    </fieldset> --}}
+                        <button @click="setTheme('dark')"
+                            :class="theme === 'dark'
+                                ?
+                                'ring-2 ring-indigo-600 bg-neutral-50 dark:bg-neutral-800' :
+                                'border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'"
+                            class="relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            role="radio" aria-label="Dark Theme">
+                            <div
+                                class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center shadow-sm mb-3 text-indigo-400">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                            </div>
+                            <span class="text-sm font-medium text-neutral-900 dark:text-neutral-200">Dark</span>
+                            <div x-show="theme === 'dark'" class="absolute top-2 right-2 text-indigo-600">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
 
-                    <div>
-                        <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save
-                            appearance settings</button>
+                        <button @click="setTheme('system')"
+                            :class="theme === 'system'
+                                ?
+                                'ring-2 ring-indigo-600 bg-neutral-50 dark:bg-neutral-800' :
+                                'border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'"
+                            class="relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            role="radio" aria-label="System Theme">
+                            <div
+                                class="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 flex items-center justify-center shadow-sm mb-3 text-neutral-500 dark:text-neutral-300">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <span class="text-sm font-medium text-neutral-900 dark:text-neutral-200">System</span>
+                            <div x-show="theme === 'system'" class="absolute top-2 right-2 text-indigo-600">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+
                     </div>
-                </form>
+                </div>
             </section>
 
             <!-- Integrations -->
@@ -436,5 +526,39 @@
             </form>
         </div>
     </div>
+    <script>
+        function themeSwitcher() {
+            return {
+                theme: localStorage.getItem('theme') || 'system',
 
+                initTheme() {
+                    this.applyTheme(this.theme);
+
+                    // Watch for system changes if 'system' is selected
+                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                        if (this.theme === 'system') {
+                            this.applyTheme('system');
+                        }
+                    });
+                },
+
+                setTheme(val) {
+                    this.theme = val;
+                    localStorage.setItem('theme', val);
+                    this.applyTheme(val);
+                },
+
+                applyTheme(val) {
+                    const isDark = val === 'dark' || (val === 'system' && window.matchMedia('(prefers-color-scheme: dark)')
+                        .matches);
+
+                    if (isDark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }
+            }
+        }
+    </script>
 </div>

@@ -20,7 +20,22 @@
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     @vite('resources/css/app.css')
 
+    <script>
+        (function() {
+            // 1. Read the theme from LocalStorage
+            const theme = localStorage.getItem('theme') || 'system';
 
+            // 2. Check if system is dark
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            // 3. Apply the class immediately
+            if (theme === 'dark' || (theme === 'system' && systemDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <style>
         html {
             scroll-behavior: smooth;
@@ -224,7 +239,8 @@
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
                 </flux:sidebar.nav>
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
-                    <flux:sidebar.profile :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null"
+                    <flux:sidebar.profile
+                        :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null"
                         name="{{ Str::title(Auth::guard('web')->user()->name) }}" />
                     <flux:menu>
                         <flux:menu.radio.group>
