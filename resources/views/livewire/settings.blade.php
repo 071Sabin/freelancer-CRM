@@ -226,8 +226,8 @@
                         </div>
                     </div>
                     <x-primary-button type="submit" wire:loading.attr="disabled">
-                        <svg wire:loading wire:target="updateInfo" class="animate-spin -ml-1 mr-2 h-4 w-4 text-current"
-                            fill="none" viewBox="0 0 24 24">
+                        <svg wire:loading wire:target="updateInfo"
+                            class="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                 stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor"
@@ -241,72 +241,129 @@
 
             <!-- Security -->
             <section id="panel-security" role="tabpanel"
-                class="tab-panel bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Security</h2>
-                <p class="text-sm text-gray-500 dark:text-neutral-400 mb-4">Change password, enable 2FA, and manage
-                    active sessions.</p>
+                class="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700/60 rounded-xl shadow-sm overflow-hidden">
 
-                <!-- Change password -->
-                <form action="#" method="POST" class="space-y-3 mb-6">
-                    <label>
-                        <span class="text-sm text-gray-600 dark:text-neutral-400">Current password</span>
-                        <input name="current_password" type="password"
-                            class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </label>
+                <div
+                    class="px-6 py-5 border-b border-neutral-100 dark:border-neutral-700/60 bg-neutral-50/50 dark:bg-neutral-800">
+                    <h2 class="text-base font-semibold text-neutral-900 dark:text-white">Security Settings</h2>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Manage your password, 2FA, and active
+                        sessions.</p>
+                </div>
 
-                    <label>
-                        <span class="text-sm text-gray-600 dark:text-neutral-400">New password</span>
-                        <input name="password" type="password"
-                            class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </label>
+                <div class="p-6 space-y-8">
 
-                    <label>
-                        <span class="text-sm text-gray-600 dark:text-neutral-400">Confirm new password</span>
-                        <input name="password_confirmation" type="password"
-                            class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </label>
+                    <form action="#" method="POST">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1">
+                                <h3 class="text-sm font-medium text-neutral-900 dark:text-white">Password</h3>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1 leading-relaxed">
+                                    Ensure your account is using a long, random password to stay secure.
+                                </p>
+                            </div>
 
-                    <div>
-                        <button type="submit"
-                            class="px-4 py-2 mt-3 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Update
-                            password</button>
-                    </div>
-                </form>
+                            <div class="md:col-span-2 space-y-4">
+                                <x-input-field type="password" label="Current Password" name="current_password" />
 
-                <!-- 2FA toggle -->
-                <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-800 dark:text-neutral-100">Two-factor
-                                Authentication</h3>
-                            <p class="text-sm text-gray-500 dark:text-neutral-400">Use an authenticator app for
-                                stronger account security.</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <x-input-field type="password" label="New Password" name="password" />
+                                    <x-input-field type="password" label="Confirm Password"
+                                        name="password_confirmation" />
+                                </div>
+
+                                <div class="pt-2 flex justify-end">
+                                    <x-primary-button type="submit">Update Password</x-primary-button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="border-t border-neutral-100 dark:border-neutral-700/60"></div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="p-2 bg-neutral-100 dark:bg-neutral-700/50 rounded-lg text-neutral-500 dark:text-neutral-400">
+                                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3
+                                    class="text-sm font-medium text-neutral-900 dark:text-white flex items-center gap-2">
+                                    Two-Factor Authentication
+                                    <span
+                                        class="inline-flex items-center rounded-md bg-neutral-100 dark:bg-neutral-700/50 px-2 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-400">Disabled</span>
+                                </h3>
+                                <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-md">
+                                    Add an extra layer of security to your account using an authenticator app like
+                                    Google Authenticator or Authy.
+                                </p>
+                            </div>
                         </div>
                         <form action="#" method="POST">
                             <button type="submit"
-                                class="px-3 py-2 rounded-md bg-neutral-100 dark:bg-neutral-700 dark:text-neutral-100">Enable
-                                / Disable</button>
+                                class="whitespace-nowrap px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Enable 2FA
+                            </button>
                         </form>
                     </div>
-                </div>
 
-                <!-- Sessions -->
-                <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-4">
-                    <h3 class="text-sm font-medium text-gray-800 dark:text-neutral-100">Active sessions</h3>
-                    <p class="text-sm text-gray-500 dark:text-neutral-400 mb-3">Revoke sessions you don't recognize.
-                    </p>
+                    <div class="border-t border-neutral-100 dark:border-neutral-700/60"></div>
 
-                    <ul class="space-y-2">
-                        <!-- Example session item -->
-                        <li
-                            class="flex items-center justify-between p-2 rounded-md bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-700">
-                            <div>
-                                <p class="text-sm font-medium text-gray-800 dark:text-neutral-100">Chrome • Mac</p>
-                                <p class="text-xs text-gray-500 dark:text-neutral-400">IP 192.0.2.1 • 2 hours ago</p>
-                            </div>
-                            <button class="text-xs text-rose-600">Sign out</button>
-                        </li>
-                    </ul>
+                    <div>
+                        <h3 class="text-sm font-medium text-neutral-900 dark:text-white mb-4">Active Sessions</h3>
+                        <div
+                            class="bg-neutral-50 dark:bg-neutral-900/50 rounded-xl border border-neutral-200 dark:border-neutral-700/60 overflow-hidden">
+                            <ul class="divide-y divide-neutral-200 dark:divide-neutral-700/60">
+
+                                <li class="flex items-center justify-between p-4">
+                                    <div class="flex items-center gap-4">
+                                        <svg class="w-8 h-8 text-neutral-400" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                        <div>
+                                            <p
+                                                class="text-sm font-medium text-neutral-900 dark:text-white flex items-center gap-2">
+                                                Chrome on macOS
+                                                <span
+                                                    class="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 px-1.5 py-0.5 rounded font-medium">This
+                                                    device</span>
+                                            </p>
+                                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                                                192.168.1.1 • San Francisco, US
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="flex items-center justify-between p-4 bg-white dark:bg-neutral-800">
+                                    <div class="flex items-center gap-4">
+                                        <svg class="w-8 h-8 text-neutral-400" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        <div>
+                                            <p class="text-sm font-medium text-neutral-900 dark:text-white">Safari on
+                                                iPhone</p>
+                                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                                                Last active 2 days ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        class="text-xs font-medium text-red-600 hover:text-red-700 dark:hover:text-red-400 transition-colors">
+                                        Revoke
+                                    </button>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 

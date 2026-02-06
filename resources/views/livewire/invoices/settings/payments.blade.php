@@ -13,65 +13,99 @@
 
     <flux:separator variant="subtle" />
 
-    <form wire:submit.prevent="save">
+    <form wire:submit.prevent="save" class="space-y-12 pb-24">
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
-
-            <div class="md:col-span-1">
-                <flux:heading size="lg" class="mb-2">Defaults</flux:heading>
-                <div class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+            <div class="lg:col-span-1">
+                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">Invoice Defaults</h3>
+                <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
                     These values will be automatically applied to new invoices to save you time. You can override them
                     on individual invoices.
-                </div>
+                </p>
             </div>
 
-            <div class="md:col-span-2">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+            <div
+                class="lg:col-span-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                    <flux:input type="number" step="0.01" label="Default Tax Rate"
-                        wire:model.defer="default_tax_rate" icon="percent-badge" placeholder="0.00" />
-
-                    <flux:input type="number" label="Payment Terms (Days)" wire:model.defer="default_due_days"
-                        description="Days until invoice is due." placeholder="14" />
-
-                    <flux:input type="number" step="0.01" label="Default Discount Rate"
-                        wire:model.defer="default_discount_rate" icon="percent-badge" placeholder="0.00" />
-
-                    <div class="sm:col-span-2">
-                        <flux:sidebar.toggle 
-                            label="Allow Partial Payments" 
-                            description="Let clients pay invoices in installments."
-                            wire:model.defer="allow_partial_payments" 
-                        />
+                    <div class="space-y-1">
+                        <x-input-field type="number" step="0.01" label="Default Tax Rate (%)"
+                            model="default_tax_rate" placeholder="0.00" />
                     </div>
+
+                    <div class="space-y-1">
+                        <x-input-field type="number" label="Payment Terms (Days)" model="default_due_days"
+                            placeholder="14" />
+                    </div>
+
+                    <div class="space-y-1">
+                        <x-input-field type="number" step="0.01" label="Default Discount Rate (%)"
+                            model="default_discount_rate" placeholder="0.00" />
+                    </div>
+
+                    <div
+                        class="sm:col-span-2 flex items-center justify-between p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg border border-neutral-100 dark:border-neutral-800">
+                        <div>
+                            <span class="block text-sm font-medium text-neutral-900 dark:text-white">Allow Partial
+                                Payments</span>
+                            <span class="block text-xs text-neutral-500 dark:text-neutral-400">Let clients pay invoices
+                                in installments.</span>
+                        </div>
+                        <button type="button" wire:click="$toggle('allow_partial_payments')"
+                            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 {{ $allow_partial_payments ? 'bg-indigo-600' : 'bg-neutral-200 dark:bg-neutral-700' }}"
+                            role="switch" aria-checked="{{ $allow_partial_payments ? 'true' : 'false' }}">
+                            <span aria-hidden="true"
+                                class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $allow_partial_payments ? 'translate-x-5' : 'translate-x-0' }}"></span>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        <div class="my-10">
-            <flux:separator variant="subtle" />
-        </div>
+        <div class="border-t border-neutral-200 dark:border-neutral-800"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
-            <div class="md:col-span-1">
-                <flux:heading size="lg" class="mb-2">Late Fees</flux:heading>
-                <div class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    Add penalties to overdue invoices.
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+            <div class="lg:col-span-1">
+                <h3 class="text-lg font-semibold text-neutral-900 dark:text-white">Late Fees</h3>
+                <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                    Automatically add penalties to invoices that are past their due date.
+                </p>
             </div>
 
-            <div class="md:col-span-2">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
-                    <flux:select label="Late Fee Type" wire:model.defer="default_late_fee_type" placeholder="Select type">
-                        <option value="percentage">Percentage</option>
-                        <option value="fixed">Fixed Amount</option>
-                    </flux:select>
-                    <flux:input type="number" step="0.01" label="Late Fee Rate (%)"
-                        wire:model.defer="default_late_fee_rate" placeholder="0.00" />
+            <div
+                class="lg:col-span-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                    <flux:input type="number" step="0.01" label="Late Fee Amount"
-                        wire:model.defer="default_late_fee_amount" placeholder="0.00" />
+                    <div class="w-full group">
+                        <label class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white mb-2">
+                            Late Fee Type
+                        </label>
+                        <div class="relative">
+                            <select wire:model.defer="default_late_fee_type"
+                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
+                                <option value="">Select type...</option>
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="fixed">Fixed Amount ($)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @if ($default_late_fee_type === 'percentage')
+                        <x-input-field type="number" step="0.01" label="Late Fee Rate (%)"
+                            model="default_late_fee_rate" placeholder="5.00" />
+                    @elseif($default_late_fee_type === 'fixed')
+                        <x-input-field type="number" step="0.01" label="Late Fee Amount"
+                            model="default_late_fee_amount" placeholder="50.00" />
+                    @else
+                        <div class="hidden sm:block"></div>
+                    @endif
                 </div>
+
+                @if (!$default_late_fee_type)
+                    <p class="mt-4 text-xs text-neutral-400 dark:text-neutral-500 italic">Select a fee type to configure
+                        rates.</p>
+                @endif
             </div>
         </div>
 
@@ -86,3 +120,4 @@
 
     </form>
 </div>
+

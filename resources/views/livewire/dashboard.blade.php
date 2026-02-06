@@ -47,7 +47,7 @@
                         Recent Projects
                     </h2>
                 </div>
-                <a href="{{route('projects')}}" wire:navigate
+                <a href="{{ route('projects') }}" wire:navigate
                     class="text-xs font-medium text-neutral-500 hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-white transition-colors">
                     View All &rarr;
                 </a>

@@ -283,7 +283,7 @@
                     </flux:menu>
                 </flux:dropdown>
             </flux:header>
-            <div class="flex-1 min-w-0 lg:m-10 p-3">
+            <div class="flex-1 min-w-0 lg:m-5">
                 <div class="w-full overflow-x-auto">
                     {{ $slot }}
                 </div>

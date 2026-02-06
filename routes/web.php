@@ -16,29 +16,12 @@ use App\Livewire\Invoices\InvoiceIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    if(Auth::user()){
-        return redirect()->route('dashboard');
-    }
-    return view('welcome');
 
-})->name('welcome');
-
-Route::get('/about', function () {
-    if(Auth::user()){
-        return redirect()->route('dashboard');
-    }
-    return view('about');
-
-})->name('about');
-Route::get('/pricing', function () {
-    if(Auth::user()){
-        return redirect()->route('dashboard');
-    }
-    return view('pricing');
-
-})->name('pricing');
-
+Route::middleware('guest:web')->group(function () {
+    Route::view('/', 'welcome')->name('welcome');
+    Route::view('/about', 'about')->name('about');
+    Route::view('/pricing', 'pricing')->name('pricing');
+});
 
 Route::get('/register', Register::class)->name('register');
 
