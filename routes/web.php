@@ -24,11 +24,20 @@ Route::get('/', function () {
 
 })->name('welcome');
 
+Route::get('/about', function () {
+    if(Auth::user()){
+        return redirect()->route('dashboard');
+    }
+    return view('about');
+
+})->name('about');
+
 
 Route::get('/register', Register::class)->name('register');
+
 Route::get('/login', Login::class)->name('login');
 // Route::get('/login', Login::class)->name('login');
-Route::get('/freelancers', FreelancerDetails::class)->name('freelancers');
+// Route::get('/freelancers', FreelancerDetails::class)->name('freelancers');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');

@@ -17,13 +17,18 @@ class InvoiceTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setPerPageAccepted([10, 25, 50, 100]);
+        // $this->setSearchIcon('heroicon-m-magnifying-glass');
+
+
+        $this->setSearchPlaceholder('Search Invoices...');
     }
 
 
     public function query(): Builder
     {
         return Project::query()
-            ->with('client'); // ✅ avoid N+1 queries
+            ->with('client');
     }
 
     public function columns(): array
@@ -41,12 +46,12 @@ class InvoiceTable extends DataTableComponent
             Column::make("Project", "project.name")
                 ->sortable()->format(function($value){return(e(ucwords($value)));}),
 
-            Column::make("Status", "status")
+            Column::make("Status", "invoice_status")
                 ->sortable()
                 ->format(
                     fn($value, $row) =>
                     view('components.badges.invoice-status', [
-                        'status' => $value
+                        'invoice_status' => $value
                     ])
                 ),
 
@@ -105,7 +110,7 @@ class InvoiceTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            SelectFilter::make('Status', 'status')
+            SelectFilter::make('Status', 'invoice_status')
                 ->options([
                     '' => 'All',
                     'draft' => 'Draft',
@@ -124,12 +129,12 @@ class InvoiceTable extends DataTableComponent
                     // special logic for overdue (enterprise behavior)
                     if ($value === 'overdue') {
                         $query
-                            ->whereNotIn('status', ['paid', 'void', 'canceled'])
+                            ->whereNotIn('invoice_status', ['paid', 'void', 'canceled'])
                             ->whereDate('due_date', '<', now());
                         return;
                     }
 
-                    $query->where('status', $value);
+                    $query->where('invoice_status', $value);
                 }),
         ];
     }

@@ -24,7 +24,7 @@ return new class extends Migration
             // Identity
             $table->string('invoice_number')->index();
             $table->string('type')->default('invoice')->index(); // invoice, credit_note, proforma
-            $table->string('status')->index(); // draft, sent, partially_paid, paid, overdue, void, canceled
+            $table->string('invoice_status')->index(); // draft, sent, partially_paid, paid, overdue, void, canceled
             $table->string('reference')->nullable()->index(); // PO / external ref
             $table->string('public_token', 64)->unique();
 
@@ -73,8 +73,8 @@ return new class extends Migration
 
             // Prevent duplicate invoice numbers per user
             $table->unique(['user_id', 'invoice_number']);
-            $table->index(['status', 'issue_date']);
-            $table->index(['status', 'due_date']);
+            $table->index(['invoice_status', 'issue_date']);
+            $table->index(['invoice_status', 'due_date']);
         });
     }
 

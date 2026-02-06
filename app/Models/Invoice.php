@@ -17,7 +17,7 @@ class Invoice extends Model
         'uuid',
         'invoice_number',
         'type',
-        'status',
+        'invoice_status',
         'reference',
         'public_token',
         'issue_date',

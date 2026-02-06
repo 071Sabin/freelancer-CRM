@@ -92,7 +92,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
                 'uuid'           => (string) Str::uuid(),
                 'invoice_number' => $invoiceNumber,
                 'type'           => 'invoice',
-                'status'         => 'draft',
+                'invoice_status' => 'draft',
                 'reference'      => null,
                 'public_token'   => Str::random(64),
                 'issue_date'     => $this->issue_date,

@@ -89,6 +89,11 @@
                     <flux:text class="text-neutral-500">
                         Start by selecting a client. You can add items in the next step.
                     </flux:text>
+                    @if ($due_date_notice)
+                        <p class="mt-2 text-xs text-yellow-500 dark:text-yellow-400">
+                            {{ $due_date_notice }}
+                        </p>
+                    @endif
                 </div>
 
                 <flux:select label="Client" wire:model="client_id" placeholder="Select client">
@@ -111,11 +116,6 @@
                     <flux:input type="date" label="Issue Date" wire:model.live="issue_date" />
                     <div>
                         <flux:input type="date" label="Due Date" wire:model.defer="due_date" />
-                        @if ($due_date_notice)
-                            <p class="mt-2 text-xs text-yellow-500 dark:text-yellow-400">
-                                {{ $due_date_notice }}
-                            </p>
-                        @endif
                     </div>
                 </div>
 
