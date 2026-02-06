@@ -224,22 +224,21 @@
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
                 </flux:sidebar.nav>
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
-                    <flux:sidebar.profile avatar="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
+                    <flux:sidebar.profile :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null"
                         name="{{ Str::title(Auth::guard('web')->user()->name) }}" />
                     <flux:menu>
                         <flux:menu.radio.group>
-                            <flux:menu.radio checked>{{ Str::title(Auth::guard('web')->user()->name) }}
-                            </flux:menu.radio>
+                            <p>{{ Str::title(Auth::guard('web')->user()->name) }}</p>
                             <p class="text-sm font-thin text-stone-400">
                                 {{ Auth::guard('web')->user()->email }}</p>
                         </flux:menu.radio.group>
                         <flux:menu.separator />
-                        <flux:menu.item icon="arrow-right-start-on-rectangle">
-                            <a href="#" onclick="openSignoutModal(event)"
-                                class="inline-flex items-center w-full p-2 rounded">
-                                <span class="">Sign out</span>
-                            </a>
-                        </flux:menu.item>
+                        <div class="flex justify-center">
+                            <flux:modal.trigger name="signout">
+                                <x-danger-button>Sign Out</x-danger-button>
+                            </flux:modal.trigger>
+                        </div>
+
                     </flux:menu>
                 </flux:dropdown>
             </flux:sidebar>
@@ -250,16 +249,17 @@
                     <i class="bi bi-person-circle text-2xl"></i>
                     <flux:menu>
                         <flux:menu.radio.group>
-                            <flux:menu.radio checked>{{ Str::title(Auth::guard('web')->user()->name) }}
+                            <flux:menu.radio>{{ Str::title(Auth::guard('web')->user()->name) }}
                             </flux:menu.radio>
                         </flux:menu.radio.group>
                         <flux:menu.separator />
-                        <flux:menu.item icon="arrow-right-start-on-rectangle">
-                            <a href="#" onclick="openSignoutModal(event)"
-                                class="inline-flex items-center w-full p-2 rounded">
-                                <span class="">Sign out</span>
-                            </a>
-                        </flux:menu.item>
+
+                        <div class="flex justify-center">
+                            <flux:modal.trigger name="signout">
+                                <x-danger-button>Sign Out</x-danger-button>
+                            </flux:modal.trigger>
+                        </div>
+
                     </flux:menu>
                 </flux:dropdown>
             </flux:header>
@@ -270,38 +270,31 @@
             </div>
         </div>
 
-        <!-- SIGNOUT MODAL -->
-        <div id="signoutModal" class="fixed inset-0 hidden items-center justify-center z-[9999]">
-
-            <!-- Blurred Dark/Light Background -->
-            <div class="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm" onclick="closeSignoutModal()">
-            </div>
-
-            <!-- Modal Box -->
-            <div
-                class="relative bg-white dark:bg-neutral-900 border border-stone-200 dark:border-stone-700 
-                rounded-xl shadow-xl w-full max-w-md mx-4 p-6 flex items-center justify-center flex-col">
-
-                <!-- Title -->
-                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                    Confirm Sign Out
-                </h2>
-
-                <!-- Description -->
-                <p class="text-gray-500 dark:text-gray-400 mb-6">
+        <flux:modal name="signout" class="md:w-96">
+            <div class="text-center">
+                <flux:heading size="lg">Sign Out</flux:heading>
+                <flux:text class="mt-2">
                     Are you sure you want to sign out? <br>You will need to log in again to continue.
-                </p>
-
-                <!-- Buttons -->
-                <div class="flex justify-end gap-3">
-                    <x-secondary-button onclick="closeSignoutModal()">cancel</x-secondary-button>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <x-danger-button type="submit">sign out</x-danger-button>
-                    </form>
-                </div>
+                </flux:text>
             </div>
-        </div>
+
+            <div class="flex gap-3 mt-4">
+                <form method="POST" action="{{ route('logout') }}" class="flex-1">
+                    @csrf
+                    <x-danger-button type="submit" class="w-full justify-center text-center">
+                        SIGN OUT
+                    </x-danger-button>
+                </form>
+
+                <flux:modal.close class="flex-1">
+                    <x-primary-button variant="ghost" class="w-full justify-center text-center">
+                        CANCEL
+                    </x-primary-button>
+                </flux:modal.close>
+            </div>
+
+
+        </flux:modal>
     @endauth
 
     <footer
@@ -468,21 +461,6 @@
 
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script> --}}
-    <script>
-        function openSignoutModal(e) {
-            e.preventDefault();
-            document.getElementById('signoutModal').classList.remove('hidden');
-            document.getElementById('signoutModal').classList.add('flex');
-        }
-
-        function closeSignoutModal() {
-            document.getElementById('signoutModal').classList.add('hidden');
-            document.getElementById('signoutModal').classList.remove('flex');
-        }
-    </script>
-
-
-
 
     @livewireScripts
     @fluxScripts

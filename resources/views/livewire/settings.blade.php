@@ -41,9 +41,11 @@
         <nav id="settings-nav" aria-label="Settings sections"
             class="mb-4 lg:mb-0 lg:w-72 shrink-0 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4">
             <div class="flex items-center gap-3 mb-4">
-                <img src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
+                {{-- <img src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
                     alt="{{ Auth::guard('web')->user()->name ?? 'User' }}"
-                    class="w-10 h-10 rounded-full object-cover border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700" />
+                    class="w-10 h-10 rounded-full object-cover border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700" /> --}}
+                <flux:profile :chevron="false" circle
+                    :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null" />
                 <div>
                     <p class="text-sm font-semibold text-gray-800 dark:text-neutral-100">
                         {{ Auth::guard('web')->user()->name ?? 'User Name' }}</p>
@@ -107,11 +109,22 @@
                         </div>
 
                         <div class="flex flex-col items-center gap-3">
+                            @php($user = Auth::guard('web')->user())
+
                             <div
-                                class="w-28 h-28 rounded-full overflow-hidden border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700">
-                                <img id="settings-avatar-preview"
-                                    src="{{ asset('uploads/' . Auth::guard('web')->user()->profile_pic) }}"
-                                    alt="Avatar" class="w-full h-full object-cover" />
+                                class="w-28 h-28 rounded-full overflow-hidden border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-700 flex items-center justify-center">
+
+                                @if ($user->profile_pic)
+                                    <img id="settings-avatar-preview" src="{{ asset('uploads/' . $user->profile_pic) }}"
+                                        alt="Avatar" class="w-full h-full object-cover" />
+                                @else
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                        class="w-10 h-10 text-neutral-400 dark:text-neutral-300">
+                                        <path fill-rule="evenodd"
+                                            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                @endif
                             </div>
 
                             <label class="block w-full text-sm">
