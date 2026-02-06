@@ -242,19 +242,24 @@
                     <flux:sidebar.profile
                         :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null"
                         name="{{ Str::title(Auth::guard('web')->user()->name) }}" />
-                    <flux:menu>
-                        <flux:menu.radio.group>
-                            <p>{{ Str::title(Auth::guard('web')->user()->name) }}</p>
-                            <p class="text-sm font-thin text-stone-400">
-                                {{ Auth::guard('web')->user()->email }}</p>
-                        </flux:menu.radio.group>
-                        <flux:menu.separator />
-                        <div class="flex justify-center">
-                            <flux:modal.trigger name="signout">
-                                <x-danger-button>Sign Out</x-danger-button>
-                            </flux:modal.trigger>
+                    <flux:menu
+                        class="min-w-[240px] !p-0 overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl shadow-neutral-900/5 ring-1 ring-neutral-900/5">
+
+                        <div
+                            class="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/50">
+                            <p class="text-sm font-semibold text-neutral-900 dark:text-white truncate">
+                                {{ Str::title(Auth::guard('web')->user()->name) }}
+                            </p>
+                            <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5 font-medium">
+                                {{ Auth::guard('web')->user()->email }}
+                            </p>
                         </div>
 
+                        <div class="p-1.5">
+                            <flux:modal.trigger name="signout">
+                                <flux:menu.item icon="arrow-right-start-on-rectangle">Logout</flux:menu.item>
+                            </flux:modal.trigger>
+                        </div>
                     </flux:menu>
                 </flux:dropdown>
             </flux:sidebar>
@@ -262,20 +267,19 @@
                 <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
                 <flux:spacer />
                 <flux:dropdown position="top" align="start">
-                    <i class="bi bi-person-circle text-2xl"></i>
+                    <flux:profile :chevron="false" circle
+                        :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null" />
                     <flux:menu>
                         <flux:menu.radio.group>
                             <flux:menu.radio>{{ Str::title(Auth::guard('web')->user()->name) }}
                             </flux:menu.radio>
                         </flux:menu.radio.group>
                         <flux:menu.separator />
-
-                        <div class="flex justify-center">
-                            <flux:modal.trigger name="signout">
-                                <x-danger-button>Sign Out</x-danger-button>
-                            </flux:modal.trigger>
-                        </div>
-
+                        <flux:menu.item icon="arrow-right-start-on-rectangle">
+                            <div class="p-1.5">
+                                <flux:modal.trigger name="signout">Logout</flux:modal.trigger>
+                            </div>
+                        </flux:menu.item>
                     </flux:menu>
                 </flux:dropdown>
             </flux:header>
@@ -286,6 +290,7 @@
             </div>
         </div>
 
+        {{-- flux signout modal --}}
         <flux:modal name="signout" class="md:w-96">
             <div class="text-center">
                 <flux:heading size="lg">Sign Out</flux:heading>
@@ -308,8 +313,6 @@
                     </x-primary-button>
                 </flux:modal.close>
             </div>
-
-
         </flux:modal>
     @endauth
 

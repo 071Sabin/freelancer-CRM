@@ -16,23 +16,6 @@
         @endif
 
         <x-error></x-error>
-
-        <div class="flex items-center gap-3">
-            <!-- Theme toggle UI (JS toggles 'dark' on <html>) -->
-            <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-600 dark:text-neutral-400">Theme</span>
-                <button id="settings-theme-toggle" type="button"
-                    class="relative inline-flex items-center h-7 w-14 rounded-full bg-neutral-200 dark:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    aria-pressed="false">
-                    <span id="settings-theme-thumb"
-                        class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition translate-x-1 dark:translate-x-7"></span>
-                </button>
-            </div>
-
-            <a href="#"
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-neutral-100 dark:bg-neutral-700 dark:text-neutral-100 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-600">View
-                profile</a>
-        </div>
     </header>
 
     <div class="lg:flex lg:items-start lg:gap-6">
@@ -51,29 +34,91 @@
                 </div>
             </div>
 
-            <div class="space-y-1">
-                <button data-tab="profile"
-                    class="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
-                    aria-controls="panel-profile">Profile</button>
-                <button data-tab="security"
-                    class="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
-                    aria-controls="panel-security">Security</button>
-                <button data-tab="notifications"
-                    class="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
-                    aria-controls="panel-notifications">Notifications</button>
-                <button data-tab="appearance"
-                    class="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
-                    aria-controls="panel-appearance">Appearance</button>
-                <button data-tab="integrations" href="#panel-integrations"
-                    class="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
-                    aria-controls="panel-appearance">Integrations</button>
-                <button data-tab="api"
-                    class="w-full text-left px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
-                    aria-controls="panel-api">API Keys</button>
-                <a data-tab="danger" href="#panel-danger"
-                    class="w-full text-left px-3 py-2 rounded-md text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900 focus:outline-none"
-                    aria-controls="panel-danger">Danger Zone</a>
-            </div>
+            <nav class="space-y-1 w-full" aria-label="Settings Sidebar">
+
+                <div
+                    class="px-3 mb-2 mt-4 md:mt-0 text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+                    General
+                </div>
+
+                <button data-tab="profile" aria-controls="panel-profile"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
+               bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+                    <svg class="w-4 h-4 text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profile
+                </button>
+
+                <button data-tab="security" aria-controls="panel-security"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-700">
+                    <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Security
+                </button>
+
+                <button data-tab="notifications" aria-controls="panel-notifications"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-700">
+                    <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    Notifications
+                </button>
+
+                <button data-tab="appearance" aria-controls="panel-appearance"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-700">
+                    <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                    Appearance
+                </button>
+
+                <div
+                    class="px-3 mt-6 mb-2 text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+                    Workspace
+                </div>
+
+                <button data-tab="integrations" aria-controls="panel-integrations"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-700">
+                    <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    </svg>
+                    Integrations
+                </button>
+
+                <button data-tab="api" aria-controls="panel-api"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-700">
+                    <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    API Keys
+                </button>
+
+                <div class="my-4 border-t border-neutral-100 dark:border-neutral-800"></div>
+
+                <a data-tab="danger" href="#panel-danger" aria-controls="panel-danger"
+                    class="group w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/20">
+                    <svg class="w-4 h-4 text-red-500/70 group-hover:text-red-600 dark:text-red-400 dark:group-hover:text-red-300"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Danger Zone
+                </a>
+            </nav>
         </nav>
 
         <!-- Right content -->
@@ -118,8 +163,8 @@
 
                                     <div wire:loading wire:target="profile_pic"
                                         class="absolute inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center">
-                                        <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24">
+                                        <svg class="animate-spin h-8 w-8 text-white"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10"
                                                 stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor"
@@ -470,62 +515,74 @@
                 </div>
             </section>
 
-            <!-- Danger -->
+            {{-- DANGER ZONE --}}
             <section id="panel-danger" role="tabpanel"
-                class="tab-panel bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Danger Zone</h2>
-                <p class="text-sm text-gray-500 dark:text-neutral-400 mb-4">Irreversible actions — proceed carefully.
-                </p>
+                class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden shadow-sm">
 
-                <div class="space-y-4">
-                    <div
-                        class="p-4 rounded-md bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-700">
-                        <h3 class="font-medium text-gray-800 dark:text-neutral-100">Delete account</h3>
-                        <p class="text-sm text-gray-500 dark:text-neutral-400">This permanently deletes your account
-                            and all data.</p>
-                        <button data-modal-open="delete-account"
-                            class="mt-3 px-3 py-2 rounded-md bg-rose-600 text-white">Delete account</button>
-                    </div>
+                <div
+                    class="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900">
+                    <h2 class="text-base font-semibold text-neutral-900 dark:text-white">Danger Zone</h2>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Manage data export and account deletion.
+                    </p>
+                </div>
 
-                    <div
-                        class="p-4 rounded-md bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-700">
-                        <h3 class="font-medium text-gray-800 dark:text-neutral-100">Export data</h3>
-                        <p class="text-sm text-gray-500 dark:text-neutral-400">Request a download of your data (GDPR).
-                        </p>
-                        <form action="#" method="POST">
-                            <button class="mt-3 px-3 py-2 rounded-md bg-neutral-100 dark:bg-neutral-600">Request
-                                export</button>
+                <div class="p-6 space-y-8">
+
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-sm font-medium text-neutral-900 dark:text-white">Export Data</h3>
+                            <p class="text-sm text-neutral-500 dark:text-neutral-400 mt-1 max-w-lg">
+                                Download a copy of your personal data, including projects and invoices, in JSON format
+                                (GDPR Compliant).
+                            </p>
+                        </div>
+                        <form action="#" method="POST" class="flex-shrink-0">
+                            <button type="button"
+                                class="inline-flex items-center justify-center px-4 py-2 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-sm text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 transition-all">
+                                <svg class="w-4 h-4 mr-2 text-neutral-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" />
+                                </svg>
+                                Export Data
+                            </button>
                         </form>
                     </div>
+
+                    <div class="border-t border-neutral-100 dark:border-neutral-800"></div>
+
+                    <div
+                        class="rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 p-5">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div>
+                                <h3 class="text-sm font-bold text-red-700 dark:text-red-400">Delete Account</h3>
+                                <p class="text-sm text-red-600/80 dark:text-red-300/70 mt-1 max-w-xl">
+                                    This action is permanent and cannot be undone. All your projects, client data, and
+                                    invoices will be permanently erased.
+                                </p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <button data-modal-open="delete-account"
+                                    class="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all">
+                                    <svg class="w-4 h-4 mr-2 text-red-100" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
         </section>
     </div>
 
-    <!-- Modal markup placeholder (hidden by default) -->
-    <div id="modal-delete-account" class="fixed inset-0 hidden items-center justify-center z-50">
-        <div class="absolute inset-0 bg-black/40"></div>
-        <div class="relative max-w-lg w-full bg-white dark:bg-neutral-800 rounded-xl p-6 z-10">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Confirm account deletion</h3>
-            <p class="text-sm text-gray-500 dark:text-neutral-400 mb-4">Type <span
-                    class="font-mono bg-neutral-100 dark:bg-neutral-700 px-2 py-1 rounded">DELETE</span> to confirm.
-            </p>
-            <form id="modal-delete-account-form" action="#" method="POST">
-                <label class="block">
-                    <input id="modal-delete-input" name="confirm"
-                        class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100"
-                        placeholder="Type DELETE" />
-                </label>
-                <div class="mt-4 flex gap-3">
-                    <button type="button" data-modal-close="delete-account"
-                        class="px-3 py-2 rounded-md bg-neutral-100 dark:bg-neutral-700">Cancel</button>
-                    <button type="submit" id="modal-delete-confirm" disabled
-                        class="px-3 py-2 rounded-md bg-rose-600 text-white disabled:opacity-50">Delete account</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
+
     <script>
         function themeSwitcher() {
             return {
