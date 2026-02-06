@@ -31,6 +31,13 @@ Route::get('/about', function () {
     return view('about');
 
 })->name('about');
+Route::get('/pricing', function () {
+    if(Auth::user()){
+        return redirect()->route('dashboard');
+    }
+    return view('pricing');
+
+})->name('pricing');
 
 
 Route::get('/register', Register::class)->name('register');

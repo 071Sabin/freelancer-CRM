@@ -107,7 +107,7 @@
                                 Freelancers
                             </a>
                         @endif
-                        <a href="#pricing" wire:navigate
+                        <a href="{{route('pricing')}}" wire:navigate
                             class="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">
                             Pricing
                         </a>
@@ -166,7 +166,7 @@
                             Freelancers
                         </a>
                     @endif
-                    <a href="#pricing" wire:navigate
+                    <a href="{{route('pricing')}}" wire:navigate
                         class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                         Pricing
                     </a>
@@ -360,7 +360,7 @@
                                 API</a> <span
                                 class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded ml-1">New</span>
                         </li>
-                        <li><a href="#"
+                        <li><a href="{{route('pricing')}}" wire:navigate
                                 class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
                         </li>
                         <li><a href="#"
