@@ -44,7 +44,7 @@
             </aside>
             <flux:separator vertical class="" />
             <flux:separator class="lg:hidden" />
-
+            
 
             <flux:main class="flex-1 min-w-0">
                 <div class="max-w-4xl space-y-8">

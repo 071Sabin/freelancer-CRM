@@ -20,8 +20,11 @@ class InvoiceTable extends DataTableComponent
         $this->setPerPageAccepted([10, 25, 50, 100]);
         // $this->setSearchIcon('heroicon-m-magnifying-glass');
 
-
         $this->setSearchPlaceholder('Search Invoices...');
+        $this->setSearchFieldAttributes([
+            'class' => 'transition-none',
+            'default' => true,
+        ]);
     }
 
 

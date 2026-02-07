@@ -25,10 +25,10 @@ class ProjectsTable extends DataTableComponent
 
         $this->setSearchPlaceholder('Search Projects...');
 
-        // $this->setSearchFieldAttributes([
-        //     'class' => 'px-2 py-2 sm:w-100 lg:w-fit rounded-lg',
-        //     'default-styling' => true,
-        // ]);
+        $this->setSearchFieldAttributes([
+            'class' => 'transition-none',
+            'default' => true,
+        ]);
 
 
         // $this->setComponentWrapperAttributes([
@@ -209,7 +209,7 @@ class ProjectsTable extends DataTableComponent
                                 text-blue-600 hover:text-blue-700
                                 bg-blue-50 hover:bg-blue-100
                                 dark:text-blue-400 dark:bg-blue-900/30 dark:hover:bg-blue-900/50
-                                transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                 focus:outline-none focus:ring-2 focus:ring-blue-400"
                             title="Edit Project">
                             <i class="bi bi-pencil-square text-base"></i>
                         </button>
@@ -221,7 +221,7 @@ class ProjectsTable extends DataTableComponent
                                 text-emerald-600 hover:text-emerald-700
                                 bg-emerald-50 hover:bg-emerald-100
                                 dark:text-emerald-400 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50
-                                transition focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                                 focus:outline-none focus:ring-2 focus:ring-emerald-400"
                             title="View Project">
                             <i class="bi bi-eye text-base"></i>
                         </button>

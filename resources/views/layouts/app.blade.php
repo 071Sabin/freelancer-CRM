@@ -14,7 +14,19 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/png" href="{{ asset('uploads/clientpivot-logo-cropped.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('uploads/clientpivot-logo-cropped.png') }}">
+    <meta name="color-scheme" content="dark light">
 
+
+    <script>
+        (function() {
+            const stored = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (stored === 'dark' || (!stored && systemDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     @livewireStyles
     @fluxAppearance
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
@@ -23,6 +35,8 @@
     <style>
         html {
             scroll-behavior: smooth;
+            color-scheme: light dark;
+
         }
 
         /* Glowing radial background utilities */
@@ -416,60 +430,68 @@
                 </flux:dropdown>
             </flux:header>
             <div class="flex-1 min-w-0 lg:p-5 my-8">
-                <div class="w-full overflow-x-auto">
+                <div class="w-full">
                     {{ $slot }}
                 </div>
             </div>
         </div>
 
         <footer
-            class="bg-slate-50 dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800/50 py-6 transition-colors duration-300">
+            class="bg-neutral-50 dark:bg-[#0a0a0a] border-t border-neutral-200/80 dark:border-neutral-800/60 py-8 transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
 
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-2">
-                        <div
-                            class="flex items-center gap-2 opacity-80 grayscale hover:grayscale-0 transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center gap-x-8 gap-y-4">
+                        <div class="flex items-center gap-2.5 group cursor-default">
                             <div
-                                class="w-6 h-6 rounded-md bg-neutral-800 dark:bg-white flex items-center justify-center text-[10px] font-bold text-white dark:text-neutral-900">
+                                class="w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white flex items-center justify-center text-[12px] font-black text-white dark:text-neutral-900 shadow-sm transition-transform group-hover:scale-105">
                                 CP
                             </div>
                             <span
-                                class="text-xs font-bold tracking-tight text-neutral-900 dark:text-white uppercase">ClientPivot</span>
+                                class="text-sm md:text-base font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
+                                ClientPivot
+                            </span>
                         </div>
-                        <p class="text-[11px] font-medium text-neutral-400 dark:text-neutral-500 tracking-tight">
-                            &copy; 2026 Internal Ops. All rights reserved.
-                        </p>
-                        <div class="hidden sm:block h-3 w-px bg-neutral-200 dark:bg-neutral-700"></div>
-                        <a href="#"
-                            class="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors uppercase tracking-wider">Privacy
-                            Policy</a>
-                        <a href="#"
-                            class="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors uppercase tracking-wider">Terms</a>
+
+                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2">
+                            <p
+                                class="text-[10px] md:text-[11px] font-semibold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest">
+                                &copy; 2026 Internal Ops
+                            </p>
+                            <div class="hidden md:block h-3 w-px bg-neutral-300 dark:bg-neutral-800"></div>
+                            <a href="#"
+                                class="text-[11px] font-bold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors uppercase tracking-wider">
+                                Privacy
+                            </a>
+                            <a href="#"
+                                class="text-[11px] font-bold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors uppercase tracking-wider">
+                                Terms
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
                         <div
-                            class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
-                            <span class="relative flex h-1.5 w-1.5">
+                            class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 shadow-[0_1px_2px_rgba(0,0,0,0,05)]">
+                            <span class="relative flex h-2 w-2">
                                 <span
                                     class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                             </span>
                             <span
-                                class="text-[10px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-tighter">API:
-                                Stable</span>
+                                class="text-[10px] md:text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-tighter">
+                                Systems: <span class="text-emerald-600 dark:text-emerald-400">Operational</span>
+                            </span>
                         </div>
 
                         <button
-                            class="flex items-center gap-2 px-4 py-1.5 text-[11px] font-bold text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-all active:scale-95 shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
+                            class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 text-[11px] font-bold text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-full transition-all active:scale-95 shadow-sm hover:shadow-md">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                     d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                                 </path>
                             </svg>
-                            Help & Support
+                            Support Center
                         </button>
                     </div>
 

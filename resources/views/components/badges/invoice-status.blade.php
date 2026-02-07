@@ -56,7 +56,7 @@
 @endphp
 
 <span
-    class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 hover:scale-105 {{ $config['class'] }}">
+    class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full hover:scale-105 {{ $config['class'] }}">
     <span class="text-[10px]">{{ $config['icon'] }}</span>
     {{ $label }}
 </span>

@@ -12,7 +12,7 @@
 
         <!-- Total Invoices -->
         <div
-            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
@@ -38,7 +38,7 @@
 
         <!-- Paid Invoices -->
         <div
-            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
@@ -63,7 +63,7 @@
 
         <!-- Outstanding Amount -->
         <div
-            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
@@ -87,7 +87,7 @@
 
         <!-- Overdue -->
         <div
-            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="relative overflow-hidden group p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">

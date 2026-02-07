@@ -1,9 +1,7 @@
 <div class="">
 
-
     <x-main-heading title="Projects" subtitle="Add and manage your projects." />
-
-
+    
     @if (session('success'))
         <div class="mb-6">
             <x-success-message>
@@ -19,7 +17,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-5 mb-10">
 
         <div
-            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
@@ -30,8 +28,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
                         </svg>
-
-
                     </div>
                 </div>
                 <div>
@@ -44,7 +40,7 @@
         </div>
 
         <div
-            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
@@ -70,7 +66,7 @@
         </div>
 
         <div
-            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
+            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
             <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                     <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
