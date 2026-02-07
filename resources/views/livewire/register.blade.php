@@ -11,7 +11,7 @@
     </div>
 
     <div
-        class="relative z-10 w-full max-w-lg bg-white dark:bg-slate-900 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 p-8 sm:p-10 transition-all duration-300">
+        class="mt-16 w-full max-w-lg bg-white dark:bg-slate-900/60 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 p-8 sm:p-10 transition-all duration-300">
 
         <div class="text-center mb-8">
             <div
@@ -21,10 +21,10 @@
                         d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h2 class="text-xl lg:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
                 Create your account
             </h2>
-            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            <p class="mt-2 text-xs lg:text-sm text-slate-500 dark:text-slate-400">
                 Join thousands of freelancers scaling their business
             </p>
         </div>
@@ -45,16 +45,16 @@
 
             {{-- Name Field --}}
             <div class="space-y-1">
-                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Full Name</label>
+                <label class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Full Name</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </div>
                     <input type="text" wire:model.defer="name" placeholder="John Doe" required
-                        class="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 sm:text-sm">
+                        class="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-xs lg:text-sm">
                 </div>
                 @error('name')
                     <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
@@ -63,16 +63,17 @@
 
             {{-- Email Field with Live Spinner --}}
             <div class="space-y-1">
-                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Email Address</label>
+                <label class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Email
+                    Address</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                     </div>
                     <input type="email" wire:model.live.debounce.700ms="email" placeholder="you@company.com" required
-                        class="block w-full pl-10 pr-10 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 sm:text-sm">
+                        class="block w-full pl-10 pr-10 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-xs lg:text-sm">
 
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                         <svg wire:loading wire:target="email" class="animate-spin h-5 w-5 text-emerald-500"
@@ -95,33 +96,35 @@
 
                 {{-- Password --}}
                 <div class="space-y-1">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
+                    <label
+                        class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
+                            <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                         </div>
                         <input type="password" wire:model="password" placeholder="••••••••" required
-                            class="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 sm:text-sm">
+                            class="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-xs lg:text-sm">
                     </div>
                 </div>
 
                 {{-- Confirm Password --}}
                 <div class="space-y-1">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Confirm</label>
+                    <label
+                        class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Confirm</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
+                            <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <input type="password" wire:model="password_confirmation" placeholder="••••••••" required
-                            class="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 sm:text-sm">
+                            class="block w-full pl-10 pr-3 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-200 text-xs lg:text-sm">
                     </div>
                 </div>
             </div>
@@ -148,7 +151,7 @@
 
             {{-- Submit Button --}}
             <button type="submit" wire:loading.attr="disabled"
-                class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-lg shadow-lg shadow-emerald-500/20 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5">
+                class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-lg shadow-lg shadow-emerald-500/20 text-xs lg:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5">
 
                 <svg wire:loading wire:target="registerUser" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -165,7 +168,7 @@
         </form>
 
         <div class="mt-8 text-center border-t border-slate-100 dark:border-slate-800 pt-6">
-            <p class="text-sm text-slate-600 dark:text-slate-400">
+            <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-400">
                 Already have an account?
                 <a href="{{ route('login') }}" wire:navigate
                     class="font-semibold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors">

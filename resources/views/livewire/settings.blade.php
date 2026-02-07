@@ -1,23 +1,24 @@
 <!-- settings root -->
 <div id="settings-root" class="space-y-6">
 
-    <!-- Header -->
-    <header class="flex items-start justify-between">
+    <x-main-heading title="Settings" subtitle="Manage account, security, appearance and integrations" />
+
+    @if (session('success'))
+        <x-success-message>
+            {{ session('success') }}
+        </x-success-message>
+    @endif
+
+    <x-error></x-error>
+    {{-- <div class="flex justify-end">
         <div>
-            <x-main-heading title="Settings"
-                subtitle="Manage account, security, appearance and integrations"></x-main-heading>
+            <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
+                <flux:radio value="light" icon="sun">Light</flux:radio>
+                <flux:radio value="dark" icon="moon">Dark</flux:radio>
+                <flux:radio value="system" icon="computer-desktop">System</flux:radio>
+            </flux:radio.group>
         </div>
-
-
-        @if (session('success'))
-            <x-success-message>
-                {{ session('success') }}
-            </x-success-message>
-        @endif
-
-        <x-error></x-error>
-    </header>
-
+    </div> --}}
     <div class="lg:flex lg:items-start lg:gap-6">
 
         <!-- Left nav (tabs) -->
@@ -479,96 +480,6 @@
                 </form>
             </section>
 
-            <!-- Appearance -->
-            <section id="panel-appearance" role="tabpanel"
-                class="tab-panel bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Appearance</h2>
-                <p class="text-sm text-gray-500 dark:text-neutral-400 mb-4">Customize the theme and layout.</p>
-
-                <div x-data="themeSwitcher()" x-init="initTheme()" class="space-y-4">
-
-                    <label class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        Interface Theme
-                    </label>
-
-                    <div class="grid grid-cols-3 gap-4">
-
-                        <button @click="setTheme('light')"
-                            :class="theme === 'light'
-                                ?
-                                'ring-2 ring-indigo-600 bg-neutral-50 dark:bg-neutral-800' :
-                                'border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'"
-                            class="relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            role="radio" aria-label="Light Theme">
-                            <div
-                                class="w-8 h-8 rounded-full bg-white border border-neutral-200 flex items-center justify-center shadow-sm mb-3 text-amber-500">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-medium text-neutral-900 dark:text-neutral-200">Light</span>
-                            <div x-show="theme === 'light'" class="absolute top-2 right-2 text-indigo-600">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-
-                        <button @click="setTheme('dark')"
-                            :class="theme === 'dark'
-                                ?
-                                'ring-2 ring-indigo-600 bg-neutral-50 dark:bg-neutral-800' :
-                                'border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'"
-                            class="relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            role="radio" aria-label="Dark Theme">
-                            <div
-                                class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center shadow-sm mb-3 text-indigo-400">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-medium text-neutral-900 dark:text-neutral-200">Dark</span>
-                            <div x-show="theme === 'dark'" class="absolute top-2 right-2 text-indigo-600">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-
-                        <button @click="setTheme('system')"
-                            :class="theme === 'system'
-                                ?
-                                'ring-2 ring-indigo-600 bg-neutral-50 dark:bg-neutral-800' :
-                                'border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800'"
-                            class="relative flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            role="radio" aria-label="System Theme">
-                            <div
-                                class="w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 flex items-center justify-center shadow-sm mb-3 text-neutral-500 dark:text-neutral-300">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-medium text-neutral-900 dark:text-neutral-200">System</span>
-                            <div x-show="theme === 'system'" class="absolute top-2 right-2 text-indigo-600">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-
-                    </div>
-                </div>
-            </section>
-
             <!-- Integrations -->
             <div class="space-y-8">
 
@@ -813,42 +724,4 @@
 
         </section>
     </div>
-
-
-
-    <script>
-        function themeSwitcher() {
-            return {
-                theme: localStorage.getItem('theme') || 'system',
-
-                initTheme() {
-                    this.applyTheme(this.theme);
-
-                    // Watch for system changes if 'system' is selected
-                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                        if (this.theme === 'system') {
-                            this.applyTheme('system');
-                        }
-                    });
-                },
-
-                setTheme(val) {
-                    this.theme = val;
-                    localStorage.setItem('theme', val);
-                    this.applyTheme(val);
-                },
-
-                applyTheme(val) {
-                    const isDark = val === 'dark' || (val === 'system' && window.matchMedia('(prefers-color-scheme: dark)')
-                        .matches);
-
-                    if (isDark) {
-                        document.documentElement.classList.add('dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                    }
-                }
-            }
-        }
-    </script>
 </div>

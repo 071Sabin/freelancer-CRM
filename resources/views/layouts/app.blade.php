@@ -110,7 +110,7 @@
                     </div>
 
                     <div class="hidden md:flex items-center gap-6">
-                        <a href="{{ route('login') }}"
+                        <a href="{{ route('login') }}" wire:navigate
                             class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
                             Sign in
                         </a>
@@ -362,6 +362,13 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="information-circle" href="#" wire:navigate
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
+                    <div class="">
+                        <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
+                            <flux:radio value="light" icon="sun" />
+                            <flux:radio value="dark" icon="moon" />
+                            <flux:radio value="system" icon="computer-desktop" />
+                        </flux:radio.group>
+                    </div>
                 </flux:sidebar.nav>
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
                     <flux:sidebar.profile
@@ -382,7 +389,7 @@
 
                         <div class="p-1.5">
                             <flux:modal.trigger name="signout">
-                                <flux:menu.item icon="arrow-right-start-on-rectangle">Logout</flux:menu.item>
+                                <flux:menu.item icon="arrow-right-start-on-rectangle">Sign Out</flux:menu.item>
                             </flux:modal.trigger>
                         </div>
                     </flux:menu>
@@ -495,8 +502,6 @@
             </div>
         </flux:modal>
     @endauth
-
-
 
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script> --}}
