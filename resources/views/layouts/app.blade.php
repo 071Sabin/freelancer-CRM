@@ -20,22 +20,6 @@
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     @vite('resources/css/app.css')
 
-    <script>
-        (function() {
-            // 1. Read the theme from LocalStorage
-            const theme = localStorage.getItem('theme') || 'system';
-
-            // 2. Check if system is dark
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-            // 3. Apply the class immediately
-            if (theme === 'dark' || (theme === 'system' && systemDark)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
-    </script>
     <style>
         html {
             scroll-behavior: smooth;
@@ -78,69 +62,84 @@
     <!-- Navigation -->
     @guest('web')
         <nav x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)"
-            :class="{ 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm': scrolled, 'bg-transparent': !scrolled }"
-            class="fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent"
-            :class="{ 'border-slate-200 dark:border-slate-800': scrolled }">
+            class="fixed top-0 w-full z-50 transition-all duration-500" :class="{ 'py-3': scrolled, 'py-5': !scrolled }">
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-20">
+                <div :class="{
+                    'bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-slate-200/50 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]': scrolled,
+                    'bg-transparent border-transparent': !scrolled
+                }"
+                    class="flex justify-between items-center h-16 px-6 transition-all duration-500 rounded-2xl border">
 
-                    <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-                        <div
-                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-emerald-500 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/20">
-                            C
+                    <div class="flex-shrink-0 flex items-center gap-3 group cursor-pointer">
+                        <div class="relative w-9 h-9 flex items-center justify-center">
+                            <div
+                                class="absolute inset-0 bg-indigo-600 rounded-xl rotate-6 group-hover:rotate-12 transition-transform duration-300 opacity-20">
+                            </div>
+                            <div
+                                class="relative w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
+                                <span class="text-base tracking-tighter">CP</span>
+                            </div>
                         </div>
                         <a href="{{ route('welcome') }}" wire:navigate
-                            class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Client<span class="text-indigo-600 dark:text-indigo-400">Pivot</span>
+                            class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+                            Client<span
+                                class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500">Pivot</span>
                         </a>
                     </div>
 
-                    <div class="hidden md:flex items-center space-x-8">
+                    <div class="hidden md:flex items-center space-x-1">
                         <a href="#features"
-                            class="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">
+                            class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-all rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
                             Features
+                        </a>
+                        <a href="{{ route('about') }}" wire:navigate
+                            class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-all rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            About
                         </a>
                         @if (Route::has('freelancers'))
                             <a href="{{ route('freelancers') }}" wire:navigate
-                                class="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">
+                                class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-all rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
                                 Freelancers
                             </a>
                         @endif
-                        <a href="{{route('pricing')}}" wire:navigate
-                            class="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">
+                        <a href="{{ route('pricing') }}" wire:navigate
+                            class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-all rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50">
                             Pricing
                         </a>
-                        @if (Route::has('about'))
-                            <a href="{{ route('about') }}" wire:navigate
-                                class="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-white transition-colors">
-                                About
-                            </a>
-                        @endif
-                        <div class="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+                    </div>
 
+                    <div class="hidden md:flex items-center gap-6">
+                        <a href="{{ route('login') }}"
+                            class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
+                            Sign in
+                        </a>
                         <a href="{{ route('login') }}" wire:navigate
-                            class="group relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 bg-slate-900 dark:bg-white dark:text-slate-900 rounded-full hover:bg-indigo-600 dark:hover:bg-indigo-50 dark:hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900">
-                            <span>Get Started</span>
-                            <svg class="w-4 h-4 ml-1 -mr-1 transition-transform duration-200 group-hover:translate-x-1"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                            </svg>
+                            class="relative group overflow-hidden px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 bg-slate-900 dark:bg-indigo-600 rounded-xl hover:shadow-[0_0_20px_rgba(79,70,229,0.4)] active:scale-95">
+                            <span class="relative z-10 flex items-center gap-2">
+                                Get Started
+                                <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                            </span>
+                            <div
+                                class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent">
+                            </div>
                         </a>
                     </div>
 
                     <div class="flex md:hidden">
-                        <button @click="mobileMenuOpen = !mobileMenuOpen" type="button"
-                            class="text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 focus:outline-none">
-                            <span class="sr-only">Open main menu</span>
-                            <svg x-show="!mobileMenuOpen" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen"
+                            class="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            <svg x-show="!mobileMenuOpen" class="h-6 w-6" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
-                            <svg x-show="mobileMenuOpen" x-cloak class="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
+                            <svg x-show="mobileMenuOpen" x-cloak class="h-6 w-6" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -149,36 +148,24 @@
                 </div>
             </div>
 
-            <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-                x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 -translate-y-2" @click.away="mobileMenuOpen = false"
-                class="md:hidden absolute top-20 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xl z-40">
-
-                <div class="px-4 pt-2 pb-6 space-y-2">
-                    <a href="#features" @click="mobileMenuOpen = false"
-                        class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                        Features
-                    </a>
-                    @if (Route::has('freelancers'))
-                        <a href="{{ route('freelancers') }}" wire:navigate
-                            class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                            Freelancers
+            <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                class="absolute top-full left-0 w-full px-4 mt-2 md:hidden">
+                <div
+                    class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4 overflow-hidden">
+                    <div class="grid gap-2">
+                        <a href="#features"
+                            class="flex items-center px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 transition-all">
+                            Features
                         </a>
-                    @endif
-                    <a href="{{route('pricing')}}" wire:navigate
-                        class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                        Pricing
-                    </a>
-                    @if (Route::has('about'))
-                        <a href="#about" wire:navigate
-                            class="block px-3 py-3 rounded-md text-base font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                            About
+                        <a href="{{ route('pricing') }}"
+                            class="flex items-center px-4 py-3 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 transition-all">
+                            Pricing
                         </a>
-                    @endif
-                    <div class="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
-                        <a href="{{ route('login') }}" wire:navigate
-                            class="block w-full text-center px-6 py-3 rounded-lg text-white font-semibold bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 transition-all">
+                        <div class="my-2 border-t border-slate-100 dark:border-slate-800"></div>
+                        <a href="{{ route('login') }}"
+                            class="flex items-center justify-center w-full px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-500/30">
                             Get Started
                         </a>
                     </div>
@@ -190,6 +177,144 @@
         <div class="">
             {{ $slot }}
         </div>
+
+
+        <footer
+            class="relative bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-20 pb-10 transition-colors duration-300 overflow-hidden">
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-12 mb-16">
+
+                    <div class="col-span-2 lg:col-span-4">
+                        <div class="flex items-center gap-3 mb-6 group cursor-pointer">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/20 group-hover:rotate-6 transition-transform">
+                                C
+                            </div>
+                            <span class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                Client<span
+                                    class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-400">Pivot</span>
+                            </span>
+                        </div>
+
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-8 leading-relaxed max-w-xs">
+                            The intelligence layer for modern freelancers. Automate your workflow, stabilize your income,
+                            and scale your client relationships.
+                        </p>
+
+                        <div class="space-y-3">
+                            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Join
+                                the Newsletter</p>
+                            <form class="flex max-w-sm">
+                                <input type="email" placeholder="work@email.com"
+                                    class="flex-1 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-l-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none">
+                                <button
+                                    class="px-5 py-2.5 bg-slate-900 dark:bg-indigo-600 text-white text-sm font-bold rounded-r-xl hover:bg-indigo-700 transition-all active:scale-95">
+                                    Join
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6">
+                            Product</h3>
+                        <ul class="space-y-4">
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">WhatsApp
+                                    API</a>
+                                <span
+                                    class="text-[9px] font-bold bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full">BETA</span>
+                            </li>
+                            <li><a href="{{ route('pricing') }}"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
+                            </li>
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Changelog</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6">
+                            Resources</h3>
+                        <ul class="space-y-4">
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Documentation</a>
+                            </li>
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Community</a>
+                            </li>
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Help
+                                    Center</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] mb-6">Legal
+                        </h3>
+                        <ul class="space-y-4">
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy
+                                    Policy</a></li>
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms
+                                    of Service</a></li>
+                            <li><a href="#"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Security</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div
+                    class="pt-8 border-t border-slate-200 dark:border-slate-800/60 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <p class="text-xs font-medium text-slate-400 dark:text-slate-500">
+                            &copy; 2026 Client Pivot Inc.
+                        </p>
+
+                        <div
+                            class="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            <span
+                                class="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-tight">Systems
+                                Operational</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-5">
+                        <a href="#"
+                            class="text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-all hover:scale-110">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-all hover:scale-110">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd"
+                                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     @endguest
 
     @auth('web')
@@ -283,12 +408,67 @@
                     </flux:menu>
                 </flux:dropdown>
             </flux:header>
-            <div class="flex-1 min-w-0 lg:m-5">
+            <div class="flex-1 min-w-0 lg:p-5 mt-8">
                 <div class="w-full overflow-x-auto">
                     {{ $slot }}
                 </div>
             </div>
         </div>
+
+        <footer
+            class="bg-slate-50 dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800/50 py-6 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-2">
+                        <div
+                            class="flex items-center gap-2 opacity-80 grayscale hover:grayscale-0 transition-all duration-300">
+                            <div
+                                class="w-6 h-6 rounded-md bg-neutral-800 dark:bg-white flex items-center justify-center text-[10px] font-bold text-white dark:text-neutral-900">
+                                CP
+                            </div>
+                            <span
+                                class="text-xs font-bold tracking-tight text-neutral-900 dark:text-white uppercase">ClientPivot</span>
+                        </div>
+                        <p class="text-[11px] font-medium text-neutral-400 dark:text-neutral-500 tracking-tight">
+                            &copy; 2026 Internal Ops. All rights reserved.
+                        </p>
+                        <div class="hidden sm:block h-3 w-px bg-neutral-200 dark:bg-neutral-700"></div>
+                        <a href="#"
+                            class="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors uppercase tracking-wider">Privacy
+                            Policy</a>
+                        <a href="#"
+                            class="text-[11px] font-bold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors uppercase tracking-wider">Terms</a>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                            <span class="relative flex h-1.5 w-1.5">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                            </span>
+                            <span
+                                class="text-[10px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-tighter">API:
+                                Stable</span>
+                        </div>
+
+                        <button
+                            class="flex items-center gap-2 px-4 py-1.5 text-[11px] font-bold text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg transition-all active:scale-95 shadow-sm">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
+                            </svg>
+                            Help & Support
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </footer>
 
         {{-- flux signout modal --}}
         <flux:modal name="signout" class="md:w-96">
@@ -316,167 +496,7 @@
         </flux:modal>
     @endauth
 
-    <footer
-        class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-16 pb-8 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-12">
-
-                <div class="col-span-2 lg:col-span-2 pr-8">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div
-                            class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-emerald-500 flex items-center justify-center text-white font-bold text-lg">
-                            C
-                        </div>
-                        <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Client<span class="text-indigo-600 dark:text-indigo-400">Pivot</span>
-                        </span>
-                    </div>
-
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed max-w-sm">
-                        The operating system for high-growth freelancers. Manage projects, invoices, and WhatsApp client
-                        communication in one unified dashboard.
-                    </p>
-
-                    <form class="flex flex-col sm:flex-row gap-2">
-                        <input type="email" placeholder="Enter your email"
-                            class="px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 w-full sm:w-auto transition-all">
-                        <button
-                            class="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-semibold rounded-lg hover:bg-indigo-600 dark:hover:bg-indigo-50 dark:hover:text-indigo-700 transition-colors">
-                            Subscribe
-                        </button>
-                    </form>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">
-                        Product</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Features</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">WhatsApp
-                                API</a> <span
-                                class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded ml-1">New</span>
-                        </li>
-                        <li><a href="{{route('pricing')}}" wire:navigate
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Enterprise</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Changelog</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">
-                        Resources</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Documentation</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">API
-                                Reference</a></li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Community</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Help
-                                Center</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">
-                        Company</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About
-                                Us</a></li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Careers</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Legal</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="hidden lg:block">
-                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider mb-4">
-                        Legal</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms</a>
-                        </li>
-                        <li><a href="#"
-                                class="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Security</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-slate-200 dark:border-slate-800 my-8"></div>
-
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-
-                <div class="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-                    <p class="text-sm text-slate-500 dark:text-slate-400">
-                        &copy; 2024 Client Pivot Inc. All rights reserved.
-                    </p>
-
-                    <div
-                        class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        <span class="relative flex h-2 w-2">
-                            <span
-                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span class="text-xs font-medium text-slate-600 dark:text-slate-300">All Systems Normal</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <a href="#"
-                        class="text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">
-                        <span class="sr-only">Twitter</span>
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                        </svg>
-                    </a>
-                    <a href="#"
-                        class="text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">
-                        <span class="sr-only">GitHub</span>
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd"
-                                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                    <a href="#"
-                        class="text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">
-                        <span class="sr-only">LinkedIn</span>
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script> --}}

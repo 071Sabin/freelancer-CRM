@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="">
 
     <x-main-heading title="Invoices" subtitle="Create, send, and track invoices with clear payment status and totals." />
 
@@ -8,7 +8,7 @@
         </x-success-message>
     @endif
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
 
         <!-- Total Invoices -->
         <div
@@ -67,18 +67,24 @@
         </div>
 
     </div>
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 
-        <div class="flex items-center justify-end gap-3 w-full">
-            <flux:modal.trigger name="create-invoice">
-                <x-primary-button><i class="bi bi-plus-lg font-bold"></i> create invoice</x-primary-button>
-            </flux:modal.trigger>
-            <a href="{{ route('invoices.settings.general') }}" wire:navigate
-                class="text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
-                <flux:icon.cog-6-tooth />
-            </a>
-        </div>
+    <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
+        <flux:modal.trigger name="create-invoice">
+            <x-primary-button class="flex gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                    <path fill-rule="evenodd"
+                        d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V10.5Z"
+                        clip-rule="evenodd" />
+                </svg>
+                Create invoice
+            </x-primary-button>
+        </flux:modal.trigger>
+        <a href="{{ route('invoices.settings.general') }}" wire:navigate
+            class="text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
+            <flux:icon.cog-6-tooth />
+        </a>
     </div>
+
 
     <div>
 
@@ -139,8 +145,5 @@
     @else
         <livewire:invoices.invoice-table />
     @endif
-
-
-
 
 </div>

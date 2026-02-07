@@ -234,7 +234,7 @@
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        Save Changes
+                        update profile
                     </x-primary-button>
                 </form>
             </section>
@@ -369,46 +369,112 @@
 
             <!-- Notifications -->
             <section id="panel-notifications" role="tabpanel"
-                class="tab-panel bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">
-                <h2 class="text-lg font-semibold text-gray-800 dark:text-neutral-100">Notifications</h2>
-                <p class="text-sm text-gray-500 dark:text-neutral-400 mb-4">Control how you receive updates.</p>
+                class="tab-panel bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-2xl overflow-hidden shadow-sm transition-all">
 
-                <form action="#" method="POST" class="space-y-4">
-                    <fieldset class="space-y-3">
-                        <legend class="text-sm font-medium text-gray-700 dark:text-neutral-200">Email notifications
-                        </legend>
+                <div class="p-6 border-b border-neutral-100 dark:border-neutral-700/50">
+                    <div class="flex items-center gap-3 mb-1">
+                        <div class="p-2 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg">
+                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-neutral-800 dark:text-neutral-100 tracking-tight">
+                            Notification Center</h2>
+                    </div>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400 ml-11">Manage your frequency and preferred
+                        channels for updates.</p>
+                </div>
 
-                        <label class="flex items-center gap-3">
-                            <input id="notif-activity" name="notif_activity" type="checkbox"
-                                class="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 text-indigo-600" />
-                            <span class="text-sm text-gray-600 dark:text-neutral-400">Activity emails</span>
-                        </label>
+                <form action="#" method="POST">
+                    <div class="p-6 space-y-8">
 
-                        <label class="flex items-center gap-3">
-                            <input id="notif-marketing" name="notif_marketing" type="checkbox"
-                                class="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 text-indigo-600" />
-                            <span class="text-sm text-gray-600 dark:text-neutral-400">Marketing & product
-                                updates</span>
-                        </label>
-                    </fieldset>
+                        <div class="space-y-4">
+                            <div
+                                class="flex items-center justify-between border-b border-neutral-50 dark:border-neutral-700/30 pb-2">
+                                <h3
+                                    class="text-sm font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                                    Email Channels</h3>
+                                <span
+                                    class="text-[10px] px-2 py-0.5 bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold rounded-full">ACTIVE</span>
+                            </div>
 
-                    <fieldset class="space-y-3">
-                        <legend class="text-sm font-medium text-gray-700 dark:text-neutral-200">Push notifications
-                        </legend>
-                        <p class="text-xs text-gray-500 dark:text-neutral-400">Enable push to receive real-time alerts.
-                        </p>
+                            <div class="flex items-start justify-between group">
+                                <div class="space-y-0.5">
+                                    <label for="notif-activity"
+                                        class="text-sm font-medium text-neutral-700 dark:text-neutral-200 cursor-pointer">Account
+                                        Activity</label>
+                                    <p class="text-xs text-neutral-500 dark:text-neutral-500">Get notified about
+                                        logins, security changes, and project mentions.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input id="notif-activity" type="checkbox" class="sr-only peer" checked>
+                                    <div
+                                        class="w-10 h-5 bg-neutral-200 dark:bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600">
+                                    </div>
+                                </label>
+                            </div>
 
-                        <label class="flex items-center gap-3">
-                            <input id="notif-push" name="notif_push" type="checkbox"
-                                class="h-4 w-4 rounded border-neutral-300 dark:border-neutral-600 text-indigo-600" />
-                            <span class="text-sm text-gray-600 dark:text-neutral-400">Enable push notifications</span>
-                        </label>
-                    </fieldset>
+                            <div class="flex items-start justify-between group">
+                                <div class="space-y-0.5">
+                                    <label for="notif-marketing"
+                                        class="text-sm font-medium text-neutral-700 dark:text-neutral-200 cursor-pointer">Product
+                                        Updates</label>
+                                    <p class="text-xs text-neutral-500 dark:text-neutral-500">News about new features,
+                                        webinars, and special offers.</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input id="notif-marketing" type="checkbox" class="sr-only peer">
+                                    <div
+                                        class="w-10 h-5 bg-neutral-200 dark:bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
 
-                    <div>
-                        <button type="submit"
-                            class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save
-                            preferences</button>
+                        <div
+                            class="p-4 bg-neutral-50 dark:bg-neutral-900/50 rounded-xl border border-neutral-100 dark:border-neutral-700/50 space-y-4">
+                            <div class="flex items-start justify-between">
+                                <div class="flex gap-3">
+                                    <div class="mt-1">
+                                        <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <h3 class="text-sm font-semibold text-neutral-700 dark:text-neutral-200">Push
+                                            Notifications</h3>
+                                        <p class="text-xs text-neutral-500 dark:text-neutral-400">Enable real-time
+                                            desktop or mobile alerts for instant feedback.</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input id="notif-push" type="checkbox" class="sr-only peer">
+                                    <div
+                                        class="w-10 h-5 bg-neutral-200 dark:bg-neutral-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-100 dark:border-neutral-700 flex items-center justify-between">
+                        <p class="text-xs text-neutral-400">Last updated: Today at 10:24 AM</p>
+                        <div class="flex gap-3">
+                            <button type="button"
+                                class="px-4 py-2 text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white transition-colors">
+                                Reset
+                            </button>
+                            <button type="submit"
+                                class="px-5 py-2 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 hover:shadow-indigo-500/40 active:scale-95 transition-all duration-200">
+                                Save Changes
+                            </button>
+                        </div>
                     </div>
                 </form>
             </section>

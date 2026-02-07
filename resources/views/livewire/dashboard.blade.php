@@ -4,7 +4,7 @@
 
 
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
         <x-dashboard-card heading="Total Clients" value="{{ $totalClients }}" dataOverTime="+3 new this month"
             icon='<i class="bi bi-people text-gray-400 text-lg"></i>'>

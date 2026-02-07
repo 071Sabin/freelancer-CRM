@@ -13,7 +13,7 @@
 
     <flux:separator variant="subtle" />
 
-    <form wire:submit.prevent="save" class="space-y-12 pb-24">
+    <form wire:submit.prevent="save" class="space-y-12">
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             <div class="lg:col-span-1">

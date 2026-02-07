@@ -24,7 +24,7 @@
 
                     <x-hr-divider />
 
-                    <div class="lg:grid grid-cols-2 gap-3">
+                    <div class="lg:grid grid-cols-2 gap-3 mb-3">
 
                         {{-- Project Name --}}
                         <x-input-field type="text" model="editProject.name" label="Project Name"
@@ -76,7 +76,6 @@
                         </div>
 
                     </div>
-
                     <x-primary-button type="submit">Save</x-primary-button>
 
                     <flux:text wire:dirty class="text-amber-500 text-sm font-medium animate-pulse">
