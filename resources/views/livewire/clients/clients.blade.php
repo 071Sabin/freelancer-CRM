@@ -120,7 +120,6 @@
     </div>
 
 
-
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
         <flux:modal.trigger name="add-client">
             <x-primary-button class="flex gap-1">

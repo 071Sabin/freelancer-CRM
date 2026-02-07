@@ -16,7 +16,7 @@
 <div class="relative mb-8 lg:mb-10">
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div class="max-w-3xl">
-            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-800 dark:text-neutral-100 leading-none">
+            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-neutral-800 dark:text-neutral-100 leading-none">
                 {{ $title }}
             </h1>
 
