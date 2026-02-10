@@ -37,7 +37,7 @@ class InvoiceTable extends DataTableComponent
     public function columns(): array
     {
         return [
-
+            Column::make('ID', 'id'),
             Column::make("Invoice #", "invoice_number")
                 ->sortable()
                 ->searchable(),

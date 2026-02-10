@@ -151,7 +151,7 @@ class ClientsTable extends DataTableComponent
                             </span>
                         </div>';
             })->html(),
-                
+            
             Column::make('client Email', 'client_email')->hideIf(true),
             Column::make('Company', 'company_name')
                 ->sortable()
@@ -277,6 +277,7 @@ class ClientsTable extends DataTableComponent
             'deleteSelected' => 'Delete Selected',
         ];
     }
+    
     public function deleteSelected(): void
     {
         $ids = $this->getSelected();

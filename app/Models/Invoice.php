@@ -75,6 +75,9 @@ class Invoice extends Model
         'balance_due' => 'decimal:2',
     ];
 
+    protected $table = 'invoices';
+    protected $primaryKey = 'id';
+
     // Relationships
     public function user()
     {

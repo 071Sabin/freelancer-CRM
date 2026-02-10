@@ -1,7 +1,7 @@
 <div class="">
 
     <x-main-heading title="Projects" subtitle="Add and manage your projects." />
-    
+
     @if (session('success'))
         <div class="mb-6">
             <x-success-message>
@@ -14,88 +14,22 @@
     {{-- <x-error></x-error> --}}
 
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-5 mb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5 mb-10">
 
-        <div
-            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
-            <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
-                        Total Lifecycle</p>
-                    <div class="text-neutral-400 group-hover:text-indigo-500 transition-colors duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
-                        </svg>
-                    </div>
-                </div>
-                <div>
-                    <h3
-                        class="text-2xl lg:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
-                        {{ $projectCount }}</h3>
-                    <p class="mt-1 text-xs font-medium text-neutral-400 dark:text-neutral-500">All-time volume</p>
-                </div>
-            </div>
-        </div>
+        <x-dashboard-card heading="Total Lifecycle" :value="$projectCount" dataOverTime="All-time volume"
+            icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3"/></svg>'
+            dataColor="text-neutral-400 dark:text-neutral-500" />
 
-        <div
-            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
-            <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
-                        In Progress</p>
-                    <div class="text-neutral-400 group-hover:text-emerald-500 transition-colors duration-300">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                        </svg>
-                    </div>
-                </div>
-                <div>
-                    <h3
-                        class="text-2xl lg:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
-                        {{ $progressProjects }}</h3>
-                    <p
-                        class="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-500 flex items-center gap-1">
-                        <span class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span> Ongoing
-                    </p>
-                </div>
-            </div>
-        </div>
+        <x-dashboard-card heading="In Progress" :value="$progressProjects" dataOverTime="Ongoing"
+            icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>'
+            dataColor="text-emerald-600 dark:text-emerald-500" />
 
-        <div
-            class="group relative p-5 bg-white dark:bg-neutral-800 rounded-2xl border border-neutral-200 dark:border-neutral-700  hover:border-neutral-300 dark:hover:border-neutral-600 shadow-sm">
-            <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                    <p class="text-[11px] font-bold uppercase tracking-[0.05em] text-neutral-400 dark:text-neutral-500">
-                        New Growth</p>
-                    <div class="text-neutral-400 group-hover:text-violet-500 transition-colors duration-300">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                    </div>
-                </div>
-                <div>
-                    <h3
-                        class="text-2xl lg:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
-                        {{ $thisMonthProjects }}</h3>
-                    <p class="mt-1 text-xs font-medium text-violet-600 dark:text-violet-400 flex items-center gap-1">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1-1 0 00-1.414 0l-3 3a1-1 0 001.414 1.414L9 9.414V13a1-1 0 102 0V9.414l1.293 1.293a1-1 0 001.414-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        This month
-                    </p>
-                </div>
-            </div>
-        </div>
+        <x-dashboard-card heading="New Growth" :value="$thisMonthProjects" dataOverTime="This month"
+            icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>'
+            dataColor="text-violet-600 dark:text-violet-400" />
 
     </div>
+
 
 
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
