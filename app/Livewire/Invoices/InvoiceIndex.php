@@ -25,6 +25,14 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public ?string $due_date_notice = null;
     public $total_invoices;
 
+    public ?Invoice $editingInvoice = null;
+    public ?Invoice $viewingInvoice = null;
+
+    protected $listeners = [
+        'edit-invoice' => 'edit',
+        'view-invoice' => 'view',
+    ];
+
 
     protected $rules = [
         'client_id'  => 'required|exists:clients,id',
@@ -159,5 +167,30 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             'clients' => $clients,
             'projects' => $projects
         ]);
+    }
+
+    public function edit($id)
+    {
+        $this->editingInvoice = Invoice::findOrFail($id);
+        // Trigger handles opening, we just load data
+    }
+
+    public function view($id)
+    {
+        $this->viewingInvoice = Invoice::findOrFail($id);
+        // Trigger handles opening, we just load data
+    }
+
+    public function update()
+    {
+        $this->validate([
+            'editingInvoice.issue_date' => 'required|date',
+            'editingInvoice.due_date' => 'required|date|after_or_equal:editingInvoice.issue_date',
+        ]);
+
+        $this->editingInvoice->save();
+
+        $this->dispatch('close-modal', 'edit-invoice-modal');
+        $this->dispatch('notify', 'Invoice updated successfully.'); 
     }
 }

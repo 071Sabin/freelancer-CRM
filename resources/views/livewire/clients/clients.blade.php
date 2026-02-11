@@ -53,10 +53,12 @@
 
         <x-clients.show-add-client-form />
 
-        <livewire:clients.edit-client-form />
+        {{-- this component will view and edit the client details --}}
+        {{-- <livewire:clients.edit-client-form /> --}}
 
     </div>
 
+    {{-- CLIENTS DATATABLE --}}
     @if ($clientCount > 0)
         <div class="border-none">
             <livewire:clients.clients-table />
@@ -73,5 +75,181 @@
             </x-slot:icon>
         </x-empty-state>
     @endif
+
+
+
+    {{-- View Client Modal --}}
+    <flux:modal name="view-client-modal"
+        class="min-h-[600px] min-w-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+        <div>
+            <div wire:loading wire:target="view">
+                <div class="flex justify-center p-8">
+                    <flux:icon.loading />
+                </div>
+            </div>
+
+            <div wire:loading.remove wire:target="view">
+                @if (!empty($viewingClient))
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <flux:heading size="xl">{{ $viewingClient['client_name'] }}</flux:heading>
+                                <flux:text>{{ $viewingClient['company_name'] }}</flux:text>
+                            </div>
+                            <div class="text-right">
+                                <flux:badge size="lg"
+                                    :color="$viewingClient['status'] === 'active' ? 'green' : 'zinc'">
+                                    {{ ucfirst($viewingClient['status']) }}
+                                </flux:badge>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-8">
+                            <div>
+                                <flux:label>Email</flux:label>
+                                <div class="font-medium">{{ $viewingClient['client_email'] }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Company Email</flux:label>
+                                <div class="font-medium">{{ $viewingClient['company_email'] }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Phone</flux:label>
+                                <div>{{ $viewingClient['company_phone'] }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Website</flux:label>
+                                <div><a href="{{ $viewingClient['company_website'] }}" target="_blank"
+                                        class="text-blue-500 hover:underline">{{ $viewingClient['company_website'] }}</a>
+                                </div>
+                            </div>
+                            <div class="col-span-2">
+                                <flux:label>Billing Address</flux:label>
+                                <div>{{ $viewingClient['billing_address'] }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Hourly Rate</flux:label>
+                                <div>{{ $viewingClient['currency'] }} {{ $viewingClient['hourly_rate'] }}</div>
+                            </div>
+                        </div>
+
+                        @if ($viewingClient['private_notes'])
+                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
+                                <flux:label>Private Notes</flux:label>
+                                <p class="text-neutral-600 dark:text-neutral-400">{{ $viewingClient['private_notes'] }}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    <div class="text-center text-neutral-500">No client selected.</div>
+                @endif
+            </div>
+        </div>
+    </flux:modal>
+
+    {{-- Edit Client Modal --}}
+    <flux:modal name="edit-client-modal" class="min-h-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+        <div>
+            <div wire:loading wire:target="edit">
+                <div class="flex justify-center p-8">
+                    <flux:icon.loading />
+                </div>
+            </div>
+
+            <div wire:loading.remove wire:target="edit">
+                @if (!empty($editingClient))
+                    <div class="space-y-6">
+                        <flux:heading size="lg">Edit Client: {{ $editingClient['client_name'] }}</flux:heading>
+
+                        <form wire:submit.prevent="update" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <x-input-field label="Client Name" model="editingClient.client_name" required />
+                                <x-input-field label="Client Email" type="email" model="editingClient.client_email"
+                                    required />
+
+                                <x-input-field label="Company Name" model="editingClient.company_name" />
+                                <x-input-field label="Company Email" type="email"
+                                    model="editingClient.company_email" />
+
+                                <x-input-field label="Website" model="editingClient.company_website" />
+                                <x-input-field label="Phone" model="editingClient.company_phone" />
+
+                                <x-input-field label="Hourly Rate" type="number" step="0.01"
+                                    model="editingClient.hourly_rate" />
+                                <x-input-field label="Currency" model="editingClient.currency" />
+
+                                <div class="w-full group">
+                                    <label
+                                        class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Status</label>
+                                    <div class="mt-2 relative">
+                                        <select wire:model="editingClient.status"
+                                            class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                            <option value="lead">Lead</option>
+                                        </select>
+                                        @error('editingClient.status')
+                                            <div
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20"
+                                                    fill="currentColor">
+                                                    <path fill-rule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    @error('editingClient.status')
+                                        <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
+                                            {{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="w-full group">
+                                <label
+                                    class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Billing
+                                    Address</label>
+                                <div class="mt-2 relative">
+                                    <textarea wire:model="editingClient.billing_address" rows="3"
+                                        class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out"></textarea>
+                                </div>
+                                @error('editingClient.billing_address')
+                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
+                                        {{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="w-full group">
+                                <label
+                                    class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Private
+                                    Notes</label>
+                                <div class="mt-2 relative">
+                                    <textarea wire:model="editingClient.private_notes" rows="3"
+                                        class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out"></textarea>
+                                </div>
+                                @error('editingClient.private_notes')
+                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
+                                        {{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="flex justify-end gap-3 pt-6">
+                                <x-primary-button type="submit">Save changes</x-primary-button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                @else
+                    <div class="text-center text-neutral-500">No client selected.</div>
+                @endif
+            </div>
+        </div>
+    </flux:modal>
+
+
 
 </div>

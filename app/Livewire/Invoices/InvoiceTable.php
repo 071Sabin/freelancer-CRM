@@ -82,8 +82,13 @@ class InvoiceTable extends DataTableComponent
             Column::make("Paid At", "paid_at")
                 ->sortable(),
 
+
             Column::make("Created", "created_at")
                 ->sortable()->format(fn($value) => $value?->diffForHumans()),
+            Column::make("Actions", "id")
+                ->format(
+                    fn($value, $row, Column $column) => view('components.actions.invoice-actions', ['row' => $row])
+                )->html(),
         ];
     }
 

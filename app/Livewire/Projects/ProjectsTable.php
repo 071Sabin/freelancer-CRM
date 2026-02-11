@@ -12,16 +12,10 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 class ProjectsTable extends DataTableComponent
 {
     protected $model = Project::class;
-    // public $color = 'neutral';
-    // public $thBg = 'bg-neutral-700/90';
-    // public $tableOddRowBg = 'bg-neutral-800';
-    // public $tableEvenRowBg = 'bg-neutral-700';
     public function configure(): void
     {
         $this->setPrimaryKey('id');
         $this->setPerPageAccepted([10, 25, 50, 100]);
-        // $this->setSearchIcon('heroicon-m-magnifying-glass');
-
 
         $this->setSearchPlaceholder('Search Projects...');
 
@@ -30,93 +24,6 @@ class ProjectsTable extends DataTableComponent
             'default' => true,
         ]);
 
-
-        // $this->setComponentWrapperAttributes([
-        //     'default' => true,
-        //     'default-colors' => false,
-        // ]);
-
-        // $this->setTableWrapperAttributes([
-        //     'default' => true,
-        //     'default-colors' => false,
-        //     'class' => 'dark:border-stone-500 ',
-        // ]);
-
-        // $this->setTableAttributes([
-        //     'default' => true,
-        //     'default-colors' => false,
-        // ]);
-
-        // $this->setThAttributes(function (Column $column) {
-
-        //     return ['class' => 'py-4 ', 'default' => true];
-        // });
-
-        // $this->setTbodyAttributes([
-        //     'default' => true,
-        //     'default-colors' => false,
-        // ]);
-
-        // $this->setTrAttributes(function ($row, $index) {
-        //     return [
-        //         'default' => true,
-        //         'default-colors' => false,
-        //     ];
-        // });
-
-        // $this->setTdAttributes(function (Column $column) {
-        //     if ($column->getTitle() == 'reorder') {
-        //         return [
-        //             'default' => false,
-        //             // 'default-colors' => false,
-        //         ];
-        //     }
-        //     return ['default' => true];
-        // });
-
-        // $this->setBulkActionsThAttributes([
-        //     'default' => true
-        // ]);
-
-        // $this->setBulkActionsButtonAttributes([
-        //     'default-colors' => true,
-        //     'default-styling' => true,
-        // ]);
-
-        // $this->setBulkActionsMenuAttributes([
-        //     'default-colors' => true,
-        //     'default-styling' => true,
-        // ]);
-
-        // $this->setBulkActionsMenuItemAttributes([
-        //     'class' => ' dark:hover:text-stone-200 cursor-pointer ',
-        //     'default-colors' => true,
-        //     'default-styling' => true,
-        // ]);
-
-        // $this->setColumnSelectButtonAttributes([
-        //     'default-colors' => true,
-        //     'default-styling' => true,
-        // ]);
-
-
-        // this is the bg of pop over after clicking filter button
-        // $this->setFilterPopoverAttributes([
-        //     'default-colors' => true,
-        //     'default-styling' => true,
-        // ]);
-
-
-
-        // this is the row per page drop down 10, 20, 30 50 etc... beside of clolumns menu
-        // $this->setPerPageFieldAttributes([
-        //     'default-styles' => true, // Output the default styling
-        // ]);
-
-        // $this->setBulkActionsThCheckboxAttributes([
-        //     'default-colors' => true,
-        //     'default-styling' => true,
-        // ]);
     }
 
     public function query(): Builder
@@ -197,37 +104,9 @@ class ProjectsTable extends DataTableComponent
             Column::make("Updated at", "updated_at")
                 ->sortable(),
 
-            Column::make('Actions')
-                ->label(fn($row) => '
-                
-                    <div class="flex items-center justify-center gap-1">
-
-                        <button
-                            type="button"
-                            wire:click="$dispatch(\'edit-project\', [' . $row->id . ']).window"
-                            class="inline-flex items-center justify-center w-9 h-9 rounded-md
-                                text-blue-600 hover:text-blue-700
-                                bg-blue-50 hover:bg-blue-100
-                                dark:text-blue-400 dark:bg-blue-900/30 dark:hover:bg-blue-900/50
-                                 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            title="Edit Project">
-                            <i class="bi bi-pencil-square text-base"></i>
-                        </button>
-
-                        <button
-                            type="button"
-                            wire:click="$dispatch(\'view-project\', [' . $row->id . ']).window"
-                            class="inline-flex items-center justify-center w-9 h-9 rounded-md
-                                text-emerald-600 hover:text-emerald-700
-                                bg-emerald-50 hover:bg-emerald-100
-                                dark:text-emerald-400 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50
-                                 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                            title="View Project">
-                            <i class="bi bi-eye text-base"></i>
-                        </button>
-
-                    </div>
-                ')->html(),
+            Column::make('Actions', 'id')
+                ->format(fn($value, $row, Column $column) => view('components.actions.project-actions', ['row' => $row]))
+                ->html(),
         ];
     }
 
@@ -251,9 +130,6 @@ class ProjectsTable extends DataTableComponent
                 }
                     return $query->where('projects.status', $value);
                 }),
-            
-                
-
         ];
     }
 

@@ -34,17 +34,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/clients', Clients::class)->name('clients');
     Route::get('/projects', Projects::class)->name('projects');
     Route::get('/invoices', InvoiceIndex::class)->name('invoices');
-    Route::get('/invoices/{invoice}/edit', InvoiceIndex::class)->name('invoices.edit');
     Route::prefix('invoices/settings')
         ->name('invoices.settings.')
         ->group(function () {
-
             Route::get('', General::class)->name('general');
             Route::get('/payments', Payments::class)->name('payments');
             Route::get('/branding', Branding::class)->name('branding');
         });
     
-
     Route::get('/settings', Settings::class)->name('settings');
     Route::post('/logout', [Dashboard::class, 'logout'])->name('logout');
     Route::get('/logout', function () {

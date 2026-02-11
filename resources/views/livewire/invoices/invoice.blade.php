@@ -8,7 +8,7 @@
         </x-success-message>
     @endif
 
-
+    {{-- main cards for details --}}
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
         <x-dashboard-card heading="Total Invoices" value="0" dataOverTime="All time"
@@ -47,9 +47,7 @@
         </a>
     </div>
 
-
     <div>
-
         <flux:modal name="create-invoice" class="max-w-lg">
             <form wire:submit.prevent="create" class="space-y-6">
                 <div>
@@ -107,5 +105,105 @@
     @else
         <livewire:invoices.invoice-table />
     @endif
+
+    {{-- View Invoice Modal --}}
+    <flux:modal name="view-invoice-modal"
+        class="min-h-[600px] min-w-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+        <div>
+            <div wire:loading wire:target="view">
+                <div class="flex justify-center p-8">
+                    <flux:icon.loading />
+                </div>
+            </div>
+
+            <div wire:loading.remove wire:target="view">
+                @if ($viewingInvoice)
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <flux:heading size="xl">Invoice #{{ $viewingInvoice->invoice_number }}
+                                </flux:heading>
+                                <flux:text>{{ $viewingInvoice->client->client_name }}</flux:text>
+                            </div>
+                            <div class="text-right">
+                                <flux:badge size="lg"
+                                    :color="$viewingInvoice->invoice_status === 'paid' ? 'green' : 'zinc'">
+                                    {{ ucfirst($viewingInvoice->invoice_status) }}
+                                </flux:badge>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-8">
+                            <div>
+                                <flux:label>Project</flux:label>
+                                <div class="font-medium">{{ $viewingInvoice->project->name }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Total Amount</flux:label>
+                                <div class="font-medium text-lg">{{ $viewingInvoice->currency }}
+                                    {{ number_format($viewingInvoice->total, 2) }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Issue Date</flux:label>
+                                <div>{{ $viewingInvoice->issue_date }}</div>
+                            </div>
+                            <div>
+                                <flux:label>Due Date</flux:label>
+                                <div>{{ $viewingInvoice->due_date }}</div>
+                            </div>
+                        </div>
+
+                        {{-- Placeholder for Items --}}
+                        <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
+                            <flux:heading size="lg" class="mb-4">Items (Coming Soon)</flux:heading>
+                            <p class="text-neutral-500 italic">Line items will be displayed here.</p>
+                        </div>
+
+                        <div class="flex justify-end pt-6">
+                            <flux:button wire:click="$dispatch('close-modal', 'view-invoice-modal')">Close</flux:button>
+                        </div>
+                    </div>
+                @else
+                    <div class="text-center text-neutral-500">No invoice selected.</div>
+                @endif
+            </div>
+        </div>
+    </flux:modal>
+
+    {{-- Edit Invoice Modal --}}
+    <flux:modal name="edit-invoice-modal" class="min-h-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+        <div>
+            <div wire:loading wire:target="edit">
+                <div class="flex justify-center p-8">
+                    <flux:icon.loading />
+                </div>
+            </div>
+
+            <div wire:loading.remove wire:target="edit">
+                @if ($editingInvoice)
+                    <div class="space-y-6">
+                        <flux:heading size="lg">Edit Invoice #{{ $editingInvoice->invoice_number }}</flux:heading>
+
+                        <form wire:submit.prevent="update" class="space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <flux:input type="date" label="Issue Date" wire:model="editingInvoice.issue_date" />
+                                <flux:input type="date" label="Due Date" wire:model="editingInvoice.due_date" />
+                            </div>
+
+                            {{-- More fields as needed --}}
+
+                            <div class="flex justify-end gap-3 pt-6">
+                                <flux:button variant="ghost"
+                                    wire:click="$dispatch('close-modal', 'edit-invoice-modal')">Cancel</flux:button>
+                                <flux:button type="submit" variant="primary">Save Changes</flux:button>
+                            </div>
+                        </form>
+                    </div>
+                @else
+                    <div class="text-center text-neutral-500">No invoice selected.</div>
+                @endif
+            </div>
+        </div>
+    </flux:modal>
 
 </div>

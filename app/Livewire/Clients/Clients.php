@@ -16,7 +16,16 @@ class Clients extends Component
     public $clientname, $companyname, $companyemail, $website, $companyphone, $thisMonthClients;
     public $billing_address, $hrate, $currency, $clientemail, $status, $privatenote, $clientDetails, $clientCount;
     
-    public $editClient = [];
+    // public $editingClient;
+    // public $viewingClient;
+
+    public array $editingClient = [];
+    public array $viewingClient = [];
+
+    protected $listeners = [
+        'edit-client' => 'edit',
+        'view-client' => 'view',
+    ];
 
     protected function resetAddClientForm()
     {
@@ -73,6 +82,55 @@ class Clients extends Component
         $this->resetAddClientForm();
 
         session()->flash('success', 'Client added successfully!');
+    }
+
+    public function edit($id)
+    {
+        $client = Client::findOrFail($id);
+        $this->editingClient = $client->toArray();
+    }
+
+    public function view($id)
+    {
+        $client = Client::findOrFail($id);
+        $this->viewingClient = $client->toArray();
+    }
+
+    public function update()
+    {
+        $this->validate([
+            'editingClient.client_name' => 'required|string|max:255',
+            'editingClient.client_email' => 'nullable|email|max:255',
+            'editingClient.company_name' => 'required|string|max:255',
+            'editingClient.company_email' => 'nullable|email|max:255',
+            'editingClient.company_website' => 'nullable|string|max:255',
+            'editingClient.company_phone' => 'required|string|max:50',
+            'editingClient.billing_address' => 'required|string',
+            'editingClient.hourly_rate' => 'required|numeric',
+            'editingClient.currency' => 'required|string|max:10',
+            'editingClient.status' => 'required|string|max:50',
+            'editingClient.private_notes' => 'nullable|string',
+        ]);
+
+        $client = Client::findOrFail($this->editingClient['id']);
+        
+        $client->client_name = $this->editingClient['client_name'];
+        $client->client_email = $this->editingClient['client_email'];
+        $client->company_name = $this->editingClient['company_name'];
+        $client->company_email = $this->editingClient['company_email'];
+        $client->company_website = $this->editingClient['company_website'];
+        $client->company_phone = $this->editingClient['company_phone'];
+        $client->billing_address = $this->editingClient['billing_address'];
+        $client->hourly_rate = $this->editingClient['hourly_rate'];
+        $client->currency = $this->editingClient['currency'];
+        $client->status = $this->editingClient['status'];
+        $client->private_notes = $this->editingClient['private_notes'];
+        
+        $client->save();
+
+        $this->dispatch('close-modal', 'edit-client-modal');
+        $this->dispatch('refreshDatatable');
+        session()->flash('success', 'Client updated successfully!');
     }
 
     public function render()

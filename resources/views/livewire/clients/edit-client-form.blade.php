@@ -112,8 +112,6 @@
             <div class="min-h-full flex items-start justify-center">
                 <div
                     class="w-full max-w-3xl rounded-xl shadow-xl bg-white text-stone-800 border border-stone-200 dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-700">
-
-
                     {{-- Header --}}
                     <div
                         class="flex items-center justify-between px-6 py-4

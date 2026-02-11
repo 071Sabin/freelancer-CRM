@@ -15,6 +15,14 @@ class Projects extends Component
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
     public $name, $value, $description, $client_id, $status = 'active';
 
+    public array $editingProject = [];
+    public array $viewingProject = [];
+
+    protected $listeners = [
+        'edit-project' => 'edit',
+        'view-project' => 'view',
+    ];
+
     public function createProject()
     {
         $this->validate([
@@ -38,6 +46,33 @@ class Projects extends Component
         // Reset form fields
         $this->reset(['name', 'description', 'value', 'client_id', 'status']);
         return back()->with('success', 'Project created successfully!');
+    }
+
+    public function edit($id)
+    {
+        $this->editingProject = Project::findOrFail($id)->toArray();
+    }
+
+    public function view($id)
+    {
+        $this->viewingProject = Project::findOrFail($id)->toArray();
+    }
+
+    public function update()
+    {
+        $this->validate([
+            'editingProject.name' => 'required|string|max:255',
+            'editingProject.description' => 'nullable|string',
+            'editingProject.value' => 'required|numeric|min:0',
+            'editingProject.client_id' => 'required|exists:clients,id',
+            'editingProject.status' => 'required|string|max:100',
+        ]);
+
+        $this->editingProject->save();
+
+        $this->dispatch('close-modal', 'edit-project-modal');
+        $this->dispatch('refreshDatatable');
+        session()->flash('success', 'Project updated successfully!');
     }
     
 
