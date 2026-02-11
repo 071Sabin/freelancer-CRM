@@ -50,6 +50,10 @@ class Invoice extends Model
         'billing_address',
         'shipping_address',
         'metadata',
+        'discount_value',
+        'discount_type',
+        'late_fee_value',
+        'late_fee_type',
     ];
 
     protected $casts = [

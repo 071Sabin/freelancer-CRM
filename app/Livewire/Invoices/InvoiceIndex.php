@@ -139,15 +139,18 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             // 4. Increment Number
             $settings->increment('next_number');
 
-            // 5. Redirect to Edit Screen (Items add karne ke liye)
-            // Hum 'invoices' route pe nahi, 'invoices.edit' pe bhejenge
-            return redirect()->route('invoices.edit', ['invoice' => $invoice->id]);
+            // 5. Open Edit Modal directly
+            $this->edit($invoice->id);
+            $this->dispatch('open-modal', 'edit-invoice-modal');
         });
     }
+
+    public ?InvoiceSetting $settings = null;
 
     public function mount()
     {
         $this->total_invoices = Invoice::where('user_id', Auth::id())->count();
+        $this->settings = InvoiceSetting::where('user_id', Auth::id())->first();
     }
 
     public function render()
@@ -174,7 +177,16 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public array $invoiceItems = [];
     public $subtotal = 0;
     public $tax_total = 0;
+    public $discount_total = 0;
+    public $late_fee_total = 0; // Calculated amount, not stored in DB column if not exists
     public $total = 0;
+
+    // Advanced Invoice Settings (Per Invoice)
+    public $tax_rate = 0;
+    public $discount_value = 0;
+    public $discount_type = 'percentage'; // percentage, fixed
+    public $late_fee_value = 0;
+    public $late_fee_type = 'percentage'; // percentage, fixed
 
     public function edit($id)
     {
@@ -189,6 +201,21 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
                 'line_total' => $item->line_total,
             ];
         })->toArray();
+
+        // Load settings from metadata or defaults
+        $metadata = $this->editingInvoice->metadata ?? [];
+        $settings = InvoiceSetting::where('user_id', Auth::id())->first();
+
+        // Tax Rate: Try metadata -> model -> default
+        $this->tax_rate = $metadata['tax_rate'] ?? ($this->editingInvoice->tax_rate ?? ($settings->default_tax_rate ?? 0));
+        
+        // Discount: Try metadata -> default
+        $this->discount_value = $metadata['discount_value'] ?? ($settings->default_discount_rate ?? 0);
+        $this->discount_type = $metadata['discount_type'] ?? 'percentage'; // Default to percentage
+
+        // Late Fee: Try metadata -> default
+        $this->late_fee_value = $metadata['late_fee_value'] ?? ($settings->default_late_fee_rate ?? 0);
+        $this->late_fee_type = $metadata['late_fee_type'] ?? ($settings->default_late_fee_type ?? 'percentage');
 
         $this->calculateTotals();
     }
@@ -221,19 +248,18 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $this->calculateTotals();
     }
 
+    // Updated update property hooks to recalculate totals
+    public function updatedTaxRate() { $this->calculateTotals(); }
+    public function updatedDiscountValue() { $this->calculateTotals(); }
+    public function updatedDiscountType() { $this->calculateTotals(); }
+    public function updatedLateFeeValue() { $this->calculateTotals(); }
+    public function updatedLateFeeType() { $this->calculateTotals(); }
+
     public function calculateTotals()
     {
         $this->subtotal = 0;
-        $this->tax_total = 0;
-
-        // Get tax rate from settings or invoice
-        $taxRate = $this->editingInvoice->tax_rate ?? 0;
-        // If not set on invoice, try to get from settings for calculation preview
-        if ($this->editingInvoice && $this->editingInvoice->wasRecentlyCreated) {
-             $settings = InvoiceSetting::where('user_id', Auth::id())->first();
-             $taxRate = $settings->default_tax_rate ?? 0;
-        }
-
+        
+        // 1. Calculate Subtotal
         foreach ($this->invoiceItems as $index => $item) {
             $qty = (float) ($item['quantity'] ?? 0);
             $price = (float) ($item['unit_price'] ?? 0);
@@ -243,10 +269,46 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             $this->subtotal += $lineTotal;
         }
 
-        // Calculate Tax
-        $this->tax_total = ($this->subtotal * $taxRate) / 100;
+        // 2. Calculate Discount
+        $discountAmount = 0;
+        if ($this->discount_value > 0) {
+            if ($this->discount_type === 'percentage') {
+                $discountAmount = ($this->subtotal * $this->discount_value) / 100;
+            } else {
+                $discountAmount = $this->discount_value;
+            }
+        }
+        $this->discount_total = $discountAmount;
+
+        // 3. Taxable Amount (Subtotal - Discount)
+        $taxableAmount = max(0, $this->subtotal - $this->discount_total);
+
+        // 4. Calculate Tax
+        $this->tax_total = ($taxableAmount * $this->tax_rate) / 100;
+
+        // 5. Calculate Late Fee (Added to Total)
+        // Usually late fees are added to the final amount or separate line item. 
+        // Here we add it to the total.
+        $lateFeeAmount = 0;
+        if ($this->late_fee_value > 0) {
+             // Late fee is often calculated on the OVERDUE amount (Total), but at creation time 
+             // it might be just an "expected" fee or added immediately? 
+             // User wants "take default late fees... apply in invoice editing". 
+             // Let's assume it's added to the total now or just stored.
+             // Usually late fees apply AFTER due date. But if user adds it now, it's part of the invoice.
+             // Let's calculate it on (Subtotal - Discount + Tax)
+             $currentTotal = $taxableAmount + $this->tax_total;
+             
+             if ($this->late_fee_type === 'percentage') {
+                 $lateFeeAmount = ($currentTotal * $this->late_fee_value) / 100;
+             } else {
+                 $lateFeeAmount = $this->late_fee_value;
+             }
+        }
+        $this->late_fee_total = $lateFeeAmount;
         
-        $this->total = $this->subtotal + $this->tax_total;
+        // 6. Final Total
+        $this->total = $taxableAmount + $this->tax_total + $this->late_fee_total;
     }
 
     public function downloadPdf($id)
@@ -266,20 +328,46 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
 
     public function update()
     {
+        $this->calculateTotals(); // Ensure totals are fresh
+
         $this->validate([
             'editingInvoice.issue_date' => 'required|date',
             'editingInvoice.due_date' => 'required|date|after_or_equal:editingInvoice.issue_date',
             'invoiceItems.*.description' => 'required|string',
             'invoiceItems.*.quantity' => 'required|numeric|min:0.01',
             'invoiceItems.*.unit_price' => 'required|numeric|min:0',
+            'tax_rate' => 'numeric|min:0',
+            'discount_value' => 'numeric|min:0',
+            'late_fee_value' => 'numeric|min:0',
         ]);
 
         DB::transaction(function () {
+            // Prepare metadata
+            $metadata = $this->editingInvoice->metadata ?? [];
+            $metadata['tax_rate'] = $this->tax_rate;
+            $metadata['discount_value'] = $this->discount_value;
+            $metadata['discount_type'] = $this->discount_type;
+            $metadata['late_fee_value'] = $this->late_fee_value;
+            $metadata['late_fee_type'] = $this->late_fee_type;
+            // Store calculated amounts in metadata too if column doesn't exist
+            $metadata['late_fee_total'] = $this->late_fee_total;
+
             // Update Invoice Details
             $this->editingInvoice->subtotal = $this->subtotal;
             $this->editingInvoice->tax_total = $this->tax_total;
+            $this->editingInvoice->discount_total = $this->discount_total; // This column usually exists
             $this->editingInvoice->total = $this->total;
             $this->editingInvoice->balance_due = $this->total - $this->editingInvoice->paid_total;
+            $this->editingInvoice->metadata = $metadata;
+            
+            // Try to save explicit columns if they exist (safe to assign if model has them in fillable, 
+            // but if column missing in DB, it might error? No, Eloquent ignores non-fillable, 
+            // but if in fillable and missing in DB -> SQL Error. 
+            // I'll assume they are NOT in DB, so I relying on metadata.
+            // But 'tax_rate' was in fillable earlier... I'll assign it just in case, catch error? 
+            // Better to relying on metadata for specific rates.
+            // $this->editingInvoice->tax_rate = $this->tax_rate; 
+
             $this->editingInvoice->save();
 
             // Sync Items

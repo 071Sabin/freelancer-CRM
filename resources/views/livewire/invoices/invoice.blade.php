@@ -107,100 +107,250 @@
     @endif
 
     {{-- View Invoice Modal --}}
-    <flux:modal name="view-invoice-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
-        <div>
+    <flux:modal name="view-invoice-modal"
+        class="min-h-[600px] w-full md:min-w-[900px] !bg-neutral-100 dark:!bg-neutral-900 p-8">
+        <div class="flex flex-col h-full">
             <div wire:loading wire:target="view">
                 <div class="flex justify-center p-8">
                     <flux:icon.loading />
                 </div>
             </div>
 
-            <div wire:loading.remove wire:target="view">
+            <div wire:loading.remove wire:target="view" class="flex-1">
                 @if ($viewingInvoice)
-                    <div class="space-y-6">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <flux:heading size="xl">Invoice #{{ $viewingInvoice->invoice_number }}
-                                </flux:heading>
-                                <flux:text>{{ $viewingInvoice->client->client_name ?? 'Unknown Client' }}</flux:text>
+                    {{-- Print Preview Container --}}
+                    <div
+                        class="bg-white text-neutral-900 w-full max-w-4xl mx-auto shadow-xl rounded-sm print:shadow-none overflow-hidden flex flex-col min-h-[800px]">
+
+                        {{-- Header --}}
+                        <div
+                            class="bg-neutral-50 px-10 py-8 border-b border-neutral-200 flex justify-between items-start">
+                            <div class="w-1/2">
+                                @if ($settings && $settings->logo_path)
+                                    <img src="{{ asset('storage/' . $settings->logo_path) }}"
+                                        class="h-16 mb-4 object-contain" alt="Logo">
+                                @endif
+                                <h1 class="text-xl font-bold text-neutral-900">
+                                    {{ $settings->company_name ?? 'Freelancer CRM' }}</h1>
+                                @if ($settings)
+                                    <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
+                                        {{ $settings->company_email }}<br>
+                                        @if ($settings->company_address)
+                                            @foreach ($settings->company_address as $line)
+                                                {{ $line }}<br>
+                                            @endforeach
+                                        @endif
+                                        @if ($settings->company_website)
+                                            {{ $settings->company_website }}<br>
+                                        @endif
+                                        @if ($settings->tax_id)
+                                            Tax ID: {{ $settings->tax_id }}
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
-                            <div class="text-right">
-                                <flux:badge size="lg"
-                                    :color="$viewingInvoice->invoice_status === 'paid' ? 'green' : 'zinc'">
+
+                            <div class="w-1/2 text-right">
+                                <div class="text-4xl font-light text-neutral-300 uppercase tracking-widest mb-2">Invoice
+                                </div>
+                                <flux:badge size="sm"
+                                    :color="$viewingInvoice->invoice_status === 'paid' ? 'green' : 'zinc'"
+                                    class="mb-4">
                                     {{ ucfirst($viewingInvoice->invoice_status) }}
                                 </flux:badge>
-                            </div>
-                        </div>
 
-                        <div class="grid grid-cols-2 gap-8">
-                            <div>
-                                <flux:label>Project</flux:label>
-                                <div class="font-medium">{{ $viewingInvoice->project->name ?? '—' }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Total Amount</flux:label>
-                                <div class="font-medium text-lg">{{ $viewingInvoice->currency }}
-                                    {{ number_format($viewingInvoice->total, 2) }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Issue Date</flux:label>
-                                <div>{{ \Carbon\Carbon::parse($viewingInvoice->issue_date)->format('M d, Y') }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Due Date</flux:label>
-                                <div>{{ \Carbon\Carbon::parse($viewingInvoice->due_date)->format('M d, Y') }}</div>
-                            </div>
-                        </div>
-
-                        {{-- Items List --}}
-                        <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
-                            <flux:heading size="lg" class="mb-4">Items</flux:heading>
-                            <table class="w-full text-left text-sm text-neutral-600 dark:text-neutral-400">
-                                <thead class="border-b border-neutral-200 dark:border-neutral-700 font-medium">
+                                <table class="ml-auto text-sm text-neutral-600">
                                     <tr>
-                                        <th class="py-2">Description</th>
-                                        <th class="py-2 text-right">Qty</th>
-                                        <th class="py-2 text-right">Price</th>
-                                        <th class="py-2 text-right">Total</th>
+                                        <td class="pr-4 font-bold text-neutral-800">Invoice #:</td>
+                                        <td>{{ $viewingInvoice->invoice_number }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pr-4 font-bold text-neutral-800">Date:</td>
+                                        <td>{{ \Carbon\Carbon::parse($viewingInvoice->issue_date)->format('M d, Y') }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="pr-4 font-bold text-neutral-800">Due Date:</td>
+                                        <td>{{ \Carbon\Carbon::parse($viewingInvoice->due_date)->format('M d, Y') }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        {{-- Body --}}
+                        <div class="px-10 py-8 flex-1">
+                            <div class="mb-10">
+                                <h3 class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Bill To
+                                </h3>
+                                @if ($viewingInvoice->client)
+                                    <div class="text-lg font-bold text-neutral-900">
+                                        {{ $viewingInvoice->client->client_name }}</div>
+                                    <div class="text-sm text-neutral-600">
+                                        {{ $viewingInvoice->client->client_email }}<br>
+                                        @if ($viewingInvoice->client->billing_address)
+                                            {!! nl2br(e($viewingInvoice->client->billing_address)) !!}
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="text-neutral-500 italic">Unknown Client</div>
+                                @endif
+                            </div>
+
+                            {{-- Items Table --}}
+                            <table class="w-full mb-8">
+                                <thead>
+                                    <tr class="bg-neutral-900 text-white text-xs uppercase tracking-wider">
+                                        <th class="px-4 py-3 text-left font-semibold rounded-l-md">Description</th>
+                                        <th class="px-4 py-3 text-right font-semibold">Qty</th>
+                                        <th class="px-4 py-3 text-right font-semibold">Price</th>
+                                        <th class="px-4 py-3 text-right font-semibold rounded-r-md">Total</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
+                                <tbody class="divide-y divide-neutral-100">
                                     @foreach ($viewingInvoice->items as $item)
                                         <tr>
-                                            <td class="py-3">{{ $item->description }}</td>
-                                            <td class="py-3 text-right">{{ $item->quantity }}</td>
-                                            <td class="py-3 text-right">{{ number_format($item->unit_price, 2) }}</td>
-                                            <td class="py-3 text-right font-medium text-neutral-900 dark:text-white">
+                                            <td class="px-4 py-3">
+                                                <div class="font-bold text-neutral-900 text-sm">
+                                                    {{ $item->description }}</div>
+                                            </td>
+                                            <td class="px-4 py-3 text-right text-sm text-neutral-600">
+                                                {{ $item->quantity }}</td>
+                                            <td class="px-4 py-3 text-right text-sm text-neutral-600">
+                                                {{ number_format($item->unit_price, 2) }}</td>
+                                            <td class="px-4 py-3 text-right font-bold text-neutral-900 text-sm">
                                                 {{ number_format($item->line_total, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot class="font-bold text-neutral-900 dark:text-white">
-                                    <tr>
-                                        <td colspan="3" class="py-4 text-right">Total</td>
-                                        <td class="py-4 text-right">{{ $viewingInvoice->currency }}
-                                            {{ number_format($viewingInvoice->total, 2) }}</td>
-                                    </tr>
-                                </tfoot>
                             </table>
+
+                            {{-- Totals --}}
+                            <div class="flex justify-end mb-12">
+                                <div class="w-1/2 md:w-1/3">
+                                    <div
+                                        class="flex justify-between py-2 text-sm text-neutral-600 border-b border-neutral-100">
+                                        <span>Subtotal</span>
+                                        <span>{{ $viewingInvoice->currency }}
+                                            {{ number_format($viewingInvoice->subtotal, 2) }}</span>
+                                    </div>
+
+                                    @php
+                                        $metadata = $viewingInvoice->metadata ?? [];
+                                        $discountTotal = $viewingInvoice->discount_total;
+                                        $lateFeeTotal = $metadata['late_fee_total'] ?? 0;
+                                    @endphp
+
+                                    @if ($discountTotal > 0)
+                                        <div
+                                            class="flex justify-between py-2 text-sm text-red-500 border-b border-neutral-100">
+                                            <span>Discount</span>
+                                            <span>-{{ $viewingInvoice->currency }}
+                                                {{ number_format($discountTotal, 2) }}</span>
+                                        </div>
+                                    @endif
+
+                                    @if ($viewingInvoice->tax_total > 0)
+                                        <div
+                                            class="flex justify-between py-2 text-sm text-neutral-600 border-b border-neutral-100">
+                                            <span>Tax
+                                                ({{ number_format($metadata['tax_rate'] ?? ($viewingInvoice->tax_rate ?? 0), 2) }}%)</span>
+                                            <span>{{ $viewingInvoice->currency }}
+                                                {{ number_format($viewingInvoice->tax_total, 2) }}</span>
+                                        </div>
+                                    @endif
+
+                                    @if ($lateFeeTotal > 0)
+                                        <div
+                                            class="flex justify-between py-2 text-sm text-yellow-600 border-b border-neutral-100">
+                                            <span>Late Fee</span>
+                                            <span>+{{ $viewingInvoice->currency }}
+                                                {{ number_format($lateFeeTotal, 2) }}</span>
+                                        </div>
+                                    @endif
+
+                                    <div
+                                        class="flex justify-between py-3 text-lg font-bold text-neutral-900 border-t border-neutral-900 mt-[-1px]">
+                                        <span>Total</span>
+                                        <span>{{ $viewingInvoice->currency }}
+                                            {{ number_format($viewingInvoice->total, 2) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Footer Info formed as columns --}}
+                            <div class="grid grid-cols-2 gap-8 pt-6 border-t border-neutral-100">
+                                <div>
+                                    @if ($settings && ($settings->bank_details || $settings->payment_methods))
+                                        <div class="mb-4">
+                                            <h4
+                                                class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">
+                                                Payment Details</h4>
+                                            @if ($settings->bank_details)
+                                                <div class="text-xs text-neutral-600 space-y-1 mb-2">
+                                                    @foreach ($settings->bank_details as $detail)
+                                                        <div>{{ $detail }}</div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                            @if ($settings->payment_methods)
+                                                <div class="text-xs text-neutral-500 italic">
+                                                    Accepted: {{ implode(', ', $settings->payment_methods) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="text-right">
+                                    @if ($viewingInvoice->notes)
+                                        <div class="mb-4">
+                                            <h4
+                                                class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                                Notes</h4>
+                                            <p class="text-xs text-neutral-600">{{ $viewingInvoice->notes }}</p>
+                                        </div>
+                                    @endif
+                                    @if ($viewingInvoice->terms)
+                                        <div>
+                                            <h4
+                                                class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                                Terms</h4>
+                                            <p class="text-xs text-neutral-600">{{ $viewingInvoice->terms }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="flex justify-between pt-6">
-                            <flux:button icon="arrow-down-tray" wire:click="downloadPdf({{ $viewingInvoice->id }})">
-                                Download PDF
-                            </flux:button>
-                            <flux:button wire:click="$dispatch('close-modal', 'view-invoice-modal')">Close</flux:button>
-                        </div>
+                        {{-- Default Footer --}}
+                        @if ($settings && $settings->default_footer)
+                            <div
+                                class="bg-neutral-50 px-10 py-4 border-t border-neutral-200 text-center text-xs text-neutral-400">
+                                {{ $settings->default_footer }}
+                            </div>
+                        @endif
                     </div>
                 @else
-                    <div class="text-center text-neutral-500">No invoice selected.</div>
+                    <div class="text-center text-neutral-500 py-10">No invoice selected.</div>
                 @endif
+            </div>
+
+            <div class="flex justify-center gap-3 mt-6">
+                @if ($viewingInvoice)
+                    <x-primary-button icon="arrow-down-tray" wire:click="downloadPdf({{ $viewingInvoice->id }})">
+                        Download PDF
+                    </x-primary-button>
+                @endif
+                <flux:modal.close>
+                    <x-secondary-button>Close Preview</x-secondary-button>
+                </flux:modal.close>
             </div>
         </div>
     </flux:modal>
 
     {{-- Edit Invoice Modal --}}
-    <flux:modal name="edit-invoice-modal" class="min-h-[600px] w-full md:min-w-[900px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="edit-invoice-modal"
+        class="min-h-[600px] w-full md:min-w-[900px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="edit">
                 <div class="flex justify-center p-8">
@@ -264,27 +414,82 @@
                                 </div>
                             </div>
 
-                            {{-- Totals --}}
-                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4 flex justify-end">
-                                <div class="w-full md:w-1/3 space-y-2">
+                            {{-- Totals & Settings --}}
+                            <div
+                                class="border-t border-neutral-200 dark:border-neutral-700 pt-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                                {{-- Left Side: settings --}}
+                                <div class="space-y-4">
+                                    <flux:heading size="sm">Settings & Adjustments</flux:heading>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <flux:input type="number" label="Tax Rate (%)" min="0"
+                                            step="0.01" wire:model.blur="tax_rate" />
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="space-y-2">
+                                            <flux:label>Discount</flux:label>
+                                            <div class="flex">
+                                                <div class="w-2/3">
+                                                    <flux:input type="number" min="0" step="0.01"
+                                                        wire:model.blur="discount_value" />
+                                                </div>
+                                                <div class="w-1/3 ml-2">
+                                                    <flux:select wire:model.live="discount_type" class="min-w-[80px]">
+                                                        <flux:select.option value="percentage">%</flux:select.option>
+                                                        <flux:select.option value="fixed">$</flux:select.option>
+                                                    </flux:select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <flux:label>Late Fee</flux:label>
+                                            <div class="flex">
+                                                <div class="w-2/3">
+                                                    <flux:input type="number" min="0" step="0.01"
+                                                        wire:model.blur="late_fee_value" />
+                                                </div>
+                                                <div class="w-1/3 ml-2">
+                                                    <flux:select wire:model.live="late_fee_type" class="min-w-[80px]">
+                                                        <flux:select.option value="percentage">%</flux:select.option>
+                                                        <flux:select.option value="fixed">$</flux:select.option>
+                                                    </flux:select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Right Side: Totals --}}
+                                <div class="space-y-2 md:pl-8 border-l border-neutral-100 dark:border-neutral-700">
                                     <div class="flex justify-between text-sm">
                                         <span class="text-neutral-500">Subtotal</span>
                                         <span class="font-medium">{{ number_format($subtotal, 2) }}</span>
                                     </div>
-                                    <div class="flex justify-between text-sm items-center">
-                                        <span class="text-neutral-500">Tax (%)</span>
-                                        <div class="w-20">
-                                            <flux:input type="number" min="0" step="0.01" size="sm"
-                                                wire:model.blur="editingInvoice.tax_rate"
-                                                wire:change="calculateTotals" />
+
+                                    @if ($discount_total > 0)
+                                        <div class="flex justify-between text-sm text-red-500">
+                                            <span>Discount</span>
+                                            <span>-{{ number_format($discount_total, 2) }}</span>
                                         </div>
-                                    </div>
+                                    @endif
+
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-neutral-500">Tax Amount</span>
-                                        <span class="font-medium">{{ number_format($tax_total, 2) }}</span>
+                                        <span class="text-neutral-500">Tax</span>
+                                        <span class="font-medium">+{{ number_format($tax_total, 2) }}</span>
                                     </div>
+
+                                    @if ($late_fee_total > 0)
+                                        <div class="flex justify-between text-sm text-yellow-600">
+                                            <span>Late Fee</span>
+                                            <span>+{{ number_format($late_fee_total, 2) }}</span>
+                                        </div>
+                                    @endif
+
                                     <div
-                                        class="flex justify-between text-base font-bold text-neutral-900 dark:text-white pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                                        class="flex justify-between text-base font-bold text-neutral-900 dark:text-white pt-2 border-t border-neutral-200 dark:border-neutral-700 mt-2">
                                         <span>Total</span>
                                         <span>{{ $editingInvoice->currency ?? '$' }}
                                             {{ number_format($total, 2) }}</span>
@@ -295,9 +500,11 @@
 
                             <div
                                 class="flex justify-end gap-3 pt-6 border-t border-neutral-200 dark:border-neutral-700">
-                                <flux:button variant="ghost"
-                                    wire:click="$dispatch('close-modal', 'edit-invoice-modal')">Cancel</flux:button>
-                                <flux:button type="submit" variant="primary">Save Changes</flux:button>
+                                <flux:modal.close>
+                                    <x-secondary-button variant="ghost"
+                                        wire:click="$dispatch('close-modal', 'edit-invoice-modal')">Cancel</x-secondary-button>
+                                </flux:modal.close>
+                                <x-primary-button type="submit">Save Changes</x-primary-button>
                             </div>
                         </form>
                     </div>
