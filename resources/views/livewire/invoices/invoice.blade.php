@@ -346,13 +346,33 @@
 
             <div class="flex justify-center gap-3 mt-6">
                 @if ($viewingInvoice)
-                    <x-primary-button icon="arrow-down-tray" wire:click="downloadPdf({{ $viewingInvoice->id }})">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                        </svg>&nbsp;
-                        Download PDF
+                    <x-primary-button wire:click="downloadPdf({{ $viewingInvoice->id }})"
+                        wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed">
+
+                        {{-- Loading State --}}
+                        <div wire:loading wire:target="downloadPdf({{ $viewingInvoice->id }})"
+                            class="flex items-center">
+                            <svg class="animate-spin h-4 w-4 text-white mr-2" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            Processing...
+                        </div>
+
+                        {{-- Default State --}}
+                        <div wire:loading.remove wire:target="downloadPdf({{ $viewingInvoice->id }})"
+                            class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-4 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            Download PDF
+                        </div>
                     </x-primary-button>
                 @endif
                 <flux:modal.close>
@@ -364,7 +384,7 @@
 
     {{-- Edit Invoice Modal --}}
     <flux:modal name="edit-invoice-modal"
-        class="min-h-[600px] w-full md:min-w-[900px] !bg-white dark:!bg-neutral-800">
+        class="min-h-[600px] w-full md:w-auto md:max-w-5xl !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="edit">
                 <div class="flex justify-center p-8">
@@ -380,6 +400,27 @@
 
                         <form wire:submit.prevent="update" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="col-span-1 md:col-span-2">
+                                    <flux:select label="Status" wire:model="invoice_status">
+                                        <flux:select.option value="draft">Draft</flux:select.option>
+                                        <flux:select.option value="sent">Sent</flux:select.option>
+                                        <flux:select.option value="paid">Paid</flux:select.option>
+                                        <flux:select.option value="partially_paid">Partially Paid</flux:select.option>
+                                        <flux:select.option value="overdue">Overdue</flux:select.option>
+                                        <flux:select.option value="void">Void</flux:select.option>
+                                        <flux:select.option value="canceled">Canceled</flux:select.option>
+                                    </flux:select>
+                                </div>
+                                <div class="col-span-1 md:col-span-2">
+                                    <flux:select label="Currency" wire:model="currency">
+                                        <flux:select.option value="USD">USD</flux:select.option>
+                                        <flux:select.option value="EUR">EUR</flux:select.option>
+                                        <flux:select.option value="GBP">GBP</flux:select.option>
+                                        <flux:select.option value="AUD">AUD</flux:select.option>
+                                        <flux:select.option value="CAD">CAD</flux:select.option>
+                                        <flux:select.option value="NPR">NPR</flux:select.option>
+                                    </flux:select>
+                                </div>
                                 <flux:input type="date" label="Issue Date" wire:model.live="issue_date" />
                                 <div>
                                     <flux:input type="date" label="Due Date" wire:model="due_date" />
@@ -398,35 +439,67 @@
                                     </flux:button>
                                 </div>
 
-                                <div class="space-y-3">
+                                <div class="space-y-4 md:space-y-2">
+                                    {{-- Headers (Desktop Only) --}}
+                                    <div
+                                        class="hidden md:grid grid-cols-12 gap-2 mb-2 text-xs font-medium text-neutral-500 uppercase tracking-wider px-2">
+                                        <div class="col-span-5">Description</div>
+                                        <div class="col-span-2">Qty</div>
+                                        <div class="col-span-2">Price</div>
+                                        <div class="col-span-2 text-right">Total</div>
+                                        <div class="col-span-1"></div>
+                                    </div>
+
                                     @foreach ($invoiceItems as $index => $item)
-                                        <div class="grid grid-cols-12 gap-2 items-start"
+                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-start bg-neutral-50 dark:bg-neutral-900/50 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none relative group"
                                             wire:key="item-{{ $index }}">
-                                            <div class="col-span-5">
-                                                <flux:input placeholder="Description"
+
+                                            {{-- Description --}}
+                                            <div class="w-full md:col-span-5">
+                                                <flux:input placeholder="Description" label="Description"
+                                                    class="md:hidden"
+                                                    wire:model.blur="invoiceItems.{{ $index }}.description" />
+                                                <flux:input placeholder="Description" class="hidden md:block"
                                                     wire:model.blur="invoiceItems.{{ $index }}.description" />
                                             </div>
-                                            <div class="col-span-2">
-                                                <flux:input type="number" placeholder="Qty" min="0"
-                                                    step="0.01"
-                                                    wire:model.blur="invoiceItems.{{ $index }}.quantity" />
+
+                                            {{-- Qty & Price Row on Mobile --}}
+                                            <div class="flex gap-3 w-full md:contents">
+                                                <div class="w-1/2 md:w-auto md:col-span-2">
+                                                    <flux:input type="number" label="Qty" placeholder="Qty"
+                                                        min="0" step="1" class="md:hidden"
+                                                        wire:model.blur="invoiceItems.{{ $index }}.quantity" />
+                                                    <flux:input type="number" placeholder="Qty" min="0"
+                                                        step="1" class="hidden md:block"
+                                                        wire:model.blur="invoiceItems.{{ $index }}.quantity" />
+                                                </div>
+                                                <div class="w-1/2 md:w-auto md:col-span-2">
+                                                    <flux:input type="number" label="Price" placeholder="Price"
+                                                        min="0" step="0.01" class="md:hidden"
+                                                        wire:model.blur="invoiceItems.{{ $index }}.unit_price" />
+                                                    <flux:input type="number" placeholder="Price" min="0"
+                                                        step="0.01" class="hidden md:block"
+                                                        wire:model.blur="invoiceItems.{{ $index }}.unit_price" />
+                                                </div>
                                             </div>
-                                            <div class="col-span-2">
-                                                <flux:input type="number" placeholder="Price" min="0"
-                                                    step="0.01"
-                                                    wire:model.blur="invoiceItems.{{ $index }}.unit_price" />
-                                            </div>
-                                            <div class="col-span-2 flex items-center justify-end h-10 px-3">
-                                                <span class="font-medium tabular-nums">
-                                                    {{ number_format($item['line_total'], 2) }}
-                                                </span>
-                                            </div>
-                                            <div class="col-span-1 flex justify-center pt-1">
-                                                <button type="button"
-                                                    class="text-neutral-400 hover:text-red-500 transition-colors"
-                                                    wire:click="removeItem({{ $index }})">
-                                                    <flux:icon.trash class="size-4" />
-                                                </button>
+
+                                            {{-- Total & Delete Row on Mobile --}}
+                                            <div
+                                                class="flex justify-between items-center w-full md:contents mt-2 md:mt-0">
+                                                <div class="md:hidden text-sm text-neutral-500">Total:</div>
+                                                <div class="md:col-span-2 flex items-center justify-end h-10 px-3">
+                                                    <span class="font-medium tabular-nums text-lg md:text-base">
+                                                        {{ number_format($item['line_total'], 2) }}
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    class="md:col-span-1 flex justify-end md:justify-center pt-1 absolute top-2 right-2 md:static">
+                                                    <button type="button"
+                                                        class="text-neutral-400 hover:text-red-500 transition-colors p-2"
+                                                        wire:click="removeItem({{ $index }})">
+                                                        <flux:icon.trash class="size-5 md:size-4" />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach

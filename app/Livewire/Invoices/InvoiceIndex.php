@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 #[Title('ClientPivot | Invoices')]
@@ -20,6 +21,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     // Form Variables
     public $client_id = "";
     public $project_id = "";
+    public $invoice_status = 'draft'; 
+    public $currency = 'USD';
     public $issue_date;
     public $due_date;
     public $due_date_note = '';
@@ -37,6 +40,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     protected $rules = [
         'client_id'  => 'required|exists:clients,id',
         'project_id' => 'required|exists:projects,id',
+        'invoice_status' => 'required|in:draft,sent,paid,partially_paid,overdue,void,canceled',
         'issue_date' => 'required|date',
         'due_date'   => 'required|date|after_or_equal:issue_date',
     ];
@@ -117,7 +121,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
                 'paid_total'     => 0,
                 'balance_due'    => 0,
                 'is_tax_inclusive' => (bool) $settings->default_tax_inclusive,
-                'tax_rate'       => $settings->default_tax_rate ?? 0, // Add this field to model fillable too if needed
+                // 'tax_rate' column removed, will use metadata or just calculation
                 'notes'          => $settings->default_notes,
                 'terms'          => $settings->default_terms,
                 'payment_terms'  => $settings->default_payment_terms,
@@ -128,7 +132,9 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
                 'company_snapshot' => null,
                 'billing_address' => null,
                 'shipping_address' => null,
-                'metadata'       => null,
+                'metadata'       => [
+                    'tax_rate' => $settings->default_tax_rate ?? 0,
+                ],
             ]);
 
             // 4. Increment Number
@@ -136,7 +142,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
 
             // 5. Open Edit Modal directly
             $this->edit($invoice->id);
-            $this->dispatch('open-modal', 'edit-invoice-modal');
+            $this->dispatch('refreshDatatable');
+            return back()->with('success', 'Draft Invoice created successfully!');
         });
     }
 
@@ -201,8 +208,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $metadata = $this->editingInvoice->metadata ?? [];
         $settings = InvoiceSetting::where('user_id', Auth::id())->first();
 
-        // Tax Rate
-        $this->tax_rate = $metadata['tax_rate'] ?? ($this->editingInvoice->tax_rate ?? ($settings->default_tax_rate ?? 0));
+        // Tax Rate (from metadata if exists, else settings)
+        $this->tax_rate = $metadata['tax_rate'] ?? ($settings->default_tax_rate ?? 0);
         
         // Discount
         $this->discount_value = $metadata['discount_value'] ?? ($settings->default_discount_rate ?? 0);
@@ -214,6 +221,9 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
 
         // Dates
         $this->issue_date = $this->editingInvoice->issue_date ? \Carbon\Carbon::parse($this->editingInvoice->issue_date)->format('Y-m-d') : now()->format('Y-m-d');
+        
+        $this->invoice_status = $this->editingInvoice->invoice_status;
+        $this->currency = $this->editingInvoice->currency ?? ($settings->default_currency ?? 'USD');
         
         if ($this->editingInvoice->due_date) {
             $this->due_date = \Carbon\Carbon::parse($this->editingInvoice->due_date)->format('Y-m-d');
@@ -292,17 +302,9 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         // 4. Calculate Tax
         $this->tax_total = ($taxableAmount * $this->tax_rate) / 100;
 
-        // 5. Calculate Late Fee (Added to Total)
-        // Usually late fees are added to the final amount or separate line item. 
-        // Here we add it to the total.
         $lateFeeAmount = 0;
         if ($this->late_fee_value > 0) {
-             // Late fee is often calculated on the OVERDUE amount (Total), but at creation time 
-             // it might be just an "expected" fee or added immediately? 
-             // User wants "take default late fees... apply in invoice editing". 
-             // Let's assume it's added to the total now or just stored.
-             // Usually late fees apply AFTER due date. But if user adds it now, it's part of the invoice.
-             // Let's calculate it on (Subtotal - Discount + Tax)
+
              $currentTotal = $taxableAmount + $this->tax_total;
              
              if ($this->late_fee_type === 'percentage') {
@@ -339,6 +341,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $this->validate([
             'issue_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:issue_date',
+            'invoice_status' => 'required|in:draft,sent,paid,partially_paid,overdue,void,canceled',
+            'currency' => 'required|string|size:3',
             'invoiceItems.*.description' => 'required|string',
             'invoiceItems.*.quantity' => 'required|numeric|min:0.01',
             'invoiceItems.*.unit_price' => 'required|numeric|min:0',
@@ -361,6 +365,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             // Update Invoice Details
             $this->editingInvoice->issue_date = $this->issue_date;
             $this->editingInvoice->due_date = $this->due_date;
+            $this->editingInvoice->invoice_status = $this->invoice_status;
+            $this->editingInvoice->currency = $this->currency;
             $this->editingInvoice->subtotal = $this->subtotal;
             $this->editingInvoice->tax_total = $this->tax_total;
             $this->editingInvoice->discount_total = $this->discount_total; // This column usually exists
@@ -368,13 +374,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             $this->editingInvoice->balance_due = $this->total - $this->editingInvoice->paid_total;
             $this->editingInvoice->metadata = $metadata;
             
-            // Try to save explicit columns if they exist (safe to assign if model has them in fillable, 
-            // but if column missing in DB, it might error? No, Eloquent ignores non-fillable, 
-            // but if in fillable and missing in DB -> SQL Error. 
-            // I'll assume they are NOT in DB, so I relying on metadata.
-            // But 'tax_rate' was in fillable earlier... I'll assign it just in case, catch error? 
-            // Better to relying on metadata for specific rates.
-            // $this->editingInvoice->tax_rate = $this->tax_rate; 
+            // $this->editingInvoice->tax_rate = $this->tax_rate; // Column removed reference 
 
             $this->editingInvoice->save();
 

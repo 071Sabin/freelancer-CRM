@@ -29,7 +29,7 @@ class Invoice extends Model
         'currency',
         'base_currency',
         'exchange_rate',
-        'tax_rate',
+        // 'tax_rate', // Removed as per user request to use metadata/settings
         'subtotal',
         'tax_total',
         'discount_total',

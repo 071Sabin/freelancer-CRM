@@ -110,8 +110,8 @@ class ClientsTable extends DataTableComponent
             //     ->sortable(),
             Column::make("Created at", "created_at")->format(fn($value) => $value?->diffForHumans())
                 ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
+            // Column::make("Updated at", "updated_at")
+            //     ->sortable(),
             Column::make('Actions', 'id')
                 ->format(fn($value, $row, Column $column) => view('components.actions.client-actions', ['row' => $row]))
                 ->html(),
