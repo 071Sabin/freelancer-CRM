@@ -152,12 +152,15 @@
             margin-bottom: 10px;
         }
 
-        /* Items Table */
+        /* Items Table - Rounded Corners Fix */
         .items-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            /* Required for border-radius */
+            border-spacing: 0;
             margin-top: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+            /* Reduced margin */
         }
 
         .items-table th {
@@ -170,6 +173,17 @@
             letter-spacing: 0.05em;
         }
 
+        /* Rounded corners for first and last th */
+        .items-table th:first-child {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .items-table th:last-child {
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
         .items-table td {
             padding: 12px 16px;
             border-bottom: 1px solid #f5f5f5;
@@ -180,10 +194,26 @@
             width: 45%;
         }
 
-        /* Totals */
-        .totals-table {
+        /* Totals - Layout Fix */
+        .totals-layout-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Use a wide left column to push totals to right */
+        .totals-layout-table td.left-spacer {
+            width: 55%;
+        }
+
+        .totals-layout-table td.right-totals {
             width: 45%;
-            float: right;
+            vertical-align: top;
+        }
+
+        .totals-table {
+            width: 100%;
             border-collapse: collapse;
         }
 
@@ -225,7 +255,8 @@
         /* Footer */
         .footer-table {
             width: 100%;
-            margin-top: 50px;
+            margin-top: 30px;
+            /* Reduced from 50px */
             border-top: 1px solid #f5f5f5;
             padding-top: 30px;
         }
@@ -260,7 +291,27 @@
                 <!-- Left Column: Company Info -->
                 <td style="width: 50%;">
                     @if ($settings && $settings->logo_path)
-                        <img src="{{ public_path('storage/' . $settings->logo_path) }}" class="company-logo">
+                        @php
+                            $logoPath = $settings->logo_path;
+                            $realPath = null;
+
+                            // 1. Try public/uploads (User specific request)
+                            if (file_exists(public_path('uploads/' . $logoPath))) {
+                                $realPath = public_path('uploads/' . $logoPath);
+                            }
+                            // 2. Try standard storage link
+                            elseif (file_exists(public_path('storage/' . $logoPath))) {
+                                $realPath = public_path('storage/' . $logoPath);
+                            }
+                            // 3. Try direct public path
+                            elseif (file_exists(public_path($logoPath))) {
+                                $realPath = public_path($logoPath);
+                            }
+                        @endphp
+
+                        @if ($realPath)
+                            <img src="{{ $realPath }}" class="company-logo" style="max-height: 60px; width: auto;">
+                        @endif
                     @endif
 
                     <div class="company-name">{{ $settings->company_name ?? 'Freelancer CRM' }}</div>
@@ -269,9 +320,7 @@
                         <div class="footer-content" style="margin-top: 5px;">
                             {{ $settings->company_email }}<br>
                             @if ($settings->company_address)
-                                @foreach ($settings->company_address as $line)
-                                    {{ $line }}<br>
-                                @endforeach
+                                {{ implode(', ', $settings->company_address) }}<br>
                             @endif
                             @if ($settings->company_website)
                                 {{ $settings->company_website }}<br>
@@ -318,8 +367,8 @@
     <!-- Main Content -->
     <div class="container">
 
-        <!-- Bill To -->
-        <div style="margin-bottom: 40px;">
+        <!-- Bill To - Reduced spacing -->
+        <div style="margin-bottom: 20px;">
             <div class="bill-to-label">Bill To</div>
             @if ($invoice->client)
                 <div style="font-size: 18px; font-weight: bold; color: #171717; margin-bottom: 4px;">
@@ -368,47 +417,55 @@
             </tbody>
         </table>
 
-        <!-- Totals -->
-        <div style="overflow: hidden;">
-            <table class="totals-table">
-                <tr>
-                    <td>Subtotal</td>
-                    <td>{{ $invoice->currency }} {{ number_format($invoice->subtotal, 2) }}</td>
-                </tr>
+        <!-- Totals - Layout Table Fix -->
+        <table class="totals-layout-table">
+            <tr>
+                <td class="left-spacer"></td>
+                <td class="right-totals">
+                    <table class="totals-table">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td>{{ $invoice->currency }} {{ number_format($invoice->subtotal, 2) }}</td>
+                        </tr>
 
-                @php
-                    $metadata = $invoice->metadata ?? [];
-                    $discountTotal = $invoice->discount_total;
-                    $lateFeeTotal = $metadata['late_fee_total'] ?? 0;
-                @endphp
+                        @php
+                            $metadata = $invoice->metadata ?? [];
+                            $discountTotal = $invoice->discount_total;
+                            $lateFeeTotal = $metadata['late_fee_total'] ?? 0;
+                        @endphp
 
-                @if ($discountTotal > 0)
-                    <tr>
-                        <td class="text-red">Discount</td>
-                        <td class="text-red">-{{ $invoice->currency }} {{ number_format($discountTotal, 2) }}</td>
-                    </tr>
-                @endif
+                        @if ($discountTotal > 0)
+                            <tr>
+                                <td class="text-red">Discount</td>
+                                <td class="text-red">-{{ $invoice->currency }} {{ number_format($discountTotal, 2) }}
+                                </td>
+                            </tr>
+                        @endif
 
-                @if ($invoice->tax_total > 0)
-                    <tr>
-                        <td>Tax ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)</td>
-                        <td>{{ $invoice->currency }} {{ number_format($invoice->tax_total, 2) }}</td>
-                    </tr>
-                @endif
+                        @if ($invoice->tax_total > 0)
+                            <tr>
+                                <td>Tax ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)
+                                </td>
+                                <td>{{ $invoice->currency }} {{ number_format($invoice->tax_total, 2) }}</td>
+                            </tr>
+                        @endif
 
-                @if ($lateFeeTotal > 0)
-                    <tr>
-                        <td class="text-yellow">Late Fee</td>
-                        <td class="text-yellow">+{{ $invoice->currency }} {{ number_format($lateFeeTotal, 2) }}</td>
-                    </tr>
-                @endif
+                        @if ($lateFeeTotal > 0)
+                            <tr>
+                                <td class="text-yellow">Late Fee</td>
+                                <td class="text-yellow">+{{ $invoice->currency }}
+                                    {{ number_format($lateFeeTotal, 2) }}</td>
+                            </tr>
+                        @endif
 
-                <tr class="total-row">
-                    <td>Total</td>
-                    <td>{{ $invoice->currency }} {{ number_format($invoice->total, 2) }}</td>
-                </tr>
-            </table>
-        </div>
+                        <tr class="total-row">
+                            <td>Total</td>
+                            <td>{{ $invoice->currency }} {{ number_format($invoice->total, 2) }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <!-- Footer -->
         <table class="footer-table">

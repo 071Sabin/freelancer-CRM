@@ -127,8 +127,19 @@
                             class="bg-neutral-50 px-10 py-8 border-b border-neutral-200 flex justify-between items-start">
                             <div class="w-1/2">
                                 @if ($settings && $settings->logo_path)
-                                    <img src="{{ asset('storage/' . $settings->logo_path) }}"
-                                        class="h-16 mb-4 object-contain" alt="Logo">
+                                    @php
+                                        $logoUrl = null;
+                                        if (file_exists(public_path('uploads/' . $settings->logo_path))) {
+                                            $logoUrl = asset('uploads/' . $settings->logo_path);
+                                        } elseif (file_exists(public_path('storage/' . $settings->logo_path))) {
+                                            $logoUrl = asset('storage/' . $settings->logo_path);
+                                        } elseif (file_exists(public_path($settings->logo_path))) {
+                                            $logoUrl = asset($settings->logo_path);
+                                        }
+                                    @endphp
+                                    @if ($logoUrl)
+                                        <img src="{{ $logoUrl }}" class="h-16 mb-4 object-contain" alt="Logo">
+                                    @endif
                                 @endif
                                 <h1 class="text-xl font-bold text-neutral-900">
                                     {{ $settings->company_name ?? 'Freelancer CRM' }}</h1>
@@ -136,9 +147,7 @@
                                     <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
                                         {{ $settings->company_email }}<br>
                                         @if ($settings->company_address)
-                                            @foreach ($settings->company_address as $line)
-                                                {{ $line }}<br>
-                                            @endforeach
+                                            {{ implode(', ', $settings->company_address) }}<br>
                                         @endif
                                         @if ($settings->company_website)
                                             {{ $settings->company_website }}<br>
