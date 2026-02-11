@@ -29,6 +29,7 @@ class Invoice extends Model
         'currency',
         'base_currency',
         'exchange_rate',
+        'tax_rate',
         'subtotal',
         'tax_total',
         'discount_total',

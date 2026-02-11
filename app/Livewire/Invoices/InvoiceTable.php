@@ -30,14 +30,14 @@ class InvoiceTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return Project::query()
-            ->with('client');
+        return Invoice::query()
+            ->with(['client', 'project']);
     }
 
     public function columns(): array
     {
         return [
-            Column::make('ID', 'id'),
+            Column::make('ID', 'id')->hideIf(true), // Hide ID usually better
             Column::make("Invoice #", "invoice_number")
                 ->sortable()
                 ->searchable(),
@@ -47,7 +47,8 @@ class InvoiceTable extends DataTableComponent
                 ->searchable(),
 
             Column::make("Project", "project.name")
-                ->sortable()->format(function($value){return(e(ucwords($value)));}),
+                ->sortable()
+                ->format(function($value){return(e(ucwords($value ?? '—')));}),
 
             Column::make("Status", "invoice_status")
                 ->sortable()
@@ -76,11 +77,11 @@ class InvoiceTable extends DataTableComponent
             Column::make("Balance", "balance_due")
                 ->sortable(),
 
-            Column::make("Sent", "sent_at")
-                ->sortable(),
+            // Column::make("Sent", "sent_at")
+            //     ->sortable(),
 
-            Column::make("Paid At", "paid_at")
-                ->sortable(),
+            // Column::make("Paid At", "paid_at")
+            //     ->sortable(),
 
 
             Column::make("Created", "created_at")
@@ -90,6 +91,21 @@ class InvoiceTable extends DataTableComponent
                     fn($value, $row, Column $column) => view('components.actions.invoice-actions', ['row' => $row])
                 )->html(),
         ];
+    }
+
+    public function downloadPdf($id)
+    {
+        $invoice = Invoice::with(['client', 'project', 'items', 'user'])->findOrFail($id);
+        $settings = \App\Models\InvoiceSetting::where('user_id', auth()->id())->first(); // Use auth helper directly or import facade
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.pdf', [
+            'invoice' => $invoice,
+            'settings' => $settings,
+        ]);
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 'invoice-' . $invoice->invoice_number . '.pdf');
     }
 
     public function bulkActions(): array
@@ -108,7 +124,7 @@ class InvoiceTable extends DataTableComponent
         }
 
         DB::transaction(function () use ($ids) {
-            invoice::whereIn('id', $ids)->delete();
+            Invoice::whereIn('id', $ids)->delete();
         });
 
         // Clear selection after delete
@@ -117,6 +133,7 @@ class InvoiceTable extends DataTableComponent
 
     public function filters(): array
     {
+        // Existing filters logic... (keeping it concise in replacement if untouched, but need full context)
         return [
             SelectFilter::make('Status', 'invoice_status')
                 ->options([

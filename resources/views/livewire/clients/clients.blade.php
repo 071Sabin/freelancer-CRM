@@ -49,13 +49,7 @@
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
-
-
         <x-clients.show-add-client-form />
-
-        {{-- this component will view and edit the client details --}}
-        {{-- <livewire:clients.edit-client-form /> --}}
-
     </div>
 
     {{-- CLIENTS DATATABLE --}}
@@ -79,8 +73,7 @@
 
 
     {{-- View Client Modal --}}
-    <flux:modal name="view-client-modal"
-        class="min-h-[600px] min-w-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="view-client-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="view">
                 <div class="flex justify-center p-8">
@@ -106,31 +99,34 @@
 
                     <div class="relative overflow-hidden">
                         <div
-                            class="px-6 py-6 border-b border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]">
+                            class="px-4 py-5 md:px-6 md:py-6 border-b border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]">
                             <div class="flex items-start justify-between">
-                                <div class="flex gap-4">
+                                <div class="flex gap-3 md:gap-4">
                                     <div class="flex-shrink-0">
                                         <span
-                                            class="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-neutral-900 dark:bg-white text-lg font-bold text-white dark:text-neutral-900 shadow-sm ring-1 ring-white/10">
+                                            class="inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-neutral-900 dark:bg-white text-base md:text-lg font-bold text-white dark:text-neutral-900 shadow-sm ring-1 ring-white/10">
                                             {{ substr($viewingClient['client_name'], 0, 1) }}
                                         </span>
                                     </div>
 
                                     <div class="space-y-1">
-                                        <div class="flex items-center gap-3">
+                                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                                             <h2
-                                                class="text-xl font-bold text-neutral-900 dark:text-white tracking-tight leading-none">
+                                                class="text-lg md:text-xl font-bold text-neutral-900 dark:text-white tracking-tight leading-none">
                                                 {{ $viewingClient['client_name'] }}
                                             </h2>
-                                            {!! $statusHtml !!}
+                                            <div>
+                                                {!! $statusHtml !!}
+                                            </div>
                                         </div>
 
                                         @if ($viewingClient['company_name'])
                                             <div
-                                                class="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
-                                                <svg class="w-4 h-4 text-neutral-400" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                class="flex items-center gap-2 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
+                                                <svg class="w-3.5 h-3.5 md:w-4 md:h-4 text-neutral-400"
+                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    fill="none" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M3 21l18 0" />
                                                     <path d="M5 21l0 -14l8 -4l8 4l0 14" />
                                                     <path d="M9 10l0 0.01" />
@@ -305,10 +301,10 @@
                                 <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div class="w-full group">
                                         <label
-                                            class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Currency</label>
+                                            class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 dark:text-neutral-400 transition-colors duration-200">Currency</label>
                                         <div class="mt-2 relative">
                                             <select wire:model="editingClient.currency"
-                                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
+                                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
                                                 <option value="" selected>-- Select --</option>
                                                 <option value="usd">USD — $</option>
                                                 <option value="eur">EUR — €</option>
@@ -338,10 +334,10 @@
 
                                     <div class="w-full group">
                                         <label
-                                            class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Status</label>
+                                            class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 dark:text-neutral-400 transition-colors duration-200">Status</label>
                                         <div class="mt-2 relative">
                                             <select wire:model="editingClient.status"
-                                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
+                                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
                                                 <option value="active">Active</option>
                                                 <option value="inactive">Inactive</option>
                                                 <option value="lead">Lead</option>
@@ -367,31 +363,13 @@
                             </div>
 
                             <div class="w-full group">
-                                <label
-                                    class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Billing
-                                    Address</label>
-                                <div class="mt-2 relative">
-                                    <textarea wire:model="editingClient.billing_address" rows="3"
-                                        class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out"></textarea>
-                                </div>
-                                @error('editingClient.billing_address')
-                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
-                                        {{ $message }}</p>
-                                @enderror
+                                <x-textarea-field label="Billing Address" model="editingClient.billing_address"
+                                    rows="3" />
                             </div>
 
                             <div class="w-full group">
-                                <label
-                                    class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Private
-                                    Notes</label>
-                                <div class="mt-2 relative">
-                                    <textarea wire:model="editingClient.private_notes" rows="3"
-                                        class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out"></textarea>
-                                </div>
-                                @error('editingClient.private_notes')
-                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
-                                        {{ $message }}</p>
-                                @enderror
+                                <x-textarea-field label="Private Notes" model="editingClient.private_notes"
+                                    rows="3" />
                             </div>
 
                             <div class="flex justify-end gap-3 pt-6">

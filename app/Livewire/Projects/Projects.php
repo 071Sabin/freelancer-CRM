@@ -50,12 +50,12 @@ class Projects extends Component
 
     public function edit($id)
     {
-        $this->editingProject = Project::findOrFail($id)->toArray();
+        $this->editingProject = Project::with('client')->findOrFail($id)->toArray();
     }
 
     public function view($id)
     {
-        $this->viewingProject = Project::findOrFail($id)->toArray();
+        $this->viewingProject = Project::with('client')->findOrFail($id)->toArray();
     }
 
     public function update()
@@ -68,7 +68,15 @@ class Projects extends Component
             'editingProject.status' => 'required|string|max:100',
         ]);
 
-        $this->editingProject->save();
+        $project = Project::findOrFail($this->editingProject['id']);
+        
+        $project->update([
+            'name' => strtolower($this->editingProject['name']),
+            'description' => strtolower($this->editingProject['description']),
+            'value' => $this->editingProject['value'],
+            'client_id' => $this->editingProject['client_id'],
+            'status' => $this->editingProject['status'],
+        ]);
 
         $this->dispatch('close-modal', 'edit-project-modal');
         $this->dispatch('refreshDatatable');

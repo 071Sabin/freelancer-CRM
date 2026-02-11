@@ -122,6 +122,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
                 'paid_total'     => 0,
                 'balance_due'    => 0,
                 'is_tax_inclusive' => (bool) $settings->default_tax_inclusive,
+                'tax_rate'       => $settings->default_tax_rate ?? 0, // Add this field to model fillable too if needed
                 'notes'          => $settings->default_notes,
                 'terms'          => $settings->default_terms,
                 'payment_terms'  => $settings->default_payment_terms,
@@ -169,16 +170,98 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         ]);
     }
 
+    // Item Management
+    public array $invoiceItems = [];
+    public $subtotal = 0;
+    public $tax_total = 0;
+    public $total = 0;
+
     public function edit($id)
     {
-        $this->editingInvoice = Invoice::findOrFail($id);
-        // Trigger handles opening, we just load data
+        $this->editingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
+        
+        $this->invoiceItems = $this->editingInvoice->items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'description' => $item->description,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->unit_price,
+                'line_total' => $item->line_total,
+            ];
+        })->toArray();
+
+        $this->calculateTotals();
     }
 
     public function view($id)
     {
-        $this->viewingInvoice = Invoice::findOrFail($id);
-        // Trigger handles opening, we just load data
+        $this->viewingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
+    }
+
+    public function addItem()
+    {
+        $this->invoiceItems[] = [
+            'id' => null,
+            'description' => '',
+            'quantity' => 1,
+            'unit_price' => 0,
+            'line_total' => 0,
+        ];
+    }
+
+    public function removeItem($index)
+    {
+        unset($this->invoiceItems[$index]);
+        $this->invoiceItems = array_values($this->invoiceItems);
+        $this->calculateTotals();
+    }
+
+    public function updatedInvoiceItems($value, $key)
+    {
+        $this->calculateTotals();
+    }
+
+    public function calculateTotals()
+    {
+        $this->subtotal = 0;
+        $this->tax_total = 0;
+
+        // Get tax rate from settings or invoice
+        $taxRate = $this->editingInvoice->tax_rate ?? 0;
+        // If not set on invoice, try to get from settings for calculation preview
+        if ($this->editingInvoice && $this->editingInvoice->wasRecentlyCreated) {
+             $settings = InvoiceSetting::where('user_id', Auth::id())->first();
+             $taxRate = $settings->default_tax_rate ?? 0;
+        }
+
+        foreach ($this->invoiceItems as $index => $item) {
+            $qty = (float) ($item['quantity'] ?? 0);
+            $price = (float) ($item['unit_price'] ?? 0);
+            $lineTotal = $qty * $price;
+            
+            $this->invoiceItems[$index]['line_total'] = $lineTotal;
+            $this->subtotal += $lineTotal;
+        }
+
+        // Calculate Tax
+        $this->tax_total = ($this->subtotal * $taxRate) / 100;
+        
+        $this->total = $this->subtotal + $this->tax_total;
+    }
+
+    public function downloadPdf($id)
+    {
+        $invoice = Invoice::with(['client', 'project', 'items', 'user'])->findOrFail($id);
+        $settings = InvoiceSetting::where('user_id', Auth::id())->first();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.pdf', [
+            'invoice' => $invoice,
+            'settings' => $settings,
+        ]);
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 'invoice-' . $invoice->invoice_number . '.pdf');
     }
 
     public function update()
@@ -186,9 +269,47 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $this->validate([
             'editingInvoice.issue_date' => 'required|date',
             'editingInvoice.due_date' => 'required|date|after_or_equal:editingInvoice.issue_date',
+            'invoiceItems.*.description' => 'required|string',
+            'invoiceItems.*.quantity' => 'required|numeric|min:0.01',
+            'invoiceItems.*.unit_price' => 'required|numeric|min:0',
         ]);
 
-        $this->editingInvoice->save();
+        DB::transaction(function () {
+            // Update Invoice Details
+            $this->editingInvoice->subtotal = $this->subtotal;
+            $this->editingInvoice->tax_total = $this->tax_total;
+            $this->editingInvoice->total = $this->total;
+            $this->editingInvoice->balance_due = $this->total - $this->editingInvoice->paid_total;
+            $this->editingInvoice->save();
+
+            // Sync Items
+            // 1. Get existing item IDs to keep
+            $existingItemIds = collect($this->invoiceItems)
+                ->pluck('id')
+                ->filter()
+                ->toArray();
+
+            // 2. Delete removed items
+            $this->editingInvoice->items()
+                ->whereNotIn('id', $existingItemIds)
+                ->delete();
+
+            // 3. Update or Create items
+            foreach ($this->invoiceItems as $index => $item) {
+                $this->editingInvoice->items()->updateOrCreate(
+                    ['id' => $item['id'] ?? null],
+                    [
+                        'position' => $index + 1,
+                        'description' => $item['description'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'line_total' => $item['line_total'],
+                        'name' => null, // or match description
+                        'invoice_id' => $this->editingInvoice->id,
+                    ]
+                );
+            }
+        });
 
         $this->dispatch('close-modal', 'edit-invoice-modal');
         $this->dispatch('notify', 'Invoice updated successfully.'); 

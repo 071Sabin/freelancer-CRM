@@ -107,8 +107,7 @@
     @endif
 
     {{-- View Invoice Modal --}}
-    <flux:modal name="view-invoice-modal"
-        class="min-h-[600px] min-w-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="view-invoice-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="view">
                 <div class="flex justify-center p-8">
@@ -123,7 +122,7 @@
                             <div>
                                 <flux:heading size="xl">Invoice #{{ $viewingInvoice->invoice_number }}
                                 </flux:heading>
-                                <flux:text>{{ $viewingInvoice->client->client_name }}</flux:text>
+                                <flux:text>{{ $viewingInvoice->client->client_name ?? 'Unknown Client' }}</flux:text>
                             </div>
                             <div class="text-right">
                                 <flux:badge size="lg"
@@ -136,7 +135,7 @@
                         <div class="grid grid-cols-2 gap-8">
                             <div>
                                 <flux:label>Project</flux:label>
-                                <div class="font-medium">{{ $viewingInvoice->project->name }}</div>
+                                <div class="font-medium">{{ $viewingInvoice->project->name ?? '—' }}</div>
                             </div>
                             <div>
                                 <flux:label>Total Amount</flux:label>
@@ -145,21 +144,51 @@
                             </div>
                             <div>
                                 <flux:label>Issue Date</flux:label>
-                                <div>{{ $viewingInvoice->issue_date }}</div>
+                                <div>{{ \Carbon\Carbon::parse($viewingInvoice->issue_date)->format('M d, Y') }}</div>
                             </div>
                             <div>
                                 <flux:label>Due Date</flux:label>
-                                <div>{{ $viewingInvoice->due_date }}</div>
+                                <div>{{ \Carbon\Carbon::parse($viewingInvoice->due_date)->format('M d, Y') }}</div>
                             </div>
                         </div>
 
-                        {{-- Placeholder for Items --}}
+                        {{-- Items List --}}
                         <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
-                            <flux:heading size="lg" class="mb-4">Items (Coming Soon)</flux:heading>
-                            <p class="text-neutral-500 italic">Line items will be displayed here.</p>
+                            <flux:heading size="lg" class="mb-4">Items</flux:heading>
+                            <table class="w-full text-left text-sm text-neutral-600 dark:text-neutral-400">
+                                <thead class="border-b border-neutral-200 dark:border-neutral-700 font-medium">
+                                    <tr>
+                                        <th class="py-2">Description</th>
+                                        <th class="py-2 text-right">Qty</th>
+                                        <th class="py-2 text-right">Price</th>
+                                        <th class="py-2 text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-200 dark:divide-neutral-700">
+                                    @foreach ($viewingInvoice->items as $item)
+                                        <tr>
+                                            <td class="py-3">{{ $item->description }}</td>
+                                            <td class="py-3 text-right">{{ $item->quantity }}</td>
+                                            <td class="py-3 text-right">{{ number_format($item->unit_price, 2) }}</td>
+                                            <td class="py-3 text-right font-medium text-neutral-900 dark:text-white">
+                                                {{ number_format($item->line_total, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot class="font-bold text-neutral-900 dark:text-white">
+                                    <tr>
+                                        <td colspan="3" class="py-4 text-right">Total</td>
+                                        <td class="py-4 text-right">{{ $viewingInvoice->currency }}
+                                            {{ number_format($viewingInvoice->total, 2) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
 
-                        <div class="flex justify-end pt-6">
+                        <div class="flex justify-between pt-6">
+                            <flux:button icon="arrow-down-tray" wire:click="downloadPdf({{ $viewingInvoice->id }})">
+                                Download PDF
+                            </flux:button>
                             <flux:button wire:click="$dispatch('close-modal', 'view-invoice-modal')">Close</flux:button>
                         </div>
                     </div>
@@ -171,7 +200,7 @@
     </flux:modal>
 
     {{-- Edit Invoice Modal --}}
-    <flux:modal name="edit-invoice-modal" class="min-h-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="edit-invoice-modal" class="min-h-[600px] w-full md:min-w-[900px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="edit">
                 <div class="flex justify-center p-8">
@@ -182,17 +211,90 @@
             <div wire:loading.remove wire:target="edit">
                 @if ($editingInvoice)
                     <div class="space-y-6">
-                        <flux:heading size="lg">Edit Invoice #{{ $editingInvoice->invoice_number }}</flux:heading>
+                        <flux:heading size="lg">Edit Invoice #{{ $editingInvoice->invoice_number }}
+                        </flux:heading>
 
                         <form wire:submit.prevent="update" class="space-y-6">
-                            <div class="grid grid-cols-2 gap-4">
-                                <flux:input type="date" label="Issue Date" wire:model="editingInvoice.issue_date" />
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <flux:input type="date" label="Issue Date"
+                                    wire:model="editingInvoice.issue_date" />
                                 <flux:input type="date" label="Due Date" wire:model="editingInvoice.due_date" />
                             </div>
 
-                            {{-- More fields as needed --}}
+                            {{-- Items Editor --}}
+                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-6">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-medium text-neutral-900 dark:text-white">Items</h3>
+                                    <flux:button size="sm" icon="plus" wire:click="addItem">Add Item
+                                    </flux:button>
+                                </div>
 
-                            <div class="flex justify-end gap-3 pt-6">
+                                <div class="space-y-3">
+                                    @foreach ($invoiceItems as $index => $item)
+                                        <div class="grid grid-cols-12 gap-2 items-start"
+                                            wire:key="item-{{ $index }}">
+                                            <div class="col-span-5">
+                                                <flux:input placeholder="Description"
+                                                    wire:model.blur="invoiceItems.{{ $index }}.description" />
+                                            </div>
+                                            <div class="col-span-2">
+                                                <flux:input type="number" placeholder="Qty" min="0"
+                                                    step="0.01"
+                                                    wire:model.blur="invoiceItems.{{ $index }}.quantity" />
+                                            </div>
+                                            <div class="col-span-2">
+                                                <flux:input type="number" placeholder="Price" min="0"
+                                                    step="0.01"
+                                                    wire:model.blur="invoiceItems.{{ $index }}.unit_price" />
+                                            </div>
+                                            <div class="col-span-2 flex items-center justify-end h-10 px-3">
+                                                <span class="font-medium tabular-nums">
+                                                    {{ number_format($item['line_total'], 2) }}
+                                                </span>
+                                            </div>
+                                            <div class="col-span-1 flex justify-center pt-1">
+                                                <button type="button"
+                                                    class="text-neutral-400 hover:text-red-500 transition-colors"
+                                                    wire:click="removeItem({{ $index }})">
+                                                    <flux:icon.trash class="size-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            {{-- Totals --}}
+                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4 flex justify-end">
+                                <div class="w-full md:w-1/3 space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-neutral-500">Subtotal</span>
+                                        <span class="font-medium">{{ number_format($subtotal, 2) }}</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm items-center">
+                                        <span class="text-neutral-500">Tax (%)</span>
+                                        <div class="w-20">
+                                            <flux:input type="number" min="0" step="0.01" size="sm"
+                                                wire:model.blur="editingInvoice.tax_rate"
+                                                wire:change="calculateTotals" />
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-neutral-500">Tax Amount</span>
+                                        <span class="font-medium">{{ number_format($tax_total, 2) }}</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between text-base font-bold text-neutral-900 dark:text-white pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                                        <span>Total</span>
+                                        <span>{{ $editingInvoice->currency ?? '$' }}
+                                            {{ number_format($total, 2) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div
+                                class="flex justify-end gap-3 pt-6 border-t border-neutral-200 dark:border-neutral-700">
                                 <flux:button variant="ghost"
                                     wire:click="$dispatch('close-modal', 'edit-invoice-modal')">Cancel</flux:button>
                                 <flux:button type="submit" variant="primary">Save Changes</flux:button>

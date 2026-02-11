@@ -48,8 +48,6 @@
 
     <x-projects.show-add-project-form :clients="$clients" />
 
-    <livewire:projects.edit-project-form />
-
 
     @if ($projectCount > 0)
         <livewire:projects.projects-table />
@@ -66,8 +64,7 @@
     @endif
 
     {{-- View Project Modal --}}
-    <flux:modal name="view-project-modal"
-        class="min-h-[600px] min-w-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="view-project-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="view">
                 <div class="flex justify-center p-8">
@@ -75,46 +72,116 @@
                 </div>
             </div>
 
-            <div wire:loading.remove wire:target="view">
-                @if ($viewingProject)
-                    <div class="space-y-6">
-                        <div class="flex justify-between items-start">
-                            <flux:heading size="xl">{{ ucwords($viewingProject->name) }}</flux:heading>
-                            <flux:badge size="lg"
-                                :color="match($viewingProject->status) {'active' => 'blue', 'in-progress' => 'amber','completed' => 'green','cancelled' => 'red',default => 'zinc'}">
-                                {{ ucwords(str_replace('-', ' ', $viewingProject->status)) }}</flux:badge>
+            <div wire:loading.remove wire:target="view" class="w-full">
+                @if (!empty($viewingProject))
+                    @php
+                        $statusHtml = match ($viewingProject['status']) {
+                            'active'
+                                => '<span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-500/10 dark:text-blue-400 dark:ring-blue-500/20">Active</span>',
+                            'in-progress'
+                                => '<span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-800 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-500 dark:ring-amber-400/20">In Progress</span>',
+                            'completed'
+                                => '<span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20">Completed</span>',
+                            'cancelled'
+                                => '<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">Cancelled</span>',
+                            'on-hold'
+                                => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">On Hold</span>',
+                            default
+                                => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">Unknown</span>',
+                        };
+                    @endphp
+
+                    <div class="relative overflow-hidden">
+                        <div
+                            class="px-4 py-5 md:px-6 md:py-6 border-b border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]">
+                            <div class="flex items-start justify-between">
+                                <div class="flex gap-3 md:gap-4">
+                                    <div class="flex-shrink-0">
+                                        <span
+                                            class="inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-neutral-900 dark:bg-white text-base md:text-lg font-bold text-white dark:text-neutral-900 shadow-sm ring-1 ring-white/10">
+                                            {{ substr($viewingProject['name'], 0, 1) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="space-y-1">
+                                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                                            <h2
+                                                class="text-lg md:text-xl font-bold text-neutral-900 dark:text-white tracking-tight leading-none">
+                                                {{ ucwords($viewingProject['name']) }}
+                                            </h2>
+                                            <div>
+                                                {!! $statusHtml !!}
+                                            </div>
+                                        </div>
+
+                                        @if (isset($viewingProject['client']['client_name']))
+                                            <div
+                                                class="flex items-center gap-2 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
+                                                <svg class="w-3.5 h-3.5 md:w-4 md:h-4 text-neutral-400"
+                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                    fill="none" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                                    <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                                                    <path
+                                                        d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+                                                </svg>
+                                                <span
+                                                    class="font-medium">{{ $viewingProject['client']['client_name'] }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-8">
-                            <div>
-                                <flux:label>Client</flux:label>
-                                <div class="font-medium">{{ ucwords($viewingProject->client->client_name) }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Value</flux:label>
-                                <div class="font-medium text-lg">{{ $viewingProject->client->currency ?? '$' }}
-                                    {{ number_format($viewingProject->value, 2) }}</div>
-                            </div>
-                            <div class="col-span-2">
-                                <flux:label>Description</flux:label>
-                                <p class="text-neutral-600 dark:text-neutral-400">
-                                    {{ ucfirst($viewingProject->description) ?? 'No description.' }}</p>
-                            </div>
-                        </div>
+                        <div class="px-4 py-5 md:px-6 md:py-8">
+                            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:gap-y-8">
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Project Value
+                                    </dt>
+                                    <dd
+                                        class="text-lg md:text-xl font-bold text-neutral-900 dark:text-white tabular-nums tracking-tight">
+                                        {{ isset($viewingProject['client']['currency']) ? $viewingProject['client']['currency'] : '$' }}
+                                        {{ number_format($viewingProject['value'], 2) }}
+                                    </dd>
+                                </div>
 
-                        <div class="flex justify-end pt-6">
-                            <flux:button wire:click="$dispatch('close-modal', 'view-project-modal')">Close</flux:button>
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Client
+                                    </dt>
+                                    <dd class="text-sm md:text-base font-medium text-neutral-900 dark:text-neutral-200">
+                                        {{ $viewingProject['client']['client_name'] ?? '—' }}
+                                    </dd>
+                                </div>
+
+                                <div class="col-span-1 md:col-span-2 pt-2">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">
+                                        Description
+                                    </dt>
+                                    <dd
+                                        class="rounded-lg border border-neutral-200 dark:border-white/10 bg-neutral-50/50 dark:bg-white/5 p-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                                        {{ ucfirst($viewingProject['description']) ?? 'No description provided.' }}
+                                    </dd>
+                                </div>
+                            </dl>
                         </div>
                     </div>
                 @else
-                    <div class="text-center text-neutral-500">No project selected.</div>
+                    <div class="text-center text-neutral-500 py-12">No project selected.</div>
                 @endif
             </div>
         </div>
     </flux:modal>
 
     {{-- Edit Project Modal --}}
-    <flux:modal name="edit-project-modal" class="min-h-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="edit-project-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="edit">
                 <div class="flex justify-center p-8">
@@ -123,43 +190,64 @@
             </div>
 
             <div wire:loading.remove wire:target="edit">
-                @if ($editingProject)
+                @if (!empty($editingProject))
                     <div class="space-y-6">
-                        <flux:heading size="lg">Edit Project: {{ ucwords($editingProject->name) }}</flux:heading>
+                        <div class="border-b border-neutral-100 dark:border-white/5 pb-4">
+                            <h3 class="text-lg md:text-xl font-bold text-neutral-900 dark:text-white">
+                                Edit Project: <span
+                                    class="text-indigo-600 dark:text-indigo-400">{{ ucwords($editingProject['name']) }}</span>
+                            </h3>
+                        </div>
 
                         <form wire:submit.prevent="update" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <flux:input label="Project Name" wire:model="editingProject.name" />
-                                <flux:input label="Value" type="number" step="0.01"
-                                    wire:model="editingProject.value" />
+                                <x-input-field label="Project Name" model="editingProject.name" />
+                                <x-input-field label="Value" type="number" step="0.01"
+                                    model="editingProject.value" />
 
-                                <flux:select label="Client" wire:model="editingProject.client_id">
-                                    @foreach ($clients as $client)
-                                        <option value="{{ $client->id }}">{{ ucwords($client->client_name) }}
-                                        </option>
-                                    @endforeach
-                                </flux:select>
+                                <div class="w-full group">
+                                    <label
+                                        class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 dark:text-neutral-400 transition-colors duration-200">Client</label>
+                                    <div class="mt-2 relative">
+                                        <select wire:model="editingProject.client_id"
+                                            class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
+                                            @foreach ($clients as $client)
+                                                <option value="{{ $client->id }}">{{ ucwords($client->client_name) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
-                                <flux:select label="Status" wire:model="editingProject.status">
-                                    <option value="active">Active</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="on-hold">On Hold</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </flux:select>
+                                <div class="w-full group">
+                                    <label
+                                        class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 dark:text-neutral-400 transition-colors duration-200">Status</label>
+                                    <div class="mt-2 relative">
+                                        <select wire:model="editingProject.status"
+                                            class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
+                                            <option value="active">Active</option>
+                                            <option value="in-progress">In Progress</option>
+                                            <option value="on-hold">On Hold</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <flux:textarea label="Description" wire:model="editingProject.description" />
+                            <x-textarea-field label="Description" model="editingProject.description"
+                                rows="4" />
 
-                            <div class="flex justify-end gap-3 pt-6">
-                                <flux:button variant="ghost"
-                                    wire:click="$dispatch('close-modal', 'edit-project-modal')">Cancel</flux:button>
-                                <flux:button type="submit" variant="primary">Save Changes</flux:button>
+                            <div class="flex justify-end gap-3 pt-6 border-t border-neutral-100 dark:border-white/5">
+                                <flux:modal.close>
+                                    <x-secondary-button>Cancel</x-secondary-button>
+                                </flux:modal.close>
+                                <x-primary-button wire:click="update">Save Changes</x-primary-button>
                             </div>
                         </form>
                     </div>
                 @else
-                    <div class="text-center text-neutral-500">No project selected.</div>
+                    <div class="text-center text-neutral-500 py-12">No project selected.</div>
                 @endif
             </div>
         </div>
