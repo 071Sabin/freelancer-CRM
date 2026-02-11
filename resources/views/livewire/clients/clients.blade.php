@@ -90,56 +90,141 @@
 
             <div wire:loading.remove wire:target="view">
                 @if (!empty($viewingClient))
-                    <div class="space-y-6">
-                        <div class="flex justify-between items-start">
+                    @php
+                        $statusHtml = match ($viewingClient['status']) {
+                            'active'
+                                => '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 border border-green-400 dark:bg-green-900/30 dark:text-green-300 dark:border-green-500">Active</span>',
+                            'inactive'
+                                => '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700 border border-red-400 dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">Inactive</span>',
+                            'lead'
+                                => '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700 border border-amber-400 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-500">Lead</span>',
+                            default => '<span class="text-gray-500 dark:text-gray-400 text-xs">Unknown</span>',
+                        };
+                    @endphp
+
+                    <div class="space-y-0">
+                        <!-- Header -->
+                        <div
+                            class="flex items-start justify-between pb-6 border-b border-neutral-200 dark:border-neutral-700">
                             <div>
-                                <flux:heading size="xl">{{ $viewingClient['client_name'] }}</flux:heading>
-                                <flux:text>{{ $viewingClient['company_name'] }}</flux:text>
+                                <h2 class="text-xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                                    {{ $viewingClient['client_name'] }}
+                                </h2>
+                                @if ($viewingClient['company_name'])
+                                    <p
+                                        class="text-sm font-medium text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                            class="w-4 h-4 opacity-70">
+                                            <path fill-rule="evenodd"
+                                                d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v11.75l2.75-2.75a.75.75 0 0 1 1.06 1.06l-4.03 4.03a.75.75 0 0 1-1.06 0L8.69 13.69a.75.75 0 0 1 1.06-1.06l2.75 2.75V3.5h-9v13h4.25a.75.75 0 0 1 0 1.5H3.5A1.5 1.5 0 0 1 2 16.5v-13Z"
+                                                clip-rule="evenodd" /> {{-- Generic building/business icon substitution --}}
+                                            <path
+                                                d="M4 17a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 1v.5a.5.5 0 0 1-.5.5h-2.5a.5.5 0 0 1-.5-.5V17Z" />
+                                        </svg>
+                                        {{ $viewingClient['company_name'] }}
+                                    </p>
+                                @endif
                             </div>
-                            <div class="text-right">
-                                <flux:badge size="lg"
-                                    :color="$viewingClient['status'] === 'active' ? 'green' : 'zinc'">
-                                    {{ ucfirst($viewingClient['status']) }}
-                                </flux:badge>
+                            <div class="pl-4">
+                                {!! $statusHtml !!}
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-8">
-                            <div>
-                                <flux:label>Email</flux:label>
-                                <div class="font-medium">{{ $viewingClient['client_email'] }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Company Email</flux:label>
-                                <div class="font-medium">{{ $viewingClient['company_email'] }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Phone</flux:label>
-                                <div>{{ $viewingClient['company_phone'] }}</div>
-                            </div>
-                            <div>
-                                <flux:label>Website</flux:label>
-                                <div><a href="{{ $viewingClient['company_website'] }}" target="_blank"
-                                        class="text-blue-500 hover:underline">{{ $viewingClient['company_website'] }}</a>
+                        <!-- Content Grid -->
+                        <div class="py-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+
+                            <!-- Contact Info -->
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Email
+                                    Address</label>
+                                <div class="text-sm font-medium text-neutral-900 dark:text-neutral-200 break-all">
+                                    {{ $viewingClient['client_email'] ?? '—' }}
                                 </div>
                             </div>
-                            <div class="col-span-2">
-                                <flux:label>Billing Address</flux:label>
-                                <div>{{ $viewingClient['billing_address'] }}</div>
+
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Company
+                                    Email</label>
+                                <div class="text-sm font-medium text-neutral-900 dark:text-neutral-200 break-all">
+                                    {{ $viewingClient['company_email'] ?? '—' }}
+                                </div>
                             </div>
-                            <div>
-                                <flux:label>Hourly Rate</flux:label>
-                                <div>{{ $viewingClient['currency'] }} {{ $viewingClient['hourly_rate'] }}</div>
+
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Phone
+                                    Number</label>
+                                <div class="text-sm font-medium text-neutral-900 dark:text-neutral-200">
+                                    {{ $viewingClient['company_phone'] ?? '—' }}
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Website</label>
+                                <div class="text-sm font-medium text-blue-600 dark:text-blue-400">
+                                    @if ($viewingClient['company_website'])
+                                        <a href="{{ $viewingClient['company_website'] }}" target="_blank"
+                                            class="hover:underline flex items-center gap-1">
+                                            {{ $viewingClient['company_website'] }}
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                fill="currentColor" class="w-3 h-3">
+                                                <path fill-rule="evenodd"
+                                                    d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Z"
+                                                    clip-rule="evenodd" />
+                                                <path fill-rule="evenodd"
+                                                    d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </a>
+                                    @else
+                                        <span class="text-neutral-400 dark:text-neutral-600">—</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Hourly
+                                    Rate</label>
+                                <div class="text-sm font-bold text-neutral-900 dark:text-neutral-200">
+                                    {{ $viewingClient['currency'] }}
+                                    {{ number_format($viewingClient['hourly_rate'], 2) }}
+                                </div>
+                            </div>
+
+                            <div class="col-span-1 md:col-span-2 space-y-1 pt-2">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Billing
+                                    Address</label>
+                                <div
+                                    class="p-3 bg-neutral-50 dark:bg-white/5 rounded-lg border border-neutral-100 dark:border-white/5 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-wrap">
+                                    {{ $viewingClient['billing_address'] }}
+                                </div>
                             </div>
                         </div>
 
                         @if ($viewingClient['private_notes'])
-                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
-                                <flux:label>Private Notes</flux:label>
-                                <p class="text-neutral-600 dark:text-neutral-400">{{ $viewingClient['private_notes'] }}
-                                </p>
+                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-6">
+                                <label
+                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400 mb-2 block">Private
+                                    Notes</label>
+                                <div
+                                    class="text-sm text-neutral-600 dark:text-neutral-400 italic bg-amber-50 dark:bg-amber-900/10 p-4 rounded-lg border border-amber-100 dark:border-amber-900/20">
+                                    {{ $viewingClient['private_notes'] }}
+                                </div>
                             </div>
                         @endif
+
+                        <!-- Footer -->
+                        <div class="flex justify-end pt-8">
+                            <x-secondary-button wire:click="$dispatch('close-modal', 'view-client-modal')"
+                                class="!px-6">
+                                Close
+                            </x-secondary-button>
+                        </div>
                     </div>
                 @else
                     <div class="text-center text-neutral-500">No client selected.</div>
