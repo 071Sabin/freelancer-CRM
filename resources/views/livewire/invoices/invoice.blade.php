@@ -55,9 +55,9 @@
                     <flux:text class="text-neutral-500">
                         Start by selecting a client. You can add items in the next step.
                     </flux:text>
-                    @if ($due_date_notice)
+                    @if ($due_date_note)
                         <p class="mt-2 text-xs text-yellow-500 dark:text-yellow-400">
-                            {{ $due_date_notice }}
+                            {{ $due_date_note }}
                         </p>
                     @endif
                 </div>
@@ -347,6 +347,11 @@
             <div class="flex justify-center gap-3 mt-6">
                 @if ($viewingInvoice)
                     <x-primary-button icon="arrow-down-tray" wire:click="downloadPdf({{ $viewingInvoice->id }})">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>&nbsp;
                         Download PDF
                     </x-primary-button>
                 @endif
@@ -375,9 +380,14 @@
 
                         <form wire:submit.prevent="update" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <flux:input type="date" label="Issue Date"
-                                    wire:model="editingInvoice.issue_date" />
-                                <flux:input type="date" label="Due Date" wire:model="editingInvoice.due_date" />
+                                <flux:input type="date" label="Issue Date" wire:model.live="issue_date" />
+                                <div>
+                                    <flux:input type="date" label="Due Date" wire:model="due_date" />
+                                    @if ($due_date_note)
+                                        <p class="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
+                                            {{ $due_date_note }}</p>
+                                    @endif
+                                </div>
                             </div>
 
                             {{-- Items Editor --}}

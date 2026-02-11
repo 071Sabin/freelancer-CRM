@@ -22,7 +22,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public $project_id = "";
     public $issue_date;
     public $due_date;
-    public ?string $due_date_notice = null;
+    public $due_date_note = '';
     public $total_invoices;
 
     public ?Invoice $editingInvoice = null;
@@ -44,20 +44,15 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     // updating issue date & due date to issue_date + 14 days = due_date
     public function updatedIssueDate($value)
     {
-        if (!$value) {
-            $this->due_date = null;
-            return;
+        if ($this->settings && $this->settings->default_due_days) {
+            $days = $this->settings->default_due_days;
+            try {
+                $this->due_date = \Carbon\Carbon::parse($value)->addDays($days)->format('Y-m-d');
+                $this->due_date_note = "Default due days of {$days} is added automatically.";
+            } catch (\Exception $e) {
+                // Invalid date
+            }
         }
-
-        // get default payment terms from settings
-        $settings = InvoiceSetting::where('user_id', Auth::id())->first();
-
-        $days = $settings?->default_due_days ?? 14;
-
-        $this->due_date = Carbon::parse($value)
-            ->addDays($days)
-            ->format('Y-m-d');
-        $this->due_date_notice = "Default due date of {$days} days added automatically.";
     }
 
     public function create()
@@ -206,16 +201,27 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $metadata = $this->editingInvoice->metadata ?? [];
         $settings = InvoiceSetting::where('user_id', Auth::id())->first();
 
-        // Tax Rate: Try metadata -> model -> default
+        // Tax Rate
         $this->tax_rate = $metadata['tax_rate'] ?? ($this->editingInvoice->tax_rate ?? ($settings->default_tax_rate ?? 0));
         
-        // Discount: Try metadata -> default
+        // Discount
         $this->discount_value = $metadata['discount_value'] ?? ($settings->default_discount_rate ?? 0);
-        $this->discount_type = $metadata['discount_type'] ?? 'percentage'; // Default to percentage
+        $this->discount_type = $metadata['discount_type'] ?? 'percentage';
 
-        // Late Fee: Try metadata -> default
+        // Late Fee
         $this->late_fee_value = $metadata['late_fee_value'] ?? ($settings->default_late_fee_rate ?? 0);
         $this->late_fee_type = $metadata['late_fee_type'] ?? ($settings->default_late_fee_type ?? 'percentage');
+
+        // Dates
+        $this->issue_date = $this->editingInvoice->issue_date ? \Carbon\Carbon::parse($this->editingInvoice->issue_date)->format('Y-m-d') : now()->format('Y-m-d');
+        
+        if ($this->editingInvoice->due_date) {
+            $this->due_date = \Carbon\Carbon::parse($this->editingInvoice->due_date)->format('Y-m-d');
+        } else {
+            $defaultDays = $settings->default_due_days ?? 14;
+            $this->due_date = \Carbon\Carbon::parse($this->issue_date)->addDays($defaultDays)->format('Y-m-d');
+        }
+        $this->due_date_note = ''; 
 
         $this->calculateTotals();
     }
@@ -331,8 +337,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $this->calculateTotals(); // Ensure totals are fresh
 
         $this->validate([
-            'editingInvoice.issue_date' => 'required|date',
-            'editingInvoice.due_date' => 'required|date|after_or_equal:editingInvoice.issue_date',
+            'issue_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:issue_date',
             'invoiceItems.*.description' => 'required|string',
             'invoiceItems.*.quantity' => 'required|numeric|min:0.01',
             'invoiceItems.*.unit_price' => 'required|numeric|min:0',
@@ -353,6 +359,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             $metadata['late_fee_total'] = $this->late_fee_total;
 
             // Update Invoice Details
+            $this->editingInvoice->issue_date = $this->issue_date;
+            $this->editingInvoice->due_date = $this->due_date;
             $this->editingInvoice->subtotal = $this->subtotal;
             $this->editingInvoice->tax_total = $this->tax_total;
             $this->editingInvoice->discount_total = $this->discount_total; // This column usually exists

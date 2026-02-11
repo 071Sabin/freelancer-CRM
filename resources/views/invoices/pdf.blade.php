@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Invoice #{{ $invoice->invoice_number }}</title>
     <style>
+        /* Base / Reset */
         @page {
             margin: 0;
         }
@@ -18,7 +19,118 @@
             padding: 0;
         }
 
-        /* Utility */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            vertical-align: top;
+            text-align: left;
+        }
+
+        /* Layout Utilities */
+        .w-full {
+            width: 100%;
+        }
+
+        .w-half {
+            width: 50%;
+        }
+
+        .h-16 {
+            height: 60px;
+        }
+
+        /* Approx h-16 */
+
+        .p-8 {
+            padding: 32px;
+        }
+
+        .p-10 {
+            padding: 40px;
+        }
+
+        .px-4 {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .py-2 {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .py-3 {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+
+        .py-4 {
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+
+        .py-8 {
+            padding-top: 32px;
+            padding-bottom: 32px;
+        }
+
+        .pt-6 {
+            padding-top: 24px;
+        }
+
+        .pb-1 {
+            padding-bottom: 4px;
+        }
+
+        .pl-4 {
+            padding-left: 16px;
+        }
+
+        .m-0 {
+            margin: 0;
+        }
+
+        .mt-1 {
+            margin-top: 4px;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .mt-8 {
+            margin-top: 32px;
+        }
+
+        .mt-12 {
+            margin-top: 48px;
+        }
+
+        .mb-1 {
+            margin-bottom: 4px;
+        }
+
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+
+        .mb-10 {
+            margin-bottom: 40px;
+        }
+
+        /* Flex-like Helpers (Table based) */
         .text-right {
             text-align: right;
         }
@@ -27,8 +139,21 @@
             text-align: center;
         }
 
+        .align-top {
+            vertical-align: top;
+        }
+
+        /* Typography */
         .font-bold {
             font-weight: bold;
+        }
+
+        .font-normal {
+            font-weight: normal;
+        }
+
+        .font-light {
+            font-weight: 300;
         }
 
         .uppercase {
@@ -36,6 +161,10 @@
         }
 
         .tracking-wide {
+            letter-spacing: 0.05em;
+        }
+
+        .tracking-widest {
             letter-spacing: 0.1em;
         }
 
@@ -47,56 +176,86 @@
             font-size: 14px;
         }
 
-        .text-neutral-500 {
-            color: #737373;
+        .text-lg {
+            font-size: 18px;
+        }
+
+        .text-xl {
+            font-size: 20px;
+        }
+
+        .text-4xl {
+            font-size: 36px;
+        }
+
+        .leading-normal {
+            line-height: 1.5;
+        }
+
+        .leading-relaxed {
+            line-height: 1.625;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        /* Colors */
+        .text-white {
+            color: #ffffff;
+        }
+
+        .text-neutral-900 {
+            color: #171717;
         }
 
         .text-neutral-600 {
             color: #525252;
         }
 
+        .text-neutral-500 {
+            color: #737373;
+        }
+
         .text-neutral-400 {
             color: #a3a3a3;
         }
 
-        /* Header */
-        .header-bg {
+        .text-neutral-300 {
+            color: #d4d4d4;
+        }
+
+        .text-red-500 {
+            color: #ef4444;
+        }
+
+        .text-yellow-600 {
+            color: #d97706;
+        }
+
+        .bg-neutral-50 {
             background-color: #fafafa;
-            padding: 40px;
+        }
+
+        .bg-neutral-900 {
+            background-color: #171717;
+        }
+
+        /* Borders */
+        .border-t {
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .border-b {
             border-bottom: 1px solid #e5e5e5;
         }
 
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* neutral-200ish */
+        .border-neutral-100 {
+            border-color: #f5f5f5;
         }
 
-        .header-table td {
-            vertical-align: top;
-        }
-
-        .company-logo {
-            height: 60px;
-            margin-bottom: 15px;
-        }
-
-        .company-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #171717;
-        }
-
-        .invoice-label {
-            font-size: 36px;
-            font-weight: 300;
-            color: #d4d4d4;
-            /* neutral-300 */
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 10px;
-            line-height: 1;
-        }
-
+        /* Specific Components */
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -104,220 +263,69 @@
             font-size: 12px;
             font-weight: 500;
             text-transform: uppercase;
-            margin-bottom: 15px;
         }
 
-        .badge-paid {
+        .bg-green-100 {
             background-color: #d1fae5;
             color: #065f46;
         }
 
-        .badge-draft {
+        .bg-gray-100 {
             background-color: #f4f4f5;
             color: #3f3f46;
         }
 
-        .badge-overdue {
+        .bg-red-100 {
             background-color: #fee2e2;
             color: #991b1b;
         }
 
-        .meta-table {
-            float: right;
-        }
-
-        .meta-table td {
-            padding-bottom: 4px;
-            padding-left: 20px;
-            text-align: right;
-            color: #525252;
-        }
-
-        .meta-label {
-            font-weight: bold;
-            color: #171717;
-        }
-
-        /* Content */
-        .container {
-            padding: 40px;
-        }
-
-        .bill-to-label {
-            font-size: 12px;
-            color: #a3a3a3;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 10px;
-        }
-
-        /* Items Table - Rounded Corners Fix */
-        .items-table {
-            width: 100%;
+        /* Table Radius Fix */
+        .rounded-table {
             border-collapse: separate;
-            /* Required for border-radius */
             border-spacing: 0;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            /* Reduced margin */
         }
 
-        .items-table th {
-            text-align: left;
-            padding: 12px 16px;
-            background-color: #171717;
-            color: #ffffff;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Rounded corners for first and last th */
-        .items-table th:first-child {
+        .rounded-l {
             border-top-left-radius: 6px;
             border-bottom-left-radius: 6px;
         }
 
-        .items-table th:last-child {
+        .rounded-r {
             border-top-right-radius: 6px;
             border-bottom-right-radius: 6px;
-        }
-
-        .items-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f5f5f5;
-            color: #171717;
-        }
-
-        .items-table .desc-cell {
-            width: 45%;
-        }
-
-        /* Totals - Layout Fix */
-        .totals-layout-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            margin-bottom: 40px;
-        }
-
-        /* Use a wide left column to push totals to right */
-        .totals-layout-table td.left-spacer {
-            width: 55%;
-        }
-
-        .totals-layout-table td.right-totals {
-            width: 45%;
-            vertical-align: top;
-        }
-
-        .totals-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .totals-table td {
-            padding: 8px 0;
-            text-align: right;
-            border-bottom: 1px solid #f5f5f5;
-            font-size: 14px;
-            color: #525252;
-        }
-
-        .totals-table td:first-child {
-            text-align: left;
-        }
-
-        .totals-table td:last-child {
-            color: #171717;
-            font-weight: 500;
-        }
-
-        .total-row td {
-            border-top: 1px solid #171717;
-            color: #171717;
-            font-weight: bold;
-            font-size: 18px;
-            padding-top: 15px;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .text-red {
-            color: #ef4444 !important;
-        }
-
-        .text-yellow {
-            color: #d97706 !important;
-        }
-
-        /* Footer */
-        .footer-table {
-            width: 100%;
-            margin-top: 30px;
-            /* Reduced from 50px */
-            border-top: 1px solid #f5f5f5;
-            padding-top: 30px;
-        }
-
-        .footer-table td {
-            vertical-align: top;
-        }
-
-        .footer-heading {
-            font-size: 12px;
-            font-weight: bold;
-            color: #a3a3a3;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 10px;
-        }
-
-        .footer-content {
-            font-size: 12px;
-            color: #525252;
-            line-height: 1.6;
         }
     </style>
 </head>
 
-<body>
+<body class="bg-white text-neutral-900">
 
-    <!-- Header Section -->
-    <div class="header-bg">
-        <table class="header-table">
+    <!-- Header -->
+    <div class="bg-neutral-50 p-10 border-b">
+        <table>
             <tr>
-                <!-- Left Column: Company Info -->
-                <td style="width: 50%;">
+                <td class="w-half">
                     @if ($settings && $settings->logo_path)
                         @php
-                            $logoPath = $settings->logo_path;
-                            $realPath = null;
-
-                            // 1. Try public/uploads (User specific request)
-                            if (file_exists(public_path('uploads/' . $logoPath))) {
-                                $realPath = public_path('uploads/' . $logoPath);
-                            }
-                            // 2. Try standard storage link
-                            elseif (file_exists(public_path('storage/' . $logoPath))) {
-                                $realPath = public_path('storage/' . $logoPath);
-                            }
-                            // 3. Try direct public path
-                            elseif (file_exists(public_path($logoPath))) {
-                                $realPath = public_path($logoPath);
+                            $logoUrl = null;
+                            if (file_exists(public_path('uploads/' . $settings->logo_path))) {
+                                $logoUrl = public_path('uploads/' . $settings->logo_path);
+                            } elseif (file_exists(public_path('storage/' . $settings->logo_path))) {
+                                $logoUrl = public_path('storage/' . $settings->logo_path);
+                            } elseif (file_exists(public_path($settings->logo_path))) {
+                                $logoUrl = public_path($settings->logo_path);
                             }
                         @endphp
-
-                        @if ($realPath)
-                            <img src="{{ $realPath }}" class="company-logo" style="max-height: 60px; width: auto;">
+                        @if ($logoUrl)
+                            <img src="{{ $logoUrl }}" class="h-16 mb-4" style="width: auto;">
                         @endif
                     @endif
 
-                    <div class="company-name">{{ $settings->company_name ?? 'Freelancer CRM' }}</div>
+                    <div class="text-xl font-bold text-neutral-900">{{ $settings->company_name ?? 'Freelancer CRM' }}
+                    </div>
 
                     @if ($settings)
-                        <div class="footer-content" style="margin-top: 5px;">
+                        <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
                             {{ $settings->company_email }}<br>
                             @if ($settings->company_address)
                                 {{ implode(', ', $settings->company_address) }}<br>
@@ -332,31 +340,32 @@
                     @endif
                 </td>
 
-                <!-- Right Column: Invoice Details -->
-                <td style="width: 50%; text-align: right;">
-                    <div class="invoice-label">Invoice</div>
+                <td class="w-half text-right align-top">
+                    <div class="text-4xl font-light text-neutral-300 uppercase tracking-widest mb-2">Invoice</div>
 
                     @php
                         $badgeClass = match ($invoice->invoice_status) {
-                            'paid' => 'badge-paid',
-                            'overdue' => 'badge-overdue',
-                            default => 'badge-draft',
+                            'paid' => 'bg-green-100',
+                            'overdue' => 'bg-red-100',
+                            default => 'bg-gray-100',
                         };
                     @endphp
-                    <span class="badge {{ $badgeClass }}">{{ ucfirst($invoice->invoice_status) }}</span>
+                    <span class="badge {{ $badgeClass }} mb-4">{{ ucfirst($invoice->invoice_status) }}</span>
 
-                    <table class="meta-table">
+                    <table class="w-full mt-2">
                         <tr>
-                            <td class="meta-label">Invoice #:</td>
-                            <td>{{ $invoice->invoice_number }}</td>
+                            <td class="text-right text-neutral-900 font-bold px-4 pb-1">Invoice #:</td>
+                            <td class="text-right text-neutral-600 pb-1">{{ $invoice->invoice_number }}</td>
                         </tr>
                         <tr>
-                            <td class="meta-label">Date:</td>
-                            <td>{{ \Carbon\Carbon::parse($invoice->issue_date)->format('M d, Y') }}</td>
+                            <td class="text-right text-neutral-900 font-bold px-4 pb-1">Date:</td>
+                            <td class="text-right text-neutral-600 pb-1">
+                                {{ \Carbon\Carbon::parse($invoice->issue_date)->format('M d, Y') }}</td>
                         </tr>
                         <tr>
-                            <td class="meta-label">Due Date:</td>
-                            <td>{{ \Carbon\Carbon::parse($invoice->due_date)->format('M d, Y') }}</td>
+                            <td class="text-right text-neutral-900 font-bold px-4 pb-1">Due Date:</td>
+                            <td class="text-right text-neutral-600 pb-1">
+                                {{ \Carbon\Carbon::parse($invoice->due_date)->format('M d, Y') }}</td>
                         </tr>
                     </table>
                 </td>
@@ -364,17 +373,15 @@
         </table>
     </div>
 
-    <!-- Main Content -->
-    <div class="container">
+    <!-- Content -->
+    <div class="p-10">
 
-        <!-- Bill To - Reduced spacing -->
-        <div style="margin-bottom: 20px;">
-            <div class="bill-to-label">Bill To</div>
+        <!-- Bill To -->
+        <div class="mb-6">
+            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Bill To</div>
             @if ($invoice->client)
-                <div style="font-size: 18px; font-weight: bold; color: #171717; margin-bottom: 4px;">
-                    {{ $invoice->client->client_name }}
-                </div>
-                <div class="text-neutral-600" style="font-size: 14px;">
+                <div class="text-lg font-bold text-neutral-900 mb-1">{{ $invoice->client->client_name }}</div>
+                <div class="text-sm text-neutral-600">
                     {{ $invoice->client->client_email }}<br>
                     @if ($invoice->client->billing_address)
                         {!! nl2br(e($invoice->client->billing_address)) !!}
@@ -384,48 +391,49 @@
                     @endif
                 </div>
             @else
-                <div class="text-neutral-400 italic">Unknown Client</div>
+                <div class="text-neutral-500 italic">Unknown Client</div>
             @endif
         </div>
 
-        <!-- Items -->
-        <table class="items-table">
+        <!-- Items Table -->
+        <table class="w-full rounded-table mb-8">
             <thead>
-                <tr>
-                    <th class="desc-cell">Description</th>
-                    <th class="text-right" style="width: 15%;">Qty</th>
-                    <th class="text-right" style="width: 20%;">Price</th>
-                    <th class="text-right" style="width: 20%;">Total</th>
+                <tr class="bg-neutral-900 text-white text-xs uppercase tracking-wide">
+                    <th class="py-3 px-4 font-bold rounded-l">Description</th>
+                    <th class="py-3 px-4 font-bold text-right w-15">Qty</th>
+                    <th class="py-3 px-4 font-bold text-right w-20">Price</th>
+                    <th class="py-3 px-4 font-bold text-right rounded-r w-20">Total</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($invoice->items as $item)
-                    <tr>
-                        <td class="desc-cell">
-                            <div style="font-weight: bold;">{{ $item->description }}</div>
+                    <tr class="border-b border-neutral-100">
+                        <td class="py-3 px-4">
+                            <div class="text-sm font-bold text-neutral-900">{{ $item->description }}</div>
                             @if ($item->name)
-                                <div style="font-size: 12px; color: #737373; margin-top: 4px;">{{ $item->name }}
-                                </div>
+                                <div class="text-xs text-neutral-500 mt-1">{{ $item->name }}</div>
                             @endif
                         </td>
-                        <td class="text-right text-neutral-600">{{ $item->quantity }}</td>
-                        <td class="text-right text-neutral-600">{{ number_format($item->unit_price, 2) }}</td>
-                        <td class="text-right font-bold text-neutral-900">{{ number_format($item->line_total, 2) }}
-                        </td>
+                        <td class="py-3 px-4 text-sm text-right text-neutral-600">{{ $item->quantity }}</td>
+                        <td class="py-3 px-4 text-sm text-right text-neutral-600">
+                            {{ number_format($item->unit_price, 2) }}</td>
+                        <td class="py-3 px-4 text-sm text-right font-bold text-neutral-900">
+                            {{ number_format($item->line_total, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <!-- Totals - Layout Table Fix -->
-        <table class="totals-layout-table">
+        <!-- Totals -->
+        <table class="w-full mb-10">
             <tr>
-                <td class="left-spacer"></td>
-                <td class="right-totals">
-                    <table class="totals-table">
+                <td class="w-half"></td> <!-- Spacer -->
+                <td class="w-half">
+                    <table class="w-full">
                         <tr>
-                            <td>Subtotal</td>
-                            <td>{{ $invoice->currency }} {{ number_format($invoice->subtotal, 2) }}</td>
+                            <td class="py-2 text-neutral-600 border-b border-neutral-100">Subtotal</td>
+                            <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">
+                                {{ $invoice->currency }} {{ number_format($invoice->subtotal, 2) }}</td>
                         </tr>
 
                         @php
@@ -436,31 +444,35 @@
 
                         @if ($discountTotal > 0)
                             <tr>
-                                <td class="text-red">Discount</td>
-                                <td class="text-red">-{{ $invoice->currency }} {{ number_format($discountTotal, 2) }}
-                                </td>
+                                <td class="py-2 text-red-500 border-b border-neutral-100">Discount</td>
+                                <td class="py-2 text-right text-red-500 font-medium border-b border-neutral-100">
+                                    -{{ $invoice->currency }} {{ number_format($discountTotal, 2) }}</td>
                             </tr>
                         @endif
 
                         @if ($invoice->tax_total > 0)
                             <tr>
-                                <td>Tax ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)
-                                </td>
-                                <td>{{ $invoice->currency }} {{ number_format($invoice->tax_total, 2) }}</td>
+                                <td class="py-2 text-neutral-600 border-b border-neutral-100">Tax
+                                    ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)</td>
+                                <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">
+                                    {{ $invoice->currency }} {{ number_format($invoice->tax_total, 2) }}</td>
                             </tr>
                         @endif
 
                         @if ($lateFeeTotal > 0)
                             <tr>
-                                <td class="text-yellow">Late Fee</td>
-                                <td class="text-yellow">+{{ $invoice->currency }}
-                                    {{ number_format($lateFeeTotal, 2) }}</td>
+                                <td class="py-2 text-yellow-600 border-b border-neutral-100">Late Fee</td>
+                                <td class="py-2 text-right text-yellow-600 font-medium border-b border-neutral-100">
+                                    +{{ $invoice->currency }} {{ number_format($lateFeeTotal, 2) }}</td>
                             </tr>
                         @endif
 
-                        <tr class="total-row">
-                            <td>Total</td>
-                            <td>{{ $invoice->currency }} {{ number_format($invoice->total, 2) }}</td>
+                        <tr>
+                            <td class="py-3 text-lg font-bold text-neutral-900 border-t border-neutral-900 mt-1">Total
+                            </td>
+                            <td
+                                class="py-3 text-lg font-bold text-right text-neutral-900 border-t border-neutral-900 mt-1">
+                                {{ $invoice->currency }} {{ number_format($invoice->total, 2) }}</td>
                         </tr>
                     </table>
                 </td>
@@ -468,46 +480,51 @@
         </table>
 
         <!-- Footer -->
-        <table class="footer-table">
-            <tr>
-                <td style="width: 50%;">
-                    @if ($settings && ($settings->bank_details || $settings->payment_methods))
-                        <div class="footer-heading">Payment Details</div>
-                        <div class="footer-content">
-                            @if ($settings->bank_details)
-                                @foreach ($settings->bank_details as $detail)
-                                    <div>{{ $detail }}</div>
-                                @endforeach
-                            @endif
+        <div class="border-t pt-6">
+            <table>
+                <tr>
+                    <td class="w-half align-top pr-8">
+                        @if ($settings && ($settings->bank_details || $settings->payment_methods))
+                            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Payment
+                                Details</div>
+                            <div class="text-xs text-neutral-600 leading-relaxed">
+                                @if ($settings->bank_details)
+                                    @foreach ($settings->bank_details as $detail)
+                                        <div>{{ $detail }}</div>
+                                    @endforeach
+                                @endif
 
-                            @if ($settings->payment_methods)
-                                <div style="margin-top: 8px; font-style: italic; color: #737373;">
-                                    Accepted: {{ implode(', ', $settings->payment_methods) }}
+                                @if ($settings->payment_methods)
+                                    <div class="italic mt-2">
+                                        Accepted: {{ implode(', ', $settings->payment_methods) }}
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    </td>
+                    <td class="w-half align-top">
+                        @if ($invoice->notes)
+                            <div class="mb-4">
+                                <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Notes
                                 </div>
-                            @endif
-                        </div>
-                    @endif
-                </td>
-                <td style="width: 50%;">
-                    @if ($invoice->notes)
-                        <div class="footer-heading">Notes</div>
-                        <div class="footer-content" style="margin-bottom: 20px;">
-                            {{ $invoice->notes }}
-                        </div>
-                    @endif
+                                <div class="text-xs text-neutral-600 leading-relaxed">{{ $invoice->notes }}</div>
+                            </div>
+                        @endif
 
-                    @if ($invoice->terms)
-                        <div class="footer-heading">Terms & Conditions</div>
-                        <div class="footer-content">
-                            {{ $invoice->terms }}
-                        </div>
-                    @endif
-                </td>
-            </tr>
-        </table>
+                        @if ($invoice->terms)
+                            <div>
+                                <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Terms &
+                                    Conditions</div>
+                                <div class="text-xs text-neutral-600 leading-relaxed">{{ $invoice->terms }}</div>
+                            </div>
+                        @endif
+                    </td>
+                </tr>
+            </table>
+        </div>
 
         @if ($settings && $settings->default_footer)
-            <div class="text-center text-neutral-400 text-xs" style="margin-top: 50px;">
+            <div class="mt-12 text-center text-xs text-neutral-400">
                 {{ $settings->default_footer }}
             </div>
         @endif
