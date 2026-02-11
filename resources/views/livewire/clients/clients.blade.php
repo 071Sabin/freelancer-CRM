@@ -88,153 +88,195 @@
                 </div>
             </div>
 
-            <div wire:loading.remove wire:target="view">
+            <div wire:loading.remove wire:target="view" class="w-full">
                 @if (!empty($viewingClient))
                     @php
+                        // Modern "Badge" styling with Ring utilities for high-DPI borders
                         $statusHtml = match ($viewingClient['status']) {
-                            'active'
-                                => '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700 border border-green-400 dark:bg-green-900/30 dark:text-green-300 dark:border-green-500">Active</span>',
-                            'inactive'
-                                => '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700 border border-red-400 dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">Inactive</span>',
-                            'lead'
-                                => '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700 border border-amber-400 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-500">Lead</span>',
-                            default => '<span class="text-gray-500 dark:text-gray-400 text-xs">Unknown</span>',
+                            'Active'
+                                => '<span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20">Active</span>',
+                            'Inactive'
+                                => '<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">Inactive</span>',
+                            'Lead'
+                                => '<span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-800 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-500 dark:ring-amber-400/20">Lead</span>',
+                            default
+                                => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">Unknown</span>',
                         };
                     @endphp
 
-                    <div class="space-y-0">
-                        <!-- Header -->
+                    <div class="relative overflow-hidden">
                         <div
-                            class="flex items-start justify-between pb-6 border-b border-neutral-200 dark:border-neutral-700">
-                            <div>
-                                <h2 class="text-xl font-bold text-neutral-900 dark:text-white tracking-tight">
-                                    {{ $viewingClient['client_name'] }}
-                                </h2>
-                                @if ($viewingClient['company_name'])
-                                    <p
-                                        class="text-sm font-medium text-neutral-500 dark:text-neutral-400 mt-1 flex items-center gap-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            class="w-4 h-4 opacity-70">
-                                            <path fill-rule="evenodd"
-                                                d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v11.75l2.75-2.75a.75.75 0 0 1 1.06 1.06l-4.03 4.03a.75.75 0 0 1-1.06 0L8.69 13.69a.75.75 0 0 1 1.06-1.06l2.75 2.75V3.5h-9v13h4.25a.75.75 0 0 1 0 1.5H3.5A1.5 1.5 0 0 1 2 16.5v-13Z"
-                                                clip-rule="evenodd" /> {{-- Generic building/business icon substitution --}}
-                                            <path
-                                                d="M4 17a1 1 0 0 1 1-1h1.5a1 1 0 0 1 1 1v.5a.5.5 0 0 1-.5.5h-2.5a.5.5 0 0 1-.5-.5V17Z" />
-                                        </svg>
-                                        {{ $viewingClient['company_name'] }}
-                                    </p>
-                                @endif
-                            </div>
-                            <div class="pl-4">
-                                {!! $statusHtml !!}
+                            class="px-6 py-6 border-b border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]">
+                            <div class="flex items-start justify-between">
+                                <div class="flex gap-4">
+                                    <div class="flex-shrink-0">
+                                        <span
+                                            class="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-neutral-900 dark:bg-white text-lg font-bold text-white dark:text-neutral-900 shadow-sm ring-1 ring-white/10">
+                                            {{ substr($viewingClient['client_name'], 0, 1) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-3">
+                                            <h2
+                                                class="text-xl font-bold text-neutral-900 dark:text-white tracking-tight leading-none">
+                                                {{ $viewingClient['client_name'] }}
+                                            </h2>
+                                            {!! $statusHtml !!}
+                                        </div>
+
+                                        @if ($viewingClient['company_name'])
+                                            <div
+                                                class="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+                                                <svg class="w-4 h-4 text-neutral-400" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M3 21l18 0" />
+                                                    <path d="M5 21l0 -14l8 -4l8 4l0 14" />
+                                                    <path d="M9 10l0 0.01" />
+                                                    <path d="M9 13l0 0.01" />
+                                                    <path d="M9 16l0 0.01" />
+                                                    <path d="M15 10l0 0.01" />
+                                                    <path d="M15 13l0 0.01" />
+                                                    <path d="M15 16l0 0.01" />
+                                                </svg>
+                                                <span class="font-medium">{{ $viewingClient['company_name'] }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Content Grid -->
-                        <div class="py-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <div class="px-6 py-8">
+                            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
 
-                            <!-- Contact Info -->
-                            <div class="space-y-1">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Email
-                                    Address</label>
-                                <div class="text-sm font-medium text-neutral-900 dark:text-neutral-200 break-all">
-                                    {{ $viewingClient['client_email'] ?? '—' }}
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Email Address
+                                    </dt>
+                                    <dd class="text-sm font-medium text-neutral-900 dark:text-neutral-200">
+                                        {{ $viewingClient['client_email'] ?? '—' }}
+                                    </dd>
                                 </div>
-                            </div>
 
-                            <div class="space-y-1">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Company
-                                    Email</label>
-                                <div class="text-sm font-medium text-neutral-900 dark:text-neutral-200 break-all">
-                                    {{ $viewingClient['company_email'] ?? '—' }}
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Company Email
+                                    </dt>
+                                    <dd class="text-sm font-medium text-neutral-900 dark:text-neutral-200">
+                                        {{ $viewingClient['company_email'] ?? '—' }}
+                                    </dd>
                                 </div>
-                            </div>
 
-                            <div class="space-y-1">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Phone
-                                    Number</label>
-                                <div class="text-sm font-medium text-neutral-900 dark:text-neutral-200">
-                                    {{ $viewingClient['company_phone'] ?? '—' }}
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Phone Number
+                                    </dt>
+                                    <dd class="text-sm font-medium text-neutral-900 dark:text-neutral-200 tabular-nums">
+                                        {{ $viewingClient['company_phone'] ?? '—' }}
+                                    </dd>
                                 </div>
-                            </div>
 
-                            <div class="space-y-1">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Website</label>
-                                <div class="text-sm font-medium text-blue-600 dark:text-blue-400">
-                                    @if ($viewingClient['company_website'])
-                                        <a href="{{ $viewingClient['company_website'] }}" target="_blank"
-                                            class="hover:underline flex items-center gap-1">
-                                            {{ $viewingClient['company_website'] }}
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Website
+                                    </dt>
+                                    <dd class="text-sm font-medium">
+                                        @if ($viewingClient['company_website'])
+                                            <a href="{{ $viewingClient['company_website'] }}" target="_blank"
+                                                class="text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 underline decoration-neutral-300 underline-offset-4 transition-colors inline-flex items-center gap-1.5">
+                                                {{ str_replace(['https://', 'http://', 'www.'], '', $viewingClient['company_website']) }}
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                    fill="currentColor" class="w-3.5 h-3.5 opacity-50">
+                                                    <path fill-rule="evenodd"
+                                                        d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Z"
+                                                        clip-rule="evenodd" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            </a>
+                                        @else
+                                            <span class="text-neutral-400">—</span>
+                                        @endif
+                                    </dd>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        Hourly Rate
+                                    </dt>
+                                    <dd
+                                        class="text-lg font-bold text-neutral-900 dark:text-white tabular-nums tracking-tight">
+                                        {{ $viewingClient['currency'] }}
+                                        {{ number_format($viewingClient['hourly_rate'], 2) }}
+                                    </dd>
+                                </div>
+
+                                <div class="col-span-1 md:col-span-2 pt-2">
+                                    <dt
+                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">
+                                        Billing Address
+                                    </dt>
+                                    <dd
+                                        class="rounded-lg border border-neutral-200 dark:border-white/10 bg-neutral-50/50 dark:bg-white/5 p-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                                        {{ $viewingClient['billing_address'] }}
+                                    </dd>
+                                </div>
+                            </dl>
+
+                            @if ($viewingClient['private_notes'])
+                                <div class="mt-8 pt-6 border-t border-neutral-100 dark:border-white/5">
+                                    <div
+                                        class="rounded-lg bg-amber-50/50 dark:bg-amber-900/10 border border-amber-200/50 dark:border-amber-700/30 p-4">
+                                        <div class="flex gap-3">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                fill="currentColor" class="w-3 h-3">
+                                                fill="currentColor"
+                                                class="w-5 h-5 text-amber-600/70 dark:text-amber-500 mt-0.5 flex-shrink-0">
                                                 <path fill-rule="evenodd"
-                                                    d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Z"
-                                                    clip-rule="evenodd" />
-                                                <path fill-rule="evenodd"
-                                                    d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z"
+                                                    d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM8.94 6.94a.75.75 0 1 1-1.061-1.061 3 3 0 1 1 2.871 5.026v.345a.75.75 0 0 1-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 1 0 8.94 6.94ZM10 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
                                                     clip-rule="evenodd" />
                                             </svg>
-                                        </a>
-                                    @else
-                                        <span class="text-neutral-400 dark:text-neutral-600">—</span>
-                                    @endif
+                                            <div>
+                                                <h4
+                                                    class="text-xs font-bold uppercase tracking-wide text-amber-800 dark:text-amber-500 mb-1">
+                                                    Private Notes</h4>
+                                                <p
+                                                    class="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed italic">
+                                                    {{ $viewingClient['private_notes'] }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="space-y-1">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Hourly
-                                    Rate</label>
-                                <div class="text-sm font-bold text-neutral-900 dark:text-neutral-200">
-                                    {{ $viewingClient['currency'] }}
-                                    {{ number_format($viewingClient['hourly_rate'], 2) }}
-                                </div>
-                            </div>
-
-                            <div class="col-span-1 md:col-span-2 space-y-1 pt-2">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">Billing
-                                    Address</label>
-                                <div
-                                    class="p-3 bg-neutral-50 dark:bg-white/5 rounded-lg border border-neutral-100 dark:border-white/5 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed whitespace-pre-wrap">
-                                    {{ $viewingClient['billing_address'] }}
-                                </div>
-                            </div>
-                        </div>
-
-                        @if ($viewingClient['private_notes'])
-                            <div class="border-t border-neutral-200 dark:border-neutral-700 pt-6">
-                                <label
-                                    class="text-xs uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400 mb-2 block">Private
-                                    Notes</label>
-                                <div
-                                    class="text-sm text-neutral-600 dark:text-neutral-400 italic bg-amber-50 dark:bg-amber-900/10 p-4 rounded-lg border border-amber-100 dark:border-amber-900/20">
-                                    {{ $viewingClient['private_notes'] }}
-                                </div>
-                            </div>
-                        @endif
-
-                        <!-- Footer -->
-                        <div class="flex justify-end pt-8">
-                            <x-secondary-button wire:click="$dispatch('close-modal', 'view-client-modal')"
-                                class="!px-6">
-                                Close
-                            </x-secondary-button>
+                            @endif
                         </div>
                     </div>
                 @else
-                    <div class="text-center text-neutral-500">No client selected.</div>
+                    <div class="flex flex-col items-center justify-center py-16 text-center">
+                        <div class="rounded-full bg-neutral-100 dark:bg-white/5 p-3 mb-4">
+                            <svg class="w-6 h-6 text-neutral-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-neutral-900 dark:text-white">No Client Selected</p>
+                        <p class="text-xs text-neutral-500 mt-1">Select a client from the list to view details.</p>
+                    </div>
                 @endif
             </div>
         </div>
     </flux:modal>
 
     {{-- Edit Client Modal --}}
-    <flux:modal name="edit-client-modal" class="min-h-[600px] md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="edit-client-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="edit">
                 <div class="flex justify-center p-8">
@@ -260,36 +302,67 @@
                                 <x-input-field label="Website" model="editingClient.company_website" />
                                 <x-input-field label="Phone" model="editingClient.company_phone" />
 
-                                <x-input-field label="Hourly Rate" type="number" step="0.01"
-                                    model="editingClient.hourly_rate" />
-                                <x-input-field label="Currency" model="editingClient.currency" />
-
-                                <div class="w-full group">
-                                    <label
-                                        class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Status</label>
-                                    <div class="mt-2 relative">
-                                        <select wire:model="editingClient.status"
-                                            class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
-                                            <option value="active">Active</option>
-                                            <option value="inactive">Inactive</option>
-                                            <option value="lead">Lead</option>
-                                        </select>
-                                        @error('editingClient.status')
-                                            <div
-                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                                <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20"
-                                                    fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </div>
+                                <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="w-full group">
+                                        <label
+                                            class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Currency</label>
+                                        <div class="mt-2 relative">
+                                            <select wire:model="editingClient.currency"
+                                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
+                                                <option value="" selected>-- Select --</option>
+                                                <option value="usd">USD — $</option>
+                                                <option value="eur">EUR — €</option>
+                                                <option value="gbp">GBP — £</option>
+                                                <option value="inr">INR — ₹</option>
+                                            </select>
+                                            @error('editingClient.currency')
+                                                <div
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                    <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20"
+                                                        fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        @error('editingClient.currency')
+                                            <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
+                                                {{ $message }}</p>
                                         @enderror
                                     </div>
-                                    @error('editingClient.status')
-                                        <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
-                                            {{ $message }}</p>
-                                    @enderror
+
+                                    <x-input-field label="Hourly Rate" type="number" step="0.01"
+                                        model="editingClient.hourly_rate" />
+
+                                    <div class="w-full group">
+                                        <label
+                                            class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white transition-colors duration-200">Status</label>
+                                        <div class="mt-2 relative">
+                                            <select wire:model="editingClient.status"
+                                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                                <option value="lead">Lead</option>
+                                            </select>
+                                            @error('editingClient.status')
+                                                <div
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                    <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20"
+                                                        fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        @error('editingClient.status')
+                                            <p class="mt-2 text-xs text-red-600 dark:text-red-400 animate-pulse">
+                                                {{ $message }}</p>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
@@ -334,7 +407,4 @@
             </div>
         </div>
     </flux:modal>
-
-
-
 </div>

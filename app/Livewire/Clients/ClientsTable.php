@@ -38,7 +38,7 @@ class ClientsTable extends DataTableComponent
                 return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e(ucwords($value)) . '
+                                ' . e($value) . '
                             </span>
 
                             <span class="text-xs text-stone-500 dark:text-neutral-400">
@@ -55,7 +55,7 @@ class ClientsTable extends DataTableComponent
                     return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e(ucwords($value)) . '
+                                ' . e($value) . '
                             </span>
 
                             <span class="text-xs text-stone-500 dark:text-neutral-400">
@@ -78,7 +78,7 @@ class ClientsTable extends DataTableComponent
             Column::make('Status', 'status')
                 ->format(fn($value) => match ($value) {
 
-                        'active' => '<span class="
+                        'Active' => '<span class="
                         inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
                         bg-green-100 text-green-700
                         border border-green-400
@@ -86,7 +86,7 @@ class ClientsTable extends DataTableComponent
                         Active
                     </span>',
 
-                        'inactive' => '<span class="
+                        'Inactive' => '<span class="
                         inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
                         bg-red-100 text-red-700
                         border border-red-400
@@ -94,7 +94,7 @@ class ClientsTable extends DataTableComponent
                         Inactive
                     </span>',
 
-                        'lead' => '<span class="
+                        'Lead' => '<span class="
                         inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
                         bg-amber-100 text-amber-700
                         border border-amber-400
@@ -127,6 +127,7 @@ class ClientsTable extends DataTableComponent
                     '' => 'All',
                     'active' => 'Active',
                     'inactive' => 'Inactive',
+                    'lead' => 'Lead',
                 ])
                 ->filter(function ($query, $value) {
                     if ($value === '') {
