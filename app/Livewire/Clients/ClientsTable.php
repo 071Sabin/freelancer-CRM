@@ -31,8 +31,7 @@ class ClientsTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")
-                ->sortable(),
+            Column::make("Id", "id")->hideIf(true),
             Column::make("Client name", "client_name")
                 ->sortable()->searchable()->format(function($value, $row){
                 return '

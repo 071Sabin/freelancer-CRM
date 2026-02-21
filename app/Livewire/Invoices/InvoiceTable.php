@@ -55,27 +55,30 @@ class InvoiceTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
-                    // FIX 2: safely access client name, falling back to 'N/A' if null
-                    // Ensure your database column is actually 'client_name' and not just 'name'
-                    $clientName = $row->client ? e($row->client->client_name) : 'No Client';
+                    // ❌ OLD: Uses raw DB value, bypassing accessor
+                    // $projectName = $value ? e($value) : ...;
 
-                    // Handle unassigned projects
-                    $projectName = $value ? e($value) : 'General / Unassigned';
+                    // ✅ NEW: Accesses the model relationship -> triggers Accessor
+                    $projectName = $row->project ? $row->project->name : ($value ?? 'General / Unassigned');
+
+                    // Ensure client name is also safe
+                    $clientName = $row->client ? $row->client->client_name : 'No Client';
 
                     return '<div class="flex flex-col">
-                                <span class="font-medium text-neutral-900 dark:text-white truncate" title="'.$projectName.'">'.$projectName.'</span>
-                                <div class="text-xs font-thin">
-                                    <span class="flex items-center gap-1 text-xs text-neutral-500 mt-0.5 truncate">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                            </svg>
-                                        '.$clientName.'
-                                    </span>
-                                </div>
-                            </div>';
+                    <span class="font-medium text-neutral-900 dark:text-white truncate" title="'.e($projectName).'">
+                        '.e($projectName).'
+                    </span>
+                    <div class="text-xs font-thin">
+                        <span class="flex items-center gap-1 text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 truncate">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                            '.e($clientName).'
+                        </span>
+                    </div>
+                </div>';
                 })
                 ->html(),
-
             Column::make('Status', 'invoice_status')
                 ->sortable()
                 ->format(
@@ -144,7 +147,7 @@ class InvoiceTable extends DataTableComponent
                         </span>
                     </div>
 
-                    <div class="w-full h-1.5 bg-zinc-100 dark:bg-zinc-700 rounded-full mt-1.5 overflow-hidden">
+                    <div class="w-full h-1.5 bg-neutral-200 dark:bg-neutral-600 rounded-full mt-1.5 overflow-hidden">
                         <div class="h-full bg-emerald-500 rounded-full transition-all duration-500" 
                              style="width: '.$percent.'%"></div>
                     </div>
