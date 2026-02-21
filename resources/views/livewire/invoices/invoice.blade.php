@@ -440,18 +440,28 @@
                                 </div>
 
                                 <div class="space-y-4 md:space-y-2">
-                                    {{-- Headers (Desktop Only) --}}
-                                    <div
-                                        class="hidden md:grid grid-cols-12 gap-2 mb-2 text-xs font-medium text-neutral-500 uppercase tracking-wider px-2">
-                                        <div class="col-span-5">Description</div>
-                                        <div class="col-span-2">Qty</div>
-                                        <div class="col-span-2">Price</div>
-                                        <div class="col-span-2 text-right">Total</div>
-                                        <div class="col-span-1"></div>
-                                    </div>
+                                    @if (!$invoiceItems)
+                                        <div
+                                            class="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed rounded-lg border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800/50">
+                                            <svg class="w-10 h-10 mb-3 text-neutral-400 dark:text-neutral-500"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                                </path>
+                                            </svg>
+
+                                            <p class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                                                No items on this invoice
+                                            </p>
+                                            <p class="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                                                Get started by adding a new line item.
+                                            </p>
+                                        </div>
+                                    @endif
 
                                     @foreach ($invoiceItems as $index => $item)
-                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-start bg-neutral-50 dark:bg-neutral-900/50 md:bg-transparent p-4 md:p-0 rounded-lg md:rounded-none relative group"
+                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-start bg-neutral-50 dark:bg-neutral-900/50 md:bg-transparent p-4 rounded-lg md:rounded-none relative group"
                                             wire:key="item-{{ $index }}">
 
                                             {{-- Description --}}
@@ -594,7 +604,7 @@
                                 class="flex justify-end gap-3 pt-6 border-t border-neutral-200 dark:border-neutral-700">
                                 <flux:modal.close>
                                     <x-secondary-button variant="ghost"
-                                        wire:click="$dispatch('close-modal', 'edit-invoice-modal')">Cancel</x-secondary-button>
+                                        wire:click="$dispatch('close-modal', 'edit-invoice-modal')">close</x-secondary-button>
                                 </flux:modal.close>
                                 <x-primary-button type="submit">Save Changes</x-primary-button>
                             </div>
