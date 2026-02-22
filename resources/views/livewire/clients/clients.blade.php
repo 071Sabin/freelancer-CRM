@@ -99,7 +99,7 @@
 
                     <div class="relative overflow-hidden">
                         <div
-                            class="px-4 py-5 md:px-6 md:py-6 border-b border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]">
+                            class="px-4 py-5 md:px-6 md:py-6 border-b w-fit border-neutral-100 dark:border-white/5">
                             <div class="flex items-start justify-between">
                                 <div class="flex gap-3 md:gap-4">
                                     <div class="flex-shrink-0">

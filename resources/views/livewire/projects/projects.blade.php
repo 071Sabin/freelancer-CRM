@@ -46,6 +46,7 @@
     </div>
 
 
+    {{-- ADD PROJECT FORM COMPONENT --}}
     <x-projects.show-add-project-form :clients="$clients" />
 
 

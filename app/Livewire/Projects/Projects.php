@@ -14,7 +14,7 @@ class Projects extends Component
 {
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
     public $name, $value, $description, $client_id, $status = 'active';
-
+    public $projectCurrency, $hourlyRate;
     public array $editingProject = [];
     public array $viewingProject = [];
 
@@ -25,12 +25,15 @@ class Projects extends Component
 
     public function createProject()
     {
+        // project currency is taken from the client default currency
         $this->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'value' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'status' => 'required|string|max:100',
+            'projectCurrency' => 'required|string|max:10',
+            'hourlyRate' => 'required|numeric|min:0',
         ]);
 
         $p = new Project();
@@ -39,6 +42,8 @@ class Projects extends Component
         $p->value = $this->value;
         $p->client_id = $this->client_id;
         $p->status = $this->status;
+        $p->project_currency = $this->projectCurrency;
+        $p->hourly_rate = $this->hourlyRate;
 
         $p->save();
         $this->dispatch('refreshDatatable');
@@ -69,7 +74,7 @@ class Projects extends Component
         ]);
 
         $project = Project::findOrFail($this->editingProject['id']);
-        
+
         $project->update([
             'name' => strtolower($this->editingProject['name']),
             'description' => strtolower($this->editingProject['description']),
@@ -82,7 +87,14 @@ class Projects extends Component
         $this->dispatch('refreshDatatable');
         session()->flash('success', 'Project updated successfully!');
     }
-    
+
+    public function updatedClientId($value)
+    {
+        $this->projectCurrency = Client::findorFail($value)->currency;
+        $this->hourlyRate = Client::findorFail($value)->hourly_rate;
+        // dd($this->clientCurrency);
+    }
+
 
     public function render()
     {
@@ -93,6 +105,8 @@ class Projects extends Component
         $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();
+
+
         return view('livewire.projects.projects');
     }
 }

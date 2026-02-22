@@ -62,7 +62,7 @@
                     </h2>
                 </div>
                 <a href="{{ route('projects') }}" wire:navigate
-                    class="text-xs font-medium text-neutral-500 hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-white transition-colors">
+                    class="text-xs font-medium text-neutral-500 hover:text-indigo-600 dark:text-neutral-400 dark:hover:text-white ">
                     View All &rarr;
                 </a>
             </div>
@@ -72,11 +72,11 @@
                     @foreach ($recentProjects as $rp)
                         <li class="group relative">
                             <a href="#"
-                                class="flex items-center justify-between p-4 sm:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/40 transition-colors duration-200">
+                                class="flex items-center justify-between p-4 sm:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/40 ">
 
                                 <div class="flex items-center gap-4 min-w-0">
                                     <div
-                                        class="hidden sm:flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-700/50 border border-neutral-200 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 group-hover:bg-white dark:group-hover:bg-neutral-700 transition-colors">
+                                        class="hidden sm:flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-700/50 border border-neutral-200 dark:border-neutral-600 text-neutral-500 dark:text-neutral-400 group-hover:bg-white dark:group-hover:bg-neutral-700 ">
                                         <span class="text-xs font-bold uppercase">
                                             {{ substr($rp->name, 0, 2) }}
                                         </span>
@@ -84,7 +84,7 @@
 
                                     <div class="min-w-0 flex-auto">
                                         <p
-                                            class="text-sm font-semibold text-neutral-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                            class="text-sm font-semibold text-neutral-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 ">
                                             {{ $rp->name }}
                                         </p>
                                         <div class="flex items-center gap-2 mt-0.5">
@@ -143,7 +143,7 @@
                                         <span class="capitalize">{{ str_replace('-', ' ', $rp->status) }}</span>
                                     </div>
 
-                                    <svg class="h-5 w-5 flex-none text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-white transition-colors"
+                                    <svg class="h-5 w-5 flex-none text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-white "
                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path fill-rule="evenodd"
                                             d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
@@ -183,7 +183,7 @@
             <div class="flex-1 divide-y divide-neutral-100 dark:divide-neutral-800">
 
                 <a href="{{ route('projects') }}" wire:navigate
-                    class="group flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors duration-200">
+                    class="group flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 ">
                     <div class="flex items-center gap-4">
                         <div
                             class="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-200">
@@ -194,7 +194,7 @@
                         </div>
                         <div>
                             <p
-                                class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 ">
                                 Create Project</p>
                             <p class="text-xs text-neutral-500 dark:text-neutral-400">Start a new workflow</p>
                         </div>
@@ -206,7 +206,7 @@
                 </a>
 
                 <a href="{{ route('clients') }}" wire:navigate
-                    class="group flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors duration-200">
+                    class="group flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 ">
                     <div class="flex items-center gap-4">
                         <div
                             class="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-300 group-hover:scale-110 transition-transform duration-200">
@@ -217,7 +217,7 @@
                         </div>
                         <div>
                             <p
-                                class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-neutral-700 dark:group-hover:text-white transition-colors">
+                                class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-neutral-700 dark:group-hover:text-white ">
                                 Add Client</p>
                             <p class="text-xs text-neutral-500 dark:text-neutral-400">Onboard new customer</p>
                         </div>
@@ -229,7 +229,7 @@
                 </a>
 
                 <a href="{{ route('invoices') }}" wire:navigate
-                    class="group flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors duration-200">
+                    class="group flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 ">
                     <div class="flex items-center gap-4">
                         <div
                             class="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-300 group-hover:scale-110 transition-transform duration-200">
@@ -240,7 +240,7 @@
                         </div>
                         <div>
                             <p
-                                class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-neutral-700 dark:group-hover:text-white transition-colors">
+                                class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-neutral-700 dark:group-hover:text-white ">
                                 Draft Invoice</p>
                             <p class="text-xs text-neutral-500 dark:text-neutral-400">Bill for your work</p>
                         </div>

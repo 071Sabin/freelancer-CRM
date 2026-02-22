@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('description')->nullable(); // Project Description (optional)
             // Monetary value: supports big values and two decimals
             $table->decimal('value', 14, 2)->default(0.00); // Project Value (e.g. 1500.00)
+            $table->string('project_currency')->default('USD'); // Client Currency Value (e.g. 1500.00)
+            $table->decimal('hourly_rate', 14, 2)->default(0.00); // Hourly Rate (e.g. 50.00)
 
             // Relationship to clients table
             $table->unsignedBigInteger('client_id')->index();

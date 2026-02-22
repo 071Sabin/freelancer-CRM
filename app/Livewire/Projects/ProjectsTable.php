@@ -3,7 +3,9 @@
 namespace App\Livewire\Projects;
 
 use App\Models\Project;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+// use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -24,22 +26,22 @@ class ProjectsTable extends DataTableComponent
             'class' => 'transition-none',
             'default' => true,
         ]);
-
     }
 
-public function query(): Builder
+    public function builder(): Builder
     {
         return Project::query()
-            ->with('client'); 
+            ->with('client');
     }
 
     public function columns(): array
     {
         return [
+            Column::make('Project Currency', 'project_currency')->hideIf(true),
             Column::make('Id', 'id')->hideIf(true),
-            
+
             // 👇 CRITICAL: ensures $row->client works reliably
-            Column::make('Client ID', 'client_id')->hideIf(true), 
+            Column::make('Client ID', 'client_id')->hideIf(true),
             Column::make('Client Name', 'client.client_name')->hideIf(true),
 
             Column::make('Project', 'name')
@@ -55,13 +57,13 @@ public function query(): Builder
 
                     return '
                     <div class="flex flex-col justify-center min-w-[150px]">
-                        <span class="font-medium text-sm text-zinc-900 dark:text-zinc-100 truncate max-w-[200px]" title="'.e($projectName).'">
-                            '.e($projectName).'
+                        <span class="font-medium text-sm text-zinc-900 dark:text-zinc-100 truncate max-w-[200px]" title="' . e($projectName) . '">
+                            ' . e($projectName) . '
                         </span>
                         <div class="flex items-center gap-1 mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-                            '.$icon.'
-                            <span class="truncate max-w-[180px]" title="'.e($clientName).'">
-                                '.e($clientName).'
+                            ' . $icon . '
+                            <span class="truncate max-w-[180px]" title="' . e($clientName) . '">
+                                ' . e($clientName) . '
                             </span>
                         </div>
                     </div>';
@@ -71,21 +73,23 @@ public function query(): Builder
             // 👇 UPGRADE: Formatted Money Column
             Column::make('Value', 'value')
                 ->sortable()
-                ->format(function ($value) {
-                    if (!$value) return '<span class="text-zinc-400">—</span>';
-                    return '<span class="font-mono text-zinc-700 dark:text-zinc-300 tabular-nums">
-                                $'.number_format((float)$value, 2).'
+                ->format(function ($value, $row) {
+                    if ($value === null) return '<span class="text-zinc-400">—</span>';
+                    return '<span class="font-mono text-zinc-700 dark:text-zinc-300 tabular-nums">' . $row->project_currency . ' ' . number_format((float)$value, 2) . '
                             </span>';
                 })
                 ->html(),
 
+            Column::make('Hourly Rate', 'hourly_rate')
+                ->sortable(),
+
             // 👇 UPGRADE: Modern "Ring" Badges (Cleaner than borders)
             Column::make('Status', 'status')
                 ->sortable()
-                ->format(fn ($value) => match ($value) {
+                ->format(fn($value) => match ($value) {
                     'active' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30">Active</span>',
-                    'in-progress' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/30">In Progress</span>',
-                    'on-hold' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-zinc-50 text-zinc-600 ring-1 ring-inset ring-zinc-500/10 dark:bg-zinc-400/10 dark:text-zinc-400 dark:ring-zinc-400/20">On Hold</span>',
+                    'in_progress' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/30">In Progress</span>',
+                    'on_hold' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-zinc-50 text-zinc-600 ring-1 ring-inset ring-zinc-500/10 dark:bg-zinc-400/10 dark:text-zinc-400 dark:ring-zinc-400/20">On Hold</span>',
                     'completed' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/30">Completed</span>',
                     'cancelled' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/10 dark:bg-rose-400/10 dark:text-rose-400 dark:ring-rose-400/30">Cancelled</span>',
                     default => '<span class="text-xs text-zinc-500">Unknown</span>',
@@ -98,14 +102,14 @@ public function query(): Builder
                 ->format(function ($value) {
                     return '
                     <div class="flex flex-col">
-                        <span class="text-zinc-900 dark:text-zinc-200 font-medium">'.$value->format('M d, Y').'</span>
-                        <span class="text-xs text-zinc-400">'.$value->diffForHumans().'</span>
+                        <span class="text-zinc-900 dark:text-zinc-200 font-medium">' . $value->format('M d, Y') . '</span>
+                        <span class="text-xs text-zinc-400">' . $value->diffForHumans() . '</span>
                     </div>';
                 })
                 ->html(),
 
             Column::make('Actions', 'id')
-                ->format(fn ($value, $row) => view('components.actions.project-actions', ['row' => $row]))
+                ->format(fn($value, $row) => view('components.actions.project-actions', ['row' => $row]))
                 ->html(),
         ];
     }

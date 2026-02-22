@@ -334,7 +334,7 @@
     @auth('web')
         <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
             <flux:sidebar sticky collapsible="mobile"
-                class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
+                class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700 text-neutral-800 dark:text-neutral-200">
                 <flux:sidebar.header>
                     <flux:sidebar.brand href="{{ route('dashboard') }}"
                         logo="{{ asset('uploads/clientpivot-logo-cropped.png') }}" name="ClientPivot" />
