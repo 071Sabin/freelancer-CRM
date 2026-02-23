@@ -25,6 +25,7 @@ class Client extends Model
         'private_notes',
     ];
 
+
     /**
      * Interact with the client's name.
      * Automatically capitalizes first letter of each word when accessed.

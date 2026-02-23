@@ -13,35 +13,35 @@ class EditProjectForm extends Component
     public bool $showDetails = false;
     public array $editProject = [];
     public array $viewProject = [];
-    public $clients;
+    public $clients, $hourly_rate;
     
-    #[On('edit-project')]
-    public function openEdit(int $projectId): void
-    {
-        // dd($clientId);
-        $project = Project::findOrFail($projectId);
-        $this->clients=Client::all();
-        $this->editProject = $project->toArray();
-        $this->open = true;
-    }
+    // #[On('edit-project')]
+    // public function openEdit(int $projectId): void
+    // {
+    //     // dd($clientId);
+    //     $project = Project::findOrFail($projectId);
+    //     $this->clients=Client::all();
+    //     $this->editProject = $project->toArray();
+    //     $this->open = true;
+    // }
 
-    #[On('view-project')]
-    public function viewProjectPopup($projectId)
-    {
-        $project = Project::findOrFail($projectId);
-        $this->viewProject = $project->toArray();
-        $this->showDetails = true;
-    }
+    // #[On('view-project')]
+    // public function viewProjectPopup($projectId)
+    // {
+    //     $project = Project::findOrFail($projectId);
+    //     $this->viewProject = $project->toArray();
+    //     $this->showDetails = true;
+    // }
 
-    public function closeView()
-    {
-        $this->reset(['showDetails', 'viewProject']);
-    }
+    // public function closeView()
+    // {
+    //     $this->reset(['showDetails', 'viewProject']);
+    // }
 
-    public function closeEdit(): void
-    {
-        $this->reset(['open', 'editProject']);
-    }
+    // public function closeEdit(): void
+    // {
+    //     $this->reset(['open', 'editProject']);
+    // }
 
     public function saveProjectEdit()
     {
@@ -53,6 +53,7 @@ class EditProjectForm extends Component
             'editProject.value'       => 'required|numeric|min:0',
             'editProject.client_id'   => 'required|exists:clients,id',
             'editProject.status'      => 'required|string|max:50',
+            
         ]);
 
         $project->name = strtolower($this->editProject['name']);
@@ -66,12 +67,13 @@ class EditProjectForm extends Component
         $project->client_id = $this->editProject['client_id'];
 
         $project->status = strtolower($this->editProject['status']);
+        $project->hourly_rate = $this->editProject['hourly_rate'];
 
         $project->save();
 
         $this->dispatch('refreshDatatable');
 
-        $this->closeEdit();
+        // $this->closeEdit();
 
         return back()->with('success', 'Project updated successfully!');
     }

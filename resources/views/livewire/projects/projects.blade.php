@@ -13,7 +13,7 @@
     {{-- calling error component from the component --}}
     {{-- <x-error></x-error> --}}
 
-
+    {{-- PROJECT CARDS --}}
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
         <x-dashboard-card heading="Total Lifecycle" :value="$projectCount" dataOverTime="All-time volume"
@@ -31,7 +31,7 @@
     </div>
 
 
-
+    {{-- ADD PROJECT BUTTON --}}
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
         <flux:modal.trigger name="add-project">
             <x-primary-button class="flex gap-1">
@@ -65,10 +65,10 @@
     @endif
 
     {{-- View Project Modal --}}
-    <flux:modal name="view-project-modal" class="min-h-[600px] w-full md:min-w-[800px] !bg-white dark:!bg-neutral-800">
+    <flux:modal name="view-project-modal" class="min-h-[600px] w-full md:min-w-[600px] !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="view">
-                <div class="flex justify-center p-8">
+                <div class="flex justify-center py-8">
                     <flux:icon.loading />
                 </div>
             </div>
@@ -78,104 +78,123 @@
                     @php
                         $statusHtml = match ($viewingProject['status']) {
                             'active'
-                                => '<span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-500/10 dark:text-blue-400 dark:ring-blue-500/20">Active</span>',
+                                => '<span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20">Active</span>',
                             'in-progress'
-                                => '<span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-800 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-500 dark:ring-amber-400/20">In Progress</span>',
+                                => '<span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800 ring-1 ring-inset ring-amber-700/10 dark:bg-amber-400/10 dark:text-amber-500 dark:ring-amber-400/20">In Progress</span>',
                             'completed'
-                                => '<span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20">Completed</span>',
+                                => '<span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-700/10 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/20">Completed</span>',
                             'cancelled'
-                                => '<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">Cancelled</span>',
-                            'on-hold'
-                                => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">On Hold</span>',
+                                => '<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 ring-1 ring-inset ring-red-700/10 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">Cancelled</span>',
                             default
-                                => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">Unknown</span>',
+                                => '<span class="inline-flex items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-800 dark:text-neutral-400 dark:ring-neutral-700">' .
+                                ucfirst($viewingProject['status'] ?? 'Unknown') .
+                                '</span>',
                         };
                     @endphp
 
-                    <div class="relative overflow-hidden">
-                        <div
-                            class="px-4 py-5 md:px-6 md:py-6 border-b border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]">
-                            <div class="flex items-start justify-between">
-                                <div class="flex gap-3 md:gap-4">
-                                    <div class="flex-shrink-0">
-                                        <span
-                                            class="inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl bg-neutral-900 dark:bg-white text-base md:text-lg font-bold text-white dark:text-neutral-900 shadow-sm ring-1 ring-white/10">
-                                            {{ substr($viewingProject['name'], 0, 1) }}
-                                        </span>
+                    <div class="relative">
+                        <div class="px-4 pb-6 pt-2">
+                            <div class="flex items-center gap-4 md:gap-5">
+                                <div class="flex-shrink-0">
+                                    <span
+                                        class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-950 text-lg font-bold text-white dark:bg-neutral-800 dark:text-neutral-100 shadow-sm border border-neutral-200 dark:border-neutral-400">
+                                        {{ substr($viewingProject['name'], 0, 1) }}
+                                    </span>
+                                </div>
+
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                                        <h2
+                                            class="text-xl md:text-2xl font-bold text-neutral-900 dark:text-white tracking-tight truncate">
+                                            {{ ucwords($viewingProject['name']) }}
+                                        </h2>
+
                                     </div>
 
-                                    <div class="space-y-1">
-                                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                                            <h2
-                                                class="text-lg md:text-xl font-bold text-neutral-900 dark:text-white tracking-tight leading-none">
-                                                {{ ucwords($viewingProject['name']) }}
-                                            </h2>
-                                            <div>
-                                                {!! $statusHtml !!}
-                                            </div>
-                                        </div>
-
-                                        @if (isset($viewingProject['client']['client_name']))
-                                            <div
-                                                class="flex items-center gap-2 text-xs md:text-sm text-neutral-500 dark:text-neutral-400">
-                                                <svg class="w-3.5 h-3.5 md:w-4 md:h-4 text-neutral-400"
-                                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                    fill="none" stroke="currentColor" stroke-width="1.5"
-                                                    stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                                                    <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                                    <path
-                                                        d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
-                                                </svg>
-                                                <span
-                                                    class="font-medium">{{ $viewingProject['client']['client_name'] }}</span>
-                                            </div>
-                                        @endif
-                                    </div>
+                                    @if (isset($viewingProject['client']['client_name']))
+                                        <p
+                                            class="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 font-medium">
+                                            {!! $statusHtml !!} | <svg class="w-4 h-4 opacity-70"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="2" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                            </svg>
+                                            {{ $viewingProject['client']['client_name'] }}
+                                        </p>
+                                        <p
+                                            class="text-[10px] mt-3 font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                                            LAST UPDATED:
+                                            {{ \Carbon\Carbon::parse($viewingProject['updated_at'])->diffForHumans() }}
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
 
-                        <div class="px-4 py-5 md:px-6 md:py-8">
-                            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 md:gap-y-8">
-                                <div class="space-y-1">
+                        <div class="px-4 py-6 md:px-6 border-t border-neutral-100 dark:border-neutral-600">
+                            <dl class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="flex flex-col gap-1">
                                     <dt
-                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+                                        class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                                         Project Value
                                     </dt>
-                                    <dd
-                                        class="text-lg md:text-xl font-bold text-neutral-900 dark:text-white tabular-nums tracking-tight">
-                                        {{ isset($viewingProject['client']['currency']) ? $viewingProject['client']['currency'] : '$' }}
+                                    <dd class="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">
+                                        <span
+                                            class="text-neutral-400 dark:text-neutral-500 font-medium mr-0.5">{{ $viewingProject['project_currency'] ?? 'USD' }}</span>
                                         {{ number_format($viewingProject['value'], 2) }}
                                     </dd>
                                 </div>
 
-                                <div class="space-y-1">
+                                <div class="flex flex-col gap-1">
                                     <dt
-                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
-                                        Client
+                                        class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                                        Hourly Rate
                                     </dt>
-                                    <dd class="text-sm md:text-base font-medium text-neutral-900 dark:text-neutral-200">
-                                        {{ $viewingProject['client']['client_name'] ?? '—' }}
+                                    <dd class="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">
+                                        <span
+                                            class="text-neutral-400 dark:text-neutral-500 font-medium mr-0.5">{{ $viewingProject['project_currency'] ?? 'USD' }}</span>
+                                        {{ number_format($viewingProject['hourly_rate'], 2) }}<span
+                                            class="text-sm font-normal text-neutral-400">/hr</span>
                                     </dd>
                                 </div>
 
-                                <div class="col-span-1 md:col-span-2 pt-2">
+                                <div class="flex flex-col gap-1">
                                     <dt
-                                        class="text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">
+                                        class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                                        deadline
+                                    </dt>
+                                    <dd
+                                        class="text-sm md:text-base font-semibold text-neutral-700 dark:text-neutral-300">
+                                        {{ \Carbon\Carbon::parse($viewingProject['deadline'])->format('M d, Y') }}
+                                        <p class="text-xs text-neutral-400 font-thin">
+                                            <span class="uppercase">Issued:</span>
+                                            {{ \Carbon\Carbon::parse($viewingProject['created_at'])->format('M d, Y') }}
+                                        </p>
+                                    </dd>
+                                </div>
+
+                                <div class="col-span-1 md:col-span-3">
+                                    <dt
+                                        class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
                                         Description
                                     </dt>
                                     <dd
-                                        class="rounded-lg border border-neutral-200 dark:border-white/10 bg-neutral-50/50 dark:bg-white/5 p-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-                                        {{ ucfirst($viewingProject['description']) ?? 'No description provided.' }}
+                                        class="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 p-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                                        {{ $viewingProject['description'] ?: 'No description provided.' }}
                                     </dd>
                                 </div>
                             </dl>
                         </div>
                     </div>
                 @else
-                    <div class="text-center text-neutral-500 py-12">No project selected.</div>
+                    <div class="flex flex-col items-center justify-center py-20 text-neutral-400">
+                        <svg class="w-12 h-12 mb-3 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <p class="text-sm font-medium">No project selected.</p>
+                    </div>
                 @endif
             </div>
         </div>
@@ -213,11 +232,16 @@
                                         <select wire:model="editingProject.client_id"
                                             class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
                                             @foreach ($clients as $client)
-                                                <option value="{{ $client->id }}">{{ ucwords($client->client_name) }}
+                                                <option value="{{ $client->id }}">
+                                                    {{ ucwords($client->client_name) }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
+                                <div>
+                                    <x-input-field type="number" model="editingProject.hourly_rate" placeholder="0.00"
+                                        label="Rate/Hr." required />
                                 </div>
 
                                 <div class="w-full group">

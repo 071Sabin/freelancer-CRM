@@ -9,76 +9,6 @@
 
         <x-hr-divider />
 
-        {{-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-            <div>
-                <x-input-field model="name" type="text" placeholder="Enter project name" label="Project Name"
-                    required />
-                @error('name')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <x-input-field model="value" type="number" step="0.01" placeholder="1500.00" label="Project Value"
-                    required />
-                @error('value')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Client <span
-                        class="text-red-500">*</span></label>
-                <select wire:model.live="client_id"
-                    class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                    <option value="">-- Select client --</option>
-                    @foreach ($clients as $client)
-                        <option value="{{ $client->id }}">{{ $client->client_name }}</option>
-                    @endforeach
-                </select>
-                @error('client_id')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-
-
-                <div class="flex flex-col md:flex-row gap-2">
-                    <x-input-field type="text" model="clientCurrency" placeholder="Client Currency"
-                        label="Client Currency" class="mt-2" required />
-                    <x-input-field type="text" model="hourlyRate" placeholder="Client Hourly Rate"
-                        label="Client Hourly Rate" class="mt-2" required />
-                </div>
-            </div>
-
-            <div>
-                <x-select id="status" label="Status" model="status" :options="[
-                    'active' => 'Active',
-                    'in-progress' => 'In Progress',
-                    'on-hold' => 'On Hold',
-                    'completed' => 'Completed',
-                    'cancelled' => 'Cancelled',
-                ]" placeholder="Select status"
-                    required />
-                @error('status')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="lg:col-span-2">
-                <label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Project
-                    Description</label>
-                <textarea wire:model.defer="description" placeholder="Project details..."
-                    class="mt-2 w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
-                @error('description')
-                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
-
-        </div> --}}
-
-
-
-
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
 
             <div class="space-y-1.5">
@@ -115,10 +45,10 @@
 
                 <div
                     class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/40 p-4">
-                    <x-input-field type="text" model="projectCurrency" placeholder="e.g. USD" label="Client Currency"
+                    <x-input-field type="text" model="project_currency" placeholder="e.g. USD" label="Currency"
                         required />
-                    <x-input-field type="text" model="hourlyRate" placeholder="e.g. 150.00"
-                        label="Client Hourly Rate" required />
+                    <x-input-field type="text" model="hourly_rate" placeholder="e.g. 150.00"
+                        label="Rate/Hr." required />
                 </div>
             </div>
 
@@ -134,6 +64,10 @@
                 @error('status')
                     <p class="text-sm font-medium text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
+            </div>
+
+            <div>
+                <x-input-field type="date" model="deadline" label="Deadline" required />
             </div>
 
             <div class="space-y-1.5 lg:col-span-2">

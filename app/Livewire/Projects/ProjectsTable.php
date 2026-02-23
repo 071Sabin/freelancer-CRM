@@ -39,6 +39,7 @@ class ProjectsTable extends DataTableComponent
         return [
             Column::make('Project Currency', 'project_currency')->hideIf(true),
             Column::make('Id', 'id')->hideIf(true),
+            Column::make('created at', 'created_at')->hideIf(true),
 
             // 👇 CRITICAL: ensures $row->client works reliably
             Column::make('Client ID', 'client_id')->hideIf(true),
@@ -97,14 +98,27 @@ class ProjectsTable extends DataTableComponent
                 ->html(),
 
             // 👇 UPGRADE: Precise Date with Relative time on secondary line
-            Column::make('Created', 'created_at')
+            Column::make('Deadline', 'deadline')
                 ->sortable()
-                ->format(function ($value) {
+                ->format(function ($value, $row) {
+                    if (!$value) return '<span class="text-zinc-400">No Deadline</span>';
+
+                    // Check if the deadline has passed (is in the past)
+                    $isOverdue = $value->isPast();
+
+                    // Define the color: Red for overdue, Neutral for upcoming
+                    $dateColorClass = $isOverdue
+                        ? 'text-red-600 dark:text-red-400 font-bold'
+                        : 'text-zinc-900 dark:text-zinc-200 font-medium';
+
                     return '
-                    <div class="flex flex-col">
-                        <span class="text-zinc-900 dark:text-zinc-200 font-medium">' . $value->format('M d, Y') . '</span>
-                        <span class="text-xs text-zinc-400">' . $value->diffForHumans() . '</span>
-                    </div>';
+        <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+                ' . ($isOverdue ? '<span class="flex h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse"></span>' : '') . '
+                <span class="' . $dateColorClass . '">' . $value->format('M d, Y') . '</span>
+            </div>
+            <span class="text-xs text-zinc-400">Issued: ' . $row->created_at->format('M d, Y') . '</span>
+        </div>';
                 })
                 ->html(),
 

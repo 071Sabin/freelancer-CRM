@@ -14,7 +14,7 @@ class Projects extends Component
 {
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
     public $name, $value, $description, $client_id, $status = 'active';
-    public $projectCurrency, $hourlyRate;
+    public $project_currency, $hourly_rate, $deadline;
     public array $editingProject = [];
     public array $viewingProject = [];
 
@@ -25,15 +25,16 @@ class Projects extends Component
 
     public function createProject()
     {
-        // project currency is taken from the client default currency
+        // project currency is taken from the respective client's default currency
         $this->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'value' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'status' => 'required|string|max:100',
-            'projectCurrency' => 'required|string|max:10',
-            'hourlyRate' => 'required|numeric|min:0',
+            'project_currency' => 'required|string|max:10',
+            'hourly_rate' => 'required|numeric|min:0',
+            'deadline' => 'required|date',
         ]);
 
         $p = new Project();
@@ -42,8 +43,9 @@ class Projects extends Component
         $p->value = $this->value;
         $p->client_id = $this->client_id;
         $p->status = $this->status;
-        $p->project_currency = $this->projectCurrency;
-        $p->hourly_rate = $this->hourlyRate;
+        $p->project_currency = $this->project_currency;
+        $p->hourly_rate = $this->hourly_rate;
+        $p->deadline = $this->deadline;
 
         $p->save();
         $this->dispatch('refreshDatatable');
@@ -71,6 +73,7 @@ class Projects extends Component
             'editingProject.value' => 'required|numeric|min:0',
             'editingProject.client_id' => 'required|exists:clients,id',
             'editingProject.status' => 'required|string|max:100',
+            'editProject.hourly_rate' => 'required|numeric',
         ]);
 
         $project = Project::findOrFail($this->editingProject['id']);
@@ -81,6 +84,7 @@ class Projects extends Component
             'value' => $this->editingProject['value'],
             'client_id' => $this->editingProject['client_id'],
             'status' => $this->editingProject['status'],
+            'hourly_rate' => $this->editingProject['hourly_rate'],
         ]);
 
         $this->dispatch('close-modal', 'edit-project-modal');
@@ -90,8 +94,8 @@ class Projects extends Component
 
     public function updatedClientId($value)
     {
-        $this->projectCurrency = Client::findorFail($value)->currency;
-        $this->hourlyRate = Client::findorFail($value)->hourly_rate;
+        $this->project_currency = Client::findorFail($value)->currency;
+        $this->hourly_rate = Client::findorFail($value)->hourly_rate;
         // dd($this->clientCurrency);
     }
 
