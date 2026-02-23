@@ -76,6 +76,28 @@ class Projects extends Component
             'editingProject.hourly_rate' => 'required|numeric|min:0',
             'editingProject.project_currency' => 'required|string',
             'editingProject.deadline' => 'required|date',
+        ], [
+            // Project Name
+            'editingProject.name.required' => 'Please provide a name for this project.',
+            'editingProject.name.max'      => 'The project name is too long (maximum is 255 characters).',
+            // Project Value
+            'editingProject.value.required' => 'Please enter an estimated value for this project.',
+            'editingProject.value.numeric'  => 'The project value must be a valid number.',
+            'editingProject.value.min'      => 'The project value cannot be negative.',
+            // Client
+            'editingProject.client_id.required' => 'You must assign this project to a client.',
+            'editingProject.client_id.exists'   => 'The selected client could not be found in the system.',
+            // Status
+            'editingProject.status.required' => 'Please select a current status for this project.',
+            // Hourly Rate
+            'editingProject.hourly_rate.required' => 'Please set an hourly billing rate.',
+            'editingProject.hourly_rate.numeric'  => 'The hourly rate must be a valid number.',
+            'editingProject.hourly_rate.min'      => 'The hourly rate cannot be negative.',
+            // Currency
+            'editingProject.project_currency.required' => 'Please select a billing currency.',
+            // Deadline
+            'editingProject.deadline.required' => 'A deadline is required to keep the project on track.',
+            'editingProject.deadline.date'     => 'Please provide a valid calendar date for the deadline.',
         ]);
 
         $project = Project::findOrFail($this->editingProject['id']);
