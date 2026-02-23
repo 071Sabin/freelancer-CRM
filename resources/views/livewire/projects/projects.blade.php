@@ -220,15 +220,17 @@
                         </div>
 
                         <form wire:submit.prevent="update" class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <x-input-field label="Project Name" model="editingProject.name" />
                                 <x-input-field label="Value" type="number" step="0.01"
                                     model="editingProject.value" />
-
+                                <x-input-field label="Deadline" type="date" model="editingProject.deadline" required/>
+                            </div>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                                 <div class="w-full group">
                                     <label
                                         class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 dark:text-neutral-400 transition-colors duration-200">Client</label>
-                                    <div class="mt-2 relative">
+                                    <div class="relative">
                                         <select wire:model="editingProject.client_id"
                                             class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
                                             @foreach ($clients as $client)
@@ -240,19 +242,23 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <x-input-field type="number" model="editingProject.hourly_rate" placeholder="0.00"
-                                        label="Rate/Hr." required />
+                                    <x-input-field type="number" model="editingProject.hourly_rate"
+                                        placeholder="0.00" label="Rate/Hr." required />
+                                </div>
+                                <div>
+                                    <x-input-field type="text" model="editingProject.project_currency"
+                                        placeholder="eg. USD" label="Curr." required />
                                 </div>
 
                                 <div class="w-full group">
                                     <label
                                         class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 dark:text-neutral-400 transition-colors duration-200">Status</label>
-                                    <div class="mt-2 relative">
+                                    <div class="relative">
                                         <select wire:model="editingProject.status"
                                             class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-sm md:text-base leading-6 transition-shadow duration-200 ease-in-out">
                                             <option value="active">Active</option>
-                                            <option value="in-progress">In Progress</option>
-                                            <option value="on-hold">On Hold</option>
+                                            <option value="in_progress">In Progress</option>
+                                            <option value="on_hold">On Hold</option>
                                             <option value="completed">Completed</option>
                                             <option value="cancelled">Cancelled</option>
                                         </select>
@@ -261,7 +267,7 @@
                             </div>
 
                             <x-textarea-field label="Description" model="editingProject.description"
-                                rows="4" />
+                                rows="4" placeholder="Project notes for personal use...." />
 
                             <div class="flex justify-end gap-3 pt-6 border-t border-neutral-100 dark:border-white/5">
                                 <flux:modal.close>

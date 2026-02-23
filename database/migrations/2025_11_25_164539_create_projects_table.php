@@ -26,7 +26,7 @@ return new class extends Migration
             // Relationship to clients table
             $table->unsignedBigInteger('client_id')->index();
             $table->string('status');
-            $table->date('deadline')->default(now()); //this is deadline for project
+            $table->timestamp('deadline')->default(now()); //this is deadline for project
             // Useful meta
             $table->timestamps();
             $table->softDeletes(); // optional but recommended for CRUD safety

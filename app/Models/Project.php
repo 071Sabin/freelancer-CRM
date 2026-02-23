@@ -12,6 +12,7 @@ class Project extends Model
     protected $table = 'projects';
 
     protected $primaryKey = 'id';
+    protected $timestamp = true;
 
     protected $fillable = [
         'name',
@@ -19,11 +20,11 @@ class Project extends Model
         'value',
         'client_id',
         'status',
+        'project_currency',
+        'hourly_rate',
+        'deadline',
     ];
 
-    protected $casts = [
-        'updated_at' => 'datetime',
-    ];
 
     /**
      * Accessor for Name
@@ -35,6 +36,14 @@ class Project extends Model
         );
     }
 
+    protected function deadline(): Attribute
+    {
+        return Attribute::make(
+            // Always returns the format needed for the <input type="date">
+            get: fn($value) => $value ? Carbon::parse($value)->format('Y-m-d') : null,
+        );
+    }
+
     /**
      * Accessor for Description
      */
@@ -42,15 +51,6 @@ class Project extends Model
     {
         return Attribute::make(
             get: fn (?string $value) => $value ? Str::ucfirst($value) : null,
-        );
-    }
-    /**
-     * Accessor for Deadlines
-     */
-    protected function deadline(): Attribute
-    {
-        return Attribute::make(
-            get: fn (?string $value) => $value ? Carbon::parse($value) : null,
         );
     }
 

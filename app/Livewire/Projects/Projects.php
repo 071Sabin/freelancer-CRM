@@ -51,7 +51,7 @@ class Projects extends Component
         $this->dispatch('refreshDatatable');
 
         // Reset form fields
-        $this->reset(['name', 'description', 'value', 'client_id', 'status']);
+        $this->reset(['name', 'description', 'value', 'client_id', 'status', 'project_currency','hourly_rate']);
         return back()->with('success', 'Project created successfully!');
     }
 
@@ -73,11 +73,13 @@ class Projects extends Component
             'editingProject.value' => 'required|numeric|min:0',
             'editingProject.client_id' => 'required|exists:clients,id',
             'editingProject.status' => 'required|string|max:100',
-            'editProject.hourly_rate' => 'required|numeric',
+            'editingProject.hourly_rate' => 'required|numeric|min:0',
+            'editingProject.project_currency' => 'required|string',
+            'editingProject.deadline' => 'required|date',
         ]);
 
         $project = Project::findOrFail($this->editingProject['id']);
-
+        
         $project->update([
             'name' => strtolower($this->editingProject['name']),
             'description' => strtolower($this->editingProject['description']),
@@ -85,6 +87,8 @@ class Projects extends Component
             'client_id' => $this->editingProject['client_id'],
             'status' => $this->editingProject['status'],
             'hourly_rate' => $this->editingProject['hourly_rate'],
+            'project_currency' => $this->editingProject['project_currency'],
+            'deadline' => $this->editingProject['deadline'],
         ]);
 
         $this->dispatch('close-modal', 'edit-project-modal');
@@ -98,7 +102,6 @@ class Projects extends Component
         $this->hourly_rate = Client::findorFail($value)->hourly_rate;
         // dd($this->clientCurrency);
     }
-
 
     public function render()
     {

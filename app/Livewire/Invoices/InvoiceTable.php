@@ -3,6 +3,7 @@
 namespace App\Livewire\Invoices;
 
 use App\Models\Invoice;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -95,11 +96,11 @@ class InvoiceTable extends DataTableComponent
                         return '—';
                     }
 
-                    $dueDate = \Carbon\Carbon::parse($value)->format('M d, Y');
+                    $dueDate = Carbon::parse($value)->format('M d, Y');
 
                     // FIX 3: Now that 'issue_date' is defined as a hidden column above,
                     // $row->issue_date will now contain data.
-                    $issueDate = $row->issue_date ? \Carbon\Carbon::parse($row->issue_date)->format('M d, Y') : '—';
+                    $issueDate = $row->issue_date ? Carbon::parse($row->issue_date)->format('M d, Y') : '—';
 
                     $isOverdue = $value < now() && ! in_array($row->invoice_status, ['paid', 'void', 'canceled']);
                     $colorClass = $isOverdue ? 'text-red-600 font-bold' : 'text-neutral-700 dark:text-neutral-300 font-semibold';
@@ -141,8 +142,8 @@ class InvoiceTable extends DataTableComponent
                     return '
                 <div class="flex flex-col min-w-[120px]">
                     <div class="flex items-baseline gap-1">
-                        <span class="text-[10px] font-medium text-zinc-400 uppercase">'.$currency.'</span>
-                        <span class="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm tabular-nums">
+                        <span class="text-[10px] font-medium text-neutral-400 uppercase">'.$currency.'</span>
+                        <span class="font-mono font-bold text-neutral-900 dark:text-neutral-100 text-sm tabular-nums">
                             '.$formattedTotal.'
                         </span>
                     </div>
@@ -154,7 +155,7 @@ class InvoiceTable extends DataTableComponent
 
                     <div class="flex justify-between items-center mt-1.5 text-xs">
                         '.$statusText.'
-                        <span class="text-zinc-400 text-[10px]">'.round($percent).'%</span>
+                        <span class="text-neutral-400 text-[10px]">'.round($percent).'%</span>
                     </div>
                 </div>';
                 })
