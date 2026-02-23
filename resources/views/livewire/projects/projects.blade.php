@@ -94,7 +94,7 @@
                 @endphp
 
                 <div
-                    class="flex items-start justify-between px-6 pt-6 pb-5 border-b sm:px-8 border-neutral-200 dark:border-neutral-800 shrink-0">
+                    class="flex items-start justify-between px-6 pt-6 pb-5 border-b sm:px-8 border-neutral-200 dark:border-neutral-600 shrink-0">
                     <div class="flex items-center gap-4">
                         <div
                             class="flex items-center justify-center shrink-0 w-14 h-14 text-xl font-bold bg-neutral-900 text-white rounded-xl shadow-sm dark:bg-white dark:text-neutral-900 ring-1 ring-black/5 dark:ring-white/10">
