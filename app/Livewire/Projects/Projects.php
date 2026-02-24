@@ -122,22 +122,20 @@ class Projects extends Component
 
     public function updatedClientId($value)
     {
-        // dd($value);
         $this->currency_id = Client::findorFail($value)->currency_id;
         $this->hourly_rate = Client::findorFail($value)->hourly_rate;
-        // dd($this->clientCurrency);
     }
 
     public function mount()
     {
-        $this->projectCount = Project::where('user_id', auth()->id())->count();
-        $this->progressProjects = Project::where(['user_id' => auth()->id(), 'status' => 'in_progress'])->count();
-        $this->clients = Client::where('user_id', auth()->id())->orderBy('client_name', 'asc')->get();
+        $this->projectCount = Project::where('projects.user_id', auth()->id())->count();
+        $this->progressProjects = Project::where(['projects.user_id' => auth()->id(), 'status' => 'in_progress'])->count();
+        $this->clients = Client::where('clients.user_id', auth()->id())->orderBy('client_name', 'asc')->get();
         $this->currencies = Currency::orderBy('code','asc')->get();
         // $this->allProjects = Project::all();
         $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
-            ->where('user_id', auth()->id())
+            ->where('projects.user_id', auth()->id())
             ->count();
     }
 

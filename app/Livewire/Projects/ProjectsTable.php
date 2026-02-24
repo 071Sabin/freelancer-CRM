@@ -31,7 +31,7 @@ class ProjectsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Project::query()->where('user_id', auth()->id());
+        return Project::query()->where('projects.user_id', auth()->id());
     }
 
 
@@ -173,7 +173,7 @@ class ProjectsTable extends DataTableComponent
 
         DB::transaction(function () use ($ids) {
             // ::whereIn('id', $ids)->delete();
-        Project::where('user_id', auth()->id())->whereIn('id', $ids)->delete();
+        Project::where('projects.user_id', auth()->id())->whereIn('id', $ids)->delete();
         });
 
         // Clear selection after delete
