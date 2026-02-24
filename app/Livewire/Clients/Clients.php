@@ -16,7 +16,7 @@ use Livewire\Attributes\Title;
 class Clients extends Component
 {
     public $clientname, $companyname, $companyemail, $website, $companyphone, $thisMonthClients;
-    public $billing_address, $hrate, $currency_id, $currencies, $clientemail, $status, $privatenote, $clientDetails, $clientCount;
+    public $billing_address, $hrate, $currency_id, $currencies, $clientemail, $status='active', $privatenote, $clientDetails, $clientCount;
     // public $editingClient;
     // public $viewingClient;
 
@@ -205,7 +205,7 @@ class Clients extends Component
         // These queries now run only once per page load
         $this->clientCount = Client::count();
         $this->clientDetails = Client::with('currency')->get();
-        $this->currencies = Currency::orderBy('name', 'asc')->get();
+        $this->currencies = Currency::orderBy('code', 'asc')->get();
         $this->thisMonthClients = Client::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();

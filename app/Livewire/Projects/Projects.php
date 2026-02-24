@@ -131,8 +131,8 @@ class Projects extends Component
     {
         $this->projectCount = Project::count();
         $this->progressProjects = Project::where('status', 'in_progress')->count();
-        $this->clients = Client::all();
-        $this->currencies = Currency::all();
+        $this->clients = Client::orderBy('client_name', 'asc')->get();
+        $this->currencies = Currency::orderBy('code','asc')->get();
         // $this->allProjects = Project::all();
         $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)

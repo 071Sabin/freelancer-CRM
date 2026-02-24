@@ -16,14 +16,13 @@
             placeholder="{{ $placeholder ?? '' }}"
             {{ $attributes->merge([
                 'class' => '
-                                block w-full rounded-lg border-0 py-2.5 px-3 
-                                text-base sm:text-sm leading-6 
-                                text-neutral-900 bg-white shadow-sm 
-                                ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 
-                                focus:ring-2 focus:ring-inset focus:ring-indigo-600 
-                                transition-shadow duration-200 ease-in-out 
+                                block w-full rounded-lg border-0 py-2 px-3 sm:text-sm leading-6 
+                                text-neutral-900 bg-white mt-2.5 shadow-xs
+                                ring-1 ring-inset ring-neutral-300 placeholder-neutral-400 
+                                focus:ring-1 focus:ring-inset focus:ring-indigo-600 
+                                transition-shadow duration-200 ease-in-out dark:border-neutral-600 dark:border-1 dark:border-neutral-50
                                 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500 disabled:ring-neutral-200 
-                                dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:placeholder:text-neutral-500 dark:focus:ring-indigo-500
+                                dark:bg-white/10 dark:text-white dark:ring-neutral-700 dark:placeholder-neutral-400 dark:focus:ring-indigo-500
                             ',
             ]) }} />
 

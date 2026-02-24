@@ -15,7 +15,7 @@ class ClientsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey('id')->setDefaultSort('client_name', 'asc');
 
         $this->setPerPageAccepted([10, 25, 50, 100]);
 

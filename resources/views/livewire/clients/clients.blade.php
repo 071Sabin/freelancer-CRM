@@ -255,7 +255,7 @@
 
     {{-- Edit Client Modal --}}
     <flux:modal name="edit-client-modal"
-        class="w-full max-w-3xl !p-0 bg-white shadow-2xl rounded-2xl dark:bg-neutral-900">
+        class="w-full max-w-3xl !p-0 bg-white shadow-2xl rounded-2xl dark:bg-neutral-800">
 
         <div wire:loading wire:target="edit"
             class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">
@@ -321,51 +321,30 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 
-                                <div class="w-full group">
-                                    <label
-                                        class="block text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">Currency</label>
-                                    <div class="relative">
-                                        <select wire:model="editingClient.currency_id"
-                                            class="block w-full rounded-lg border-0 py-2.5 px-3 text-base sm:text-sm leading-6 text-neutral-900 bg-white shadow-sm ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-shadow duration-200 ease-in-out dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:focus:ring-indigo-500">
-                                            @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->id }}">{{ $currency->code }} —
-                                                    {{ $currency->symbol }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('editingClient.currency.code')
-                                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                                <flux:select wire:model="editingClient.currency_id" label="Currency" searchable>
+                                    @foreach ($currencies as $currency)
+                                        <flux:select.option value="{{ $currency->id }}">
+                                            {{ $currency->code }} — {{ $currency->symbol }}
+                                        </flux:select.option>
+                                    @endforeach
+                                </flux:select>
 
                                 <x-input-field label="Hourly Rate" type="number" step="0.01"
                                     model="editingClient.hourly_rate" />
 
-                                <div class="w-full group">
-                                    <label
-                                        class="block text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">Status</label>
-                                    <div class="relative">
-                                        <select wire:model="editingClient.status"
-                                            class="block w-full rounded-lg border-0 py-2.5 px-3 text-base sm:text-sm leading-6 text-neutral-900 bg-white shadow-sm ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-shadow duration-200 ease-in-out dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:focus:ring-indigo-500">
-                                            <option value="active">Active</option>
-                                            <option value="inactive">Inactive</option>
-                                            <option value="lead">Lead</option>
-                                        </select>
-                                    </div>
-                                    @error('editingClient.status')
-                                        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                                <flux:select wire:model="editingClient.status" label="Status" placeholder="Status...">
+                                    <flux:select.option value="active">Active</flux:select.option>
+                                    <flux:select.option value="inactive">Inactive</flux:select.option>
+                                    <flux:select.option value="lead">Lead</flux:select.option>
+                                </flux:select>
                             </div>
                         </div>
 
                         <x-hr-divider />
 
                         <div class="space-y-5">
-                            <x-textarea-field label="Billing Address" model="editingClient.billing_address"
-                                rows="3" />
-                            <x-textarea-field label="Private Notes" model="editingClient.private_notes"
-                                rows="3" />
+                                <flux:textarea label="Billing Address" placeholder="Billing Address" wire:model="editingClient.billing_address" />
+                                <flux:textarea label="Private Notes" placeholder="Private notes for yourself" wire:model="editingClient.private_notes" />
                         </div>
                     </div>
 

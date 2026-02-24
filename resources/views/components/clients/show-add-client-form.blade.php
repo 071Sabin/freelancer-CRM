@@ -20,46 +20,33 @@
 
         <x-input-field model="companyphone" type="text" placeholder="Company phone" label="Company Phone" required />
 
-        <x-input-field model="billing_address" type="textarea" placeholder="Billing Address...." label="Billing Address"
+        <x-input-field model="billing_address" type="text" placeholder="Billing Address...." label="Billing Address"
             required />
 
 
         <div class="flex flex-col lg:flex-row gap-2">
             <x-input-field model="hrate" type="number" placeholder="Hourly rate" label="Hourly Rate" required
                 class="" />
-            <div>
-                <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Currency
-                    <span class="text-red-500">*</span></label>
-                <select wire:model="currency_id" id=""
-                    class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150">
-                    <option value="" selected>-- Select Currency --</option>
-                    @foreach ($currencies as $currency)
-                        <option value="{{ $currency->id }}">{{ $currency->code }} — {{ $currency->symbol }}</option>
-                    @endforeach
-                </select>
-            </div>
+
+            <flux:select wire:model="currency_id" label="Currency" placeholder="-- Select Currency --" required>
+
+                @foreach ($currencies as $currency)
+                    <flux:select.option value="{{ $currency->id }}">
+                        {{ $currency->code }} — {{ $currency->symbol }}
+                    </flux:select.option>
+                @endforeach
+            </flux:select>
         </div>
 
-        <div>
-            <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">System
-                Status <span class="text-red-500">*</span></label>
-            <select wire:model="status" id="" required
-                class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150">
-                <option value="" selected>-- Select Status --</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="lead">Lead</option>
-            </select>
-        </div>
-        <div class=" col-span-2">
-            <label for="" class="text-gray-800 dark:text-neutral-400 text-sm">Private
-                Notes</label>
-            <textarea placeholder="Private notes for yourself" wire:model="privatenote"
-                class="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-100 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder:text-gray-400 dark:placeholder:text-neutral-500 transition-all duration-150"></textarea>
-        </div>
-
+        <flux:select wire:model="status" label="System Status" placeholder="-- Select Status --" required>
+            <flux:select.option value="active">Active</flux:select.option>
+            <flux:select.option value="inactive">Inactive</flux:select.option>
+            <flux:select.option value="lead">Lead</flux:select.option>
+        </flux:select>
     </div>
-    <div class="flex justify-start gap-2">
+    <flux:textarea label="Private Notes" placeholder="Private notes for yourself" wire:model="privatenote" />
+
+    <div class="flex justify-start gap-2 mt-3">
         <x-primary-button wire:click="addClient">add client</x-primary-button>
     </div>
 
