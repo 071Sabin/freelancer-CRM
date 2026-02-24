@@ -530,7 +530,17 @@
 
     @livewireScripts
     @fluxScripts
-
+    <script>
+        window.addEventListener('scroll-to-error', () => {
+            const firstError = document.querySelector('.text-red-600'); // Or whatever your error class is
+            if (firstError) {
+                firstError.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

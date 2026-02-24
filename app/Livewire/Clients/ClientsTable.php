@@ -64,15 +64,11 @@ class ClientsTable extends DataTableComponent
             })->html(),
             Column::make("Company Email", "company_email")
                 ->hideIf(true),
-            // Column::make("Company phone", "company_phone")
-            //     ->sortable(),
-            // Column::make("Billing address", "billing_address")
-            //     ->sortable(),
             Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row){
-                return strtoupper($row->currency).' '.e(strtoupper($value));
+                return strtoupper($row->currency->code ?? 'USD').' '.e(strtoupper($value));
             }),
 
-            Column::make("Currency", "currency")
+            Column::make("Currency", "currency_id")
                 ->hideIf(true),
             Column::make('Status', 'status')
                 ->format(fn($value) => match ($value) {

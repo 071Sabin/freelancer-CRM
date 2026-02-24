@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $this->call([
+            CurrencySeeder::class,]);
+            
         // User::factory(10)->create();
         // Client::factory(10)->create();
         DB::table('users')->insert([
@@ -132,7 +136,6 @@ class DatabaseSeeder extends Seeder
                 'company_phone'   => '+91 9876543210',
                 'billing_address' => 'Mumbai, India',
                 'hourly_rate'     => '25.00',
-                'currency'        => 'INR',
                 'status'          => 'active',
                 'private_notes'   => 'Priority client',
                 'created_at'      => now(),
@@ -147,7 +150,6 @@ class DatabaseSeeder extends Seeder
                 'company_phone'   => null,
                 'billing_address' => 'Delhi, India',
                 'hourly_rate'     => '40.00',
-                'currency'        => 'USD',
                 'status'          => 'lead',
                 'private_notes'   => null,
                 'created_at'      => now(),

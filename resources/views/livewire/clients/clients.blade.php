@@ -35,7 +35,6 @@
     </div>
 
 
-
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
         <flux:modal.trigger name="add-client">
             <x-primary-button class="flex gap-1">
@@ -49,7 +48,7 @@
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
-        <x-clients.show-add-client-form />
+        <x-clients.show-add-client-form :currencies="$currencies" />
     </div>
 
     {{-- CLIENTS DATATABLE --}}
@@ -185,7 +184,7 @@
                             <dt class="text-sm font-medium text-neutral-500 dark:text-neutral-400">Hourly Rate</dt>
                             <dd class="text-base font-semibold text-neutral-900 dark:text-white tabular-nums">
                                 <span
-                                    class="text-neutral-500 uppercase text-xs mr-1">{{ $viewingClient['currency'] }}</span>
+                                    class="text-neutral-500 uppercase text-xs mr-1">{{ $viewingClient['currency']['code'] ?? 'USD' }}</span>
                                 {{ number_format($viewingClient['hourly_rate'], 2) }}
                             </dd>
                         </div>
@@ -326,17 +325,16 @@
                                 <div class="w-full group">
                                     <label
                                         class="block text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">Currency</label>
-                                    <div class="relative mt-1">
-                                        <select wire:model="editingClient.currency"
+                                    <div class="relative">
+                                        <select wire:model="editingClient.currency_id"
                                             class="block w-full rounded-lg border-0 py-2.5 px-3 text-base sm:text-sm leading-6 text-neutral-900 bg-white shadow-sm ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-shadow duration-200 ease-in-out dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:focus:ring-indigo-500">
-                                            <option value="" selected>-- Select --</option>
-                                            <option value="usd">USD — $</option>
-                                            <option value="eur">EUR — €</option>
-                                            <option value="gbp">GBP — £</option>
-                                            <option value="inr">INR — ₹</option>
+                                            @foreach ($currencies as $currency)
+                                                <option value="{{ $currency->id }}">{{ $currency->code }} —
+                                                    {{ $currency->symbol }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    @error('editingClient.currency')
+                                    @error('editingClient.currency.code')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -370,17 +368,14 @@
                             <x-textarea-field label="Private Notes" model="editingClient.private_notes"
                                 rows="3" />
                         </div>
-
                     </div>
 
                     <div
                         class="flex items-center justify-end gap-3 px-6 py-4 bg-neutral-50 sm:px-8 border-t border-neutral-200 rounded-b-2xl dark:bg-neutral-900/50 dark:border-neutral-800">
                         <flux:modal.close>
-                            <x-secondary-button>cancel</x-secondary-button>
+                            <x-secondary-button>Cancel</x-secondary-button>
                         </flux:modal.close>
-                        <x-primary-button type="submit">
-                            Save changes
-                        </x-primary-button>
+                        <x-primary-button type="submit">Save changes</x-primary-button>
                     </div>
 
                 </form>

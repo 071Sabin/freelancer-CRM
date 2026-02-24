@@ -58,4 +58,22 @@ class Project extends Model
     {
         return $this->belongsTo(Client::class);
     }
+    /**
+     * The Relationship
+     */
+    public function currency()
+    {
+        return $this->belongsTo(currency::class);
+    }
+
+    /**
+     * Professional Accessor: $project->price_display
+     */
+    public function getPriceDisplayAttribute()
+    {
+        // Fail-safe if relation isn't loaded
+        if (!$this->currency) return number_format($this->value, 2);
+
+        return $this->currency->symbol . ' ' . number_format($this->value, $this->currency->precision);
+    }
 }

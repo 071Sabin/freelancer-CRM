@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('company_phone')->nullable();
             $table->string('billing_address');
             $table->string('hourly_rate')->default('0.00');
-            $table->string('currency');
+            $table->foreignId('currency_id')->nullable(); //this is related to the currencies table where all the currencies are stored.
             $table->enum('status', ['active', 'inactive', 'lead'])
                 ->default('active');
             $table->string('private_notes')->nullable();

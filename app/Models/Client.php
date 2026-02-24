@@ -11,6 +11,9 @@ use Illuminate\Support\Str;
 class Client extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'clients';
+
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'client_name',
@@ -20,7 +23,7 @@ class Client extends Model
         'company_phone',
         'billing_address',
         'hourly_rate',
-        'currency',
+        'currency_id',
         'status',
         'private_notes',
     ];
@@ -33,7 +36,7 @@ class Client extends Model
     protected function clientName(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Str::title($value) : null,
+            get: fn(?string $value) => $value ? Str::title($value) : null,
         );
     }
 
@@ -43,7 +46,7 @@ class Client extends Model
     protected function companyName(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Str::title($value) : null,
+            get: fn(?string $value) => $value ? Str::title($value) : null,
         );
     }
 
@@ -53,7 +56,7 @@ class Client extends Model
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? ucfirst($value) : null,
+            get: fn(?string $value) => $value ? ucfirst($value) : null,
         );
     }
 
@@ -63,18 +66,16 @@ class Client extends Model
     protected function billingAddress(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Str::title($value) : null,
+            get: fn(?string $value) => $value ? Str::title($value) : null,
         );
     }
 
     /**
      * Interact with the currency (Uppercase).
      */
-    protected function currency(): Attribute
+    public function currency()
     {
-        return Attribute::make(
-            get: fn (?string $value) => $value ? strtoupper($value) : null,
-        );
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 
     /**
@@ -83,13 +84,10 @@ class Client extends Model
     protected function privateNotes(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? ucfirst(strtolower($value)) : null,
+            get: fn(?string $value) => $value ? ucfirst(strtolower($value)) : null,
         );
     }
 
-    protected $table = 'clients';
-
-    protected $primaryKey = 'id';
 
     public function projects()
     {
