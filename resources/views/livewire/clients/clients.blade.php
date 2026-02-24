@@ -64,7 +64,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
-
             </x-slot:icon>
         </x-empty-state>
     @endif
@@ -345,7 +344,7 @@
                                 <div class="w-full group">
                                     <label
                                         class="block text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">Status</label>
-                                    <div class="relative mt-1">
+                                    <div class="relative">
                                         <select wire:model="editingClient.status"
                                             class="block w-full rounded-lg border-0 py-2.5 px-3 text-base sm:text-sm leading-6 text-neutral-900 bg-white shadow-sm ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-shadow duration-200 ease-in-out dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:focus:ring-indigo-500">
                                             <option value="active">Active</option>

@@ -29,16 +29,16 @@ class ProjectsTable extends DataTableComponent
         ]);
     }
 
-    public function builder(): Builder
-    {
-        return Project::query()
-            ->with('client');
-    }
+    // public function builder(): Builder
+    // {
+    //     return Project::query()
+    //         ->with('client');
+    // }
 
     public function columns(): array
     {
         return [
-            Column::make('Project Currency', 'project_currency')->hideIf(true),
+            Column::make('Project Currency', 'currency_id')->hideIf(true),
             Column::make('Id', 'id')->hideIf(true),
             Column::make('created at', 'created_at')->hideIf(true),
 
@@ -76,14 +76,16 @@ class ProjectsTable extends DataTableComponent
             Column::make('Value', 'value')
                 ->sortable()
                 ->format(function ($value, $row) {
-                    if ($value === null) return '<span class="text-neutral-400">—</span>';
-                    return '<span class="font-mono text-neutral-700 dark:text-neutral-300 tabular-nums">' . $row->project_currency . ' ' . number_format((float)$value, 2) . '
+                    return '<span class="font-mono text-neutral-700 dark:text-neutral-300 tabular-nums">' . ($row->currency->code ?? 'USD') . ' ' . number_format((float)$value, 2) . '
                             </span>';
                 })
                 ->html(),
 
-            Column::make('Hourly Rate', 'hourly_rate')
-                ->sortable(),
+            Column::make('Currency', 'currency_id')->hideIf(true),
+
+            Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row) {
+                return strtoupper($row->currency->symbol ?? '$') . '. ' . e(strtoupper($value));
+            }),
 
             // 👇 UPGRADE: Modern "Ring" Badges (Cleaner than borders)
             Column::make('Status', 'status')

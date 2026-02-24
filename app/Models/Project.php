@@ -20,7 +20,7 @@ class Project extends Model
         'value',
         'client_id',
         'status',
-        'project_currency',
+        'currency_id',
         'hourly_rate',
         'deadline',
     ];
@@ -63,7 +63,7 @@ class Project extends Model
      */
     public function currency()
     {
-        return $this->belongsTo(currency::class);
+        return $this->belongsTo(Currency::class);
     }
 
     /**

@@ -47,7 +47,7 @@
 
 
     {{-- ADD PROJECT FORM COMPONENT --}}
-    <x-projects.show-add-project-form :clients="$clients" />
+    <x-projects.show-add-project-form :clients="$clients" :currencies="$currencies" />
 
 
     @if ($projectCount > 0)
@@ -131,7 +131,7 @@
                                 Value</span>
                             <span class="text-lg font-semibold text-neutral-900 dark:text-white tabular-nums">
                                 <span
-                                    class="text-sm font-normal text-neutral-400 mr-1">{{ $viewingProject['project_currency'] ?? 'USD' }}</span>{{ number_format($viewingProject['value'], 2) }}
+                                    class="text-sm font-normal text-neutral-400 mr-1">{{ $viewingProject['currency']['code'] ?? 'USD' }}</span>{{ number_format($viewingProject['value'], 2) }}
                             </span>
                         </div>
 
@@ -139,7 +139,7 @@
                             <span class="text-xs font-medium text-neutral-500 dark:text-neutral-400">Hourly Rate</span>
                             <span class="text-lg font-semibold text-neutral-900 dark:text-white tabular-nums">
                                 <span
-                                    class="text-sm font-normal text-neutral-400 mr-1">{{ $viewingProject['project_currency'] ?? 'USD' }}</span>{{ number_format($viewingProject['hourly_rate'], 2) }}<span
+                                    class="text-sm font-normal text-neutral-400 mr-1">{{ $viewingProject['currency']['code'] ?? 'USD' }}</span>{{ number_format($viewingProject['hourly_rate'], 2) }}<span
                                     class="text-sm font-normal text-neutral-400 ml-0.5">/hr</span>
                             </span>
                         </div>
@@ -244,11 +244,23 @@
                                 </div>
                                 <div>
                                     <x-input-field type="number" model="editingProject.hourly_rate"
-                                        placeholder="0.00" label="Rate/Hr." required />
+                                        placeholder="0.00" label="Rate/Hr." step="0.01" required />
                                 </div>
                                 <div>
-                                    <x-input-field type="text" model="editingProject.project_currency"
-                                        placeholder="eg. USD" label="Curr." required />
+                                    <label
+                                        class="block text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">Currency</label>
+                                    <select name="currency_id" id="currency_id"
+                                        wire:model.defer="editingProject.currency_id"
+                                        class="block w-full rounded-lg border-0 py-2.5 px-3 text-base sm:text-sm leading-6 text-neutral-900 bg-white shadow-sm ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-shadow duration-200 ease-in-out dark:bg-neutral-900 dark:text-white dark:ring-neutral-700 dark:focus:ring-indigo-500">
+                                        @foreach ($currencies as $c)
+                                            <option value="{{ $c->id }}">{{ $c->code }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('currency_id')
+                                        <p class="text-[11px] sm:text-xs font-medium text-red-500 dark:text-red-400">
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
                                 </div>
 
                                 <div class="w-full group">

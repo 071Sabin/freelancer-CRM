@@ -3,6 +3,7 @@
 namespace App\Livewire\Projects;
 
 use App\Models\Client;
+use App\Models\Currency;
 use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -14,7 +15,7 @@ class Projects extends Component
 {
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
     public $name, $value, $description, $client_id, $status = 'active';
-    public $project_currency, $hourly_rate, $deadline;
+    public $currencies, $currency_id, $hourly_rate, $deadline;
     public array $editingProject = [];
     public array $viewingProject = [];
 
@@ -32,7 +33,7 @@ class Projects extends Component
             'value' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
             'status' => 'required|string|max:100',
-            'project_currency' => 'required|string|max:10',
+            'currency_id' => 'required|exists:currencies,id',
             'hourly_rate' => 'required|numeric|min:0',
             'deadline' => 'required|date',
         ]);
@@ -43,7 +44,7 @@ class Projects extends Component
         $p->value = $this->value;
         $p->client_id = $this->client_id;
         $p->status = $this->status;
-        $p->project_currency = $this->project_currency;
+        $p->currency_id = $this->currency_id;
         $p->hourly_rate = $this->hourly_rate;
         $p->deadline = $this->deadline;
 
@@ -51,18 +52,18 @@ class Projects extends Component
         $this->dispatch('refreshDatatable');
 
         // Reset form fields
-        $this->reset(['name', 'description', 'value', 'client_id', 'status', 'project_currency','hourly_rate']);
+        $this->reset(['name', 'description', 'value', 'client_id', 'status', 'currency_id', 'hourly_rate']);
         return back()->with('success', 'Project created successfully!');
     }
 
     public function edit($id)
     {
-        $this->editingProject = Project::with('client')->findOrFail($id)->toArray();
+        $this->editingProject = Project::with('client','currency')->findOrFail($id)->toArray();
     }
 
     public function view($id)
     {
-        $this->viewingProject = Project::with('client')->findOrFail($id)->toArray();
+        $this->viewingProject = Project::with('client','currency')->findOrFail($id)->toArray();
     }
 
     public function update()
@@ -74,7 +75,7 @@ class Projects extends Component
             'editingProject.client_id' => 'required|exists:clients,id',
             'editingProject.status' => 'required|string|max:100',
             'editingProject.hourly_rate' => 'required|numeric|min:0',
-            'editingProject.project_currency' => 'required|string',
+            'editingProject.currency_id' => 'required|exists:currencies,id',
             'editingProject.deadline' => 'required|date',
         ], [
             // Project Name
@@ -94,14 +95,14 @@ class Projects extends Component
             'editingProject.hourly_rate.numeric'  => 'The hourly rate must be a valid number.',
             'editingProject.hourly_rate.min'      => 'The hourly rate cannot be negative.',
             // Currency
-            'editingProject.project_currency.required' => 'Please select a billing currency.',
+            'editingProject.currency_id.required' => 'Please select a billing currency.',
             // Deadline
             'editingProject.deadline.required' => 'A deadline is required to keep the project on track.',
             'editingProject.deadline.date'     => 'Please provide a valid calendar date for the deadline.',
         ]);
 
         $project = Project::findOrFail($this->editingProject['id']);
-        
+
         $project->update([
             'name' => strtolower($this->editingProject['name']),
             'description' => strtolower($this->editingProject['description']),
@@ -109,7 +110,7 @@ class Projects extends Component
             'client_id' => $this->editingProject['client_id'],
             'status' => $this->editingProject['status'],
             'hourly_rate' => $this->editingProject['hourly_rate'],
-            'project_currency' => $this->editingProject['project_currency'],
+            'currency_id' => $this->editingProject['currency_id'],
             'deadline' => $this->editingProject['deadline'],
         ]);
 
@@ -120,22 +121,26 @@ class Projects extends Component
 
     public function updatedClientId($value)
     {
-        $this->project_currency = Client::findorFail($value)->currency;
+        // dd($value);
+        $this->currency_id = Client::findorFail($value)->currency_id;
         $this->hourly_rate = Client::findorFail($value)->hourly_rate;
         // dd($this->clientCurrency);
     }
 
-    public function render()
+    public function mount()
     {
         $this->projectCount = Project::count();
-        $this->progressProjects = Project::where('status', 'in-progress')->count();
+        $this->progressProjects = Project::where('status', 'in_progress')->count();
         $this->clients = Client::all();
-        $this->allProjects = Project::all();
+        $this->currencies = Currency::all();
+        // $this->allProjects = Project::all();
         $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();
+    }
 
-
+    public function render()
+    {
         return view('livewire.projects.projects');
     }
 }
