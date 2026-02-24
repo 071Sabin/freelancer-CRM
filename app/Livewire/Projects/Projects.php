@@ -40,6 +40,7 @@ class Projects extends Component
 
         $p = new Project();
         $p->name = strtolower($this->name);
+        $p->user_id = auth()->id();
         $p->description = strtolower($this->description);
         $p->value = $this->value;
         $p->client_id = $this->client_id;
@@ -129,13 +130,14 @@ class Projects extends Component
 
     public function mount()
     {
-        $this->projectCount = Project::count();
-        $this->progressProjects = Project::where('status', 'in_progress')->count();
-        $this->clients = Client::orderBy('client_name', 'asc')->get();
+        $this->projectCount = Project::where('user_id', auth()->id())->count();
+        $this->progressProjects = Project::where(['user_id' => auth()->id(), 'status' => 'in_progress'])->count();
+        $this->clients = Client::where('user_id', auth()->id())->orderBy('client_name', 'asc')->get();
         $this->currencies = Currency::orderBy('code','asc')->get();
         // $this->allProjects = Project::all();
         $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
+            ->where('user_id', auth()->id())
             ->count();
     }
 

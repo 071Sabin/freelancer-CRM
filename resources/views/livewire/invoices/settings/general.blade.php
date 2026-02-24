@@ -64,21 +64,12 @@
 
                     <x-input-field label="Default Currency" model="default_currency" placeholder="USD" />
 
-                    <div class="w-full group">
-                        <label class="block text-sm font-medium leading-6 text-neutral-800 dark:text-white mb-2">
-                            Language
-                        </label>
-                        <div class="relative">
-                            <select wire:model.defer="invoice_language"
-                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-800 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
-                                <option value="">Select language...</option>
-                                <option value="en">English</option>
-                                <option value="de">German</option>
-                                <option value="es">Spanish</option>
-                                <option value="fr">French</option>
-                            </select>
-                        </div>
-                    </div>
+                    <flux:select wire:model.defer="invoice_language" label="Language" placeholder="Select language...">
+                        <flux:select.option value="en">English</flux:select.option>
+                        <flux:select.option value="de">German</flux:select.option>
+                        <flux:select.option value="es">Spanish</flux:select.option>
+                        <flux:select.option value="fr">French</flux:select.option>
+                    </flux:select>
 
                     <x-input-field label="Timezone" model="timezone" placeholder="UTC" />
                     <x-input-field label="Date Format" model="date_format" placeholder="Y-m-d" />
@@ -130,12 +121,12 @@
             <div class="flex items-center gap-4">
                 <flux:text wire:dirty class="text-amber-500 text-sm">
                     Unsaved changes...
-                    </flux:text>
+                </flux:text>
                 <x-primary-button type="submit">
                     Save Changes
-                    </x-primary-button>
-                </div>
+                </x-primary-button>
             </div>
+        </div>
 
     </form>
 </div>

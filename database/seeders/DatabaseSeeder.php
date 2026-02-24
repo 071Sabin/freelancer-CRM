@@ -129,6 +129,7 @@ class DatabaseSeeder extends Seeder
         DB::table('clients')->insert([
             [
                 'client_name'     => 'John Doe',
+                'user_id'         => 1,
                 'client_email'    => 'john@example.com',
                 'company_name'    => 'Doe Pvt Ltd',
                 'company_email'   => 'info@doe.com',
@@ -143,6 +144,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'client_name'     => 'Jane Smith',
+                'user_id'         => 1,
                 'client_email'    => 'jane@example.com',
                 'company_name'    => 'Smith Solutions',
                 'company_email'   => 'contact@smith.com',
@@ -161,6 +163,7 @@ class DatabaseSeeder extends Seeder
         DB::table('projects')->insert([
             [
                 'name'        => 'Website Redesign',
+                'user_id'     => 1,
                 'description' => 'Complete redesign of company website UI/UX.',
                 'value'       => 1500.00,
                 'client_id'   => 1,
@@ -170,6 +173,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name'        => 'Mobile App Development',
+                'user_id'     => 1,
                 'description' => 'Build cross-platform mobile application.',
                 'value'       => 3200.00,
                 'client_id'   => 2,
@@ -179,6 +183,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name'        => 'SEO Optimization',
+                'user_id'     => 1,
                 'description' => null,
                 'value'       => 800.00,
                 'client_id'   => 1,

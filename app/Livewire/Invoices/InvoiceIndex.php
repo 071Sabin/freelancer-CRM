@@ -165,8 +165,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             ->get();
 
         // Dropdowns ke liye data yaha se pass karo, Blade me query mat chalao
-        $clients = Client::get();
-        $projects = Project::get();
+        $clients = Client::where('user_id', Auth::id())->get();
+        $projects = Project::where('user_id', Auth::id())->get();
 
         return view('livewire.invoices.invoice', [
             'invoices' => $invoices,

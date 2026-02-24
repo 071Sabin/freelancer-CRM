@@ -83,6 +83,7 @@ class Clients extends Component
 
         $client = new Client();
         $client->client_name = strtolower($this->clientname);
+        $client->user_id = auth()->id();
         $client->client_email = strtolower($this->clientemail);
         $client->company_name = strtolower($this->companyname);
         $client->company_email = strtolower($this->companyemail);
@@ -104,13 +105,13 @@ class Clients extends Component
 
     public function edit($id)
     {
-        $client = Client::with('currency')->findOrFail($id);
+        $client = Client::with('currency')->where('user_id', auth()->id())->findOrFail($id);
         $this->editingClient = $client->toArray();
     }
 
     public function view($id)
     {
-        $client = Client::with('currency')->findOrFail($id);
+        $client = Client::with('currency')->where('user_id', auth()->id())->findOrFail($id);
         $this->viewingClient = $client->toArray();
     }
 
@@ -203,11 +204,12 @@ class Clients extends Component
         // $client = Client::with('currency')->findOrFail(1);
         // dd($client->currency->code);
         // These queries now run only once per page load
-        $this->clientCount = Client::count();
-        $this->clientDetails = Client::with('currency')->get();
+        $this->clientCount = Client::where('user_id', auth()->id())->count();
+        $this->clientDetails = Client::with('currency')->where('user_id', auth()->id())->get();
         $this->currencies = Currency::orderBy('code', 'asc')->get();
         $this->thisMonthClients = Client::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
+            ->where('user_id', auth()->id())
             ->count();
     }
 

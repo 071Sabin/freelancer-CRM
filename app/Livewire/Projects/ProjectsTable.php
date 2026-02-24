@@ -29,11 +29,11 @@ class ProjectsTable extends DataTableComponent
         ]);
     }
 
-    // public function builder(): Builder
-    // {
-    //     return Project::query()
-    //         ->with('client');
-    // }
+    public function builder(): Builder
+    {
+        return Project::query()->where('user_id', auth()->id());
+    }
+
 
     public function columns(): array
     {
@@ -172,7 +172,8 @@ class ProjectsTable extends DataTableComponent
         }
 
         DB::transaction(function () use ($ids) {
-            Project::whereIn('id', $ids)->delete();
+            // ::whereIn('id', $ids)->delete();
+        Project::where('user_id', auth()->id())->whereIn('id', $ids)->delete();
         });
 
         // Clear selection after delete

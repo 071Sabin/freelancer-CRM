@@ -16,15 +16,16 @@ class Dashboard extends Component
 {
     public $admins, $totalClients, $progressProjects, $activeProjects, $recentProjects;
 
-
+    public function mount()
+    {
+        $this->totalClients = Client::where('user_id', auth()->id())->count();
+        $this->progressProjects = Project::where(['user_id' => auth()->id(), 'status' => 'in_progress'])->count();
+        $this->activeProjects = Project::where(['user_id' => auth()->id(), 'status' => 'active'])->count();
+        $this->recentProjects = Project::with('client')->where('user_id', auth()->id())->latest()->take(3)->get();
+    }
+    
     public function render()
     {
-        // $this->admins = User::all();
-        $this->totalClients = Client::count();
-        $this->progressProjects = Project::where('status', 'in-progress')->count();
-        $this->activeProjects = Project::where('status', 'active')->count();
-        $this->recentProjects = Project::with('client')->latest()->take(3)->get();
-        // dd($this->recentProjects);
         return view('livewire.dashboard');
     }
 

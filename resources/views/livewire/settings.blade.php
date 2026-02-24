@@ -10,15 +10,7 @@
     @endif
 
     <x-error></x-error>
-    {{-- <div class="flex justify-end">
-        <div>
-            <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
-                <flux:radio value="light" icon="sun">Light</flux:radio>
-                <flux:radio value="dark" icon="moon">Dark</flux:radio>
-                <flux:radio value="system" icon="computer-desktop">System</flux:radio>
-            </flux:radio.group>
-        </div>
-    </div> --}}
+
     <div class="lg:flex lg:items-start lg:gap-6">
 
         <!-- Left nav (tabs) -->
@@ -149,9 +141,10 @@
                                     <p class="text-sm text-gray-600 dark:text-neutral-400 font-semibold">Bio</p>
                                     <p class="text-xs text-neutral-500">Optional</p>
                                 </div>
-
-                                <textarea wire:model="bio" rows="3"
-                                    class="mt-1 block w-full rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 py-2 px-3 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ Auth::guard('web')->user()->bio ?? '' }}</textarea>
+                                <flux:textarea label="Order notes" wire:model="bio"
+                                    placeholder="Bio.....">
+                                    {{ Auth::guard('web')->user()->bio ?? '' }}</flux:textarea>
+                                
                             </label>
                         </div>
 

@@ -77,19 +77,11 @@
                 class="lg:col-span-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                    <div class="w-full group">
-                        <label class="block text-sm font-medium leading-6 text-neutral-900 dark:text-white mb-2">
-                            Late Fee Type
-                        </label>
-                        <div class="relative">
-                            <select wire:model.defer="default_late_fee_type"
-                                class="block w-full rounded-lg border-0 py-2.5 px-3 text-neutral-900 dark:text-white bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 text-base sm:text-sm sm:leading-6 transition-shadow duration-200 ease-in-out">
-                                <option value="">Select type...</option>
-                                <option value="percentage">Percentage (%)</option>
-                                <option value="fixed">Fixed Amount ($)</option>
-                            </select>
-                        </div>
-                    </div>
+                    <flux:select wire:model.defer="default_late_fee_type" label="Late Fee Type"
+                        placeholder="Select type...">
+                        <flux:select.option value="percentage">Percentage (%)</flux:select.option>
+                        <flux:select.option value="fixed">Fixed Amount ($)</flux:select.option>
+                    </flux:select>
 
                     @if ($default_late_fee_type === 'percentage')
                         <x-input-field type="number" step="0.01" label="Late Fee Rate (%)"
@@ -120,4 +112,3 @@
 
     </form>
 </div>
-

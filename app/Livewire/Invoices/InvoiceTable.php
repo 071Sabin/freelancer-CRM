@@ -29,7 +29,7 @@ class InvoiceTable extends DataTableComponent
 
     public function query(): Builder
     {
-        return Invoice::query()
+        return Invoice::query()->where(['user_id' => auth()->id()])
             ->with(['client' => fn ($query) => $query->withTrashed(), 'project']);
     }
 
@@ -199,7 +199,8 @@ class InvoiceTable extends DataTableComponent
         }
 
         DB::transaction(function () use ($ids) {
-            Invoice::whereIn('id', $ids)->delete();
+            // Invoice::whereIn('id', $ids)->delete();
+            Invoice::where('user_id', auth()->id())->whereIn('id', $ids)->delete();
         });
 
         // Clear selection after delete

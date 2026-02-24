@@ -28,6 +28,12 @@ class ClientsTable extends DataTableComponent
         ]);
     }
 
+    public function builder(): \Illuminate\Database\Eloquent\Builder
+    {
+        return Client::query()->where('user_id', auth()->id());
+    }
+
+
     public function columns(): array
     {
         return [
@@ -149,7 +155,7 @@ class ClientsTable extends DataTableComponent
         }
 
         DB::transaction(function () use ($ids) {
-            Client::whereIn('id', $ids)->delete();
+            Client::where('user_id', auth()->id())->whereIn('id', $ids)->delete();
         });
 
         // Clear selection after delete
