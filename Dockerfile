@@ -16,7 +16,7 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 # Install JS deps and build Vite
 RUN npm install
 RUN npm run build
