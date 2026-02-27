@@ -43,4 +43,4 @@ RUN chmod +x /usr/local/bin/start.sh
 CMD ["/usr/local/bin/start.sh"]
 
 # CMD php artisan migrate --force && apache2-foreground
-CMD apache2-foreground
+# CMD apache2-foreground
