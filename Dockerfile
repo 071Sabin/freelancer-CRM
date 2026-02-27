@@ -1,13 +1,6 @@
 FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip unzip git curl
-    nodejs \
-    npm
+RUN apt-get update && apt-get install -y libpq-dev libpng-dev libonig-dev libxml2-dev zip unzip git curl nodejs npm
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
