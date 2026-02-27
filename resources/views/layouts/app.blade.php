@@ -528,7 +528,7 @@
 
 
     @livewireScripts
-    <!-- @fluxScripts -->
+    @fluxScripts
     <script>
         window.addEventListener('scroll-to-error', () => {
             const firstError = document.querySelector('.text-red-600'); // Or whatever your error class is
