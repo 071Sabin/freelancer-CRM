@@ -76,3 +76,16 @@
         --font-size-xs: 0.75rem; /* Equivalent to text-xs (12px) */
     }
 }
+
+@config {
+  safelist: [
+    "translate-x-0",
+    "-translate-x-full",
+    "translate-x-full",
+    "overflow-hidden",
+    "md:translate-x-0",
+    "md:static",
+    "fixed",
+    "inset-0",
+  ];
+}
