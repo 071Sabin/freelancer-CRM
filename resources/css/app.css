@@ -13,7 +13,7 @@
 /* 👇 Default Sources */
 @source "../../resources/views/**/*.blade.php";
 
-@source "../../vendor/livewire/flux/stubs/**/*.blade.php";
+@import "../../vendor/livewire/flux/dist/flux.css"; /* 👈 ADD THIS */
 /* 👇 RAPPSOFT */
 @source "./vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php";
 
