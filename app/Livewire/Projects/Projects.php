@@ -14,7 +14,7 @@ use Livewire\Attributes\Title;
 class Projects extends Component
 {
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects;
-    public $name, $value, $description, $client_id, $status = 'active';
+    public $name, $value, $description, $client_id='', $status = 'active';
     public $currencies, $currency_id, $hourly_rate, $deadline;
     public array $editingProject = [];
     public array $viewingProject = [];
@@ -122,8 +122,9 @@ class Projects extends Component
 
     public function updatedClientId($value)
     {
-        $this->currency_id = Client::findorFail($value)->currency_id;
-        $this->hourly_rate = Client::findorFail($value)->hourly_rate;
+        // dd('fired', $value);
+        $this->currency_id = Client::findOrFail($value)->currency_id;
+        $this->hourly_rate = Client::findOrFail($value)->hourly_rate;
     }
 
     public function mount()

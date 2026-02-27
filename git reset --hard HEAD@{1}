@@ -1,0 +1,47 @@
+[33m0ea6f9a[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: pull: Fast-forward
+[33m138f78c[m HEAD@{1}: commit: authorization fixed1
+[33medb44ae[m HEAD@{2}: commit: authorization update
+[33m0bbe57b[m HEAD@{3}: commit: flux components added
+[33m9b9770f[m HEAD@{4}: commit: currencies solved for projects and clients
+[33ma7a27df[m HEAD@{5}: commit: currency migration + vali
+[33m6909359[m HEAD@{6}: commit: normal UI
+[33me14c67d[m HEAD@{7}: commit: validation messages on updating client
+[33maf861ff[m HEAD@{8}: commit: projects: table, deadline, edit+view project forms
+[33m68889ff[m HEAD@{9}: commit: project forms + tables + deadlines
+[33mebe06bd[m HEAD@{10}: commit: projects table + db edited
+[33m7a2f115[m HEAD@{11}: commit: ...
+[33m2e4416b[m HEAD@{12}: commit: tables edited to short + professional
+[33m48e6334[m HEAD@{13}: commit (amend): invoice + client table fixed
+[33mc874e1e[m HEAD@{14}: commit: invoice + client table fixed
+[33ma81a35b[m HEAD@{15}: commit: invoice: edit due date + issue date solved
+[33m1819f6e[m HEAD@{16}: commit: invoice image brand image fix
+[33m0661f62[m HEAD@{17}: commit: invoice pdf edited
+[33mc02e791[m HEAD@{18}: commit: invoice: pdf + edit+view
+[33mba010a5[m HEAD@{19}: commit: client show/edit responsive
+[33meb5b309[m HEAD@{20}: commit: client view UI
+[33mc1a5a81[m HEAD@{21}: commit: backend: invoice + edit/view each client, prj, invoice
+[33m4d3dbb4[m HEAD@{22}: commit: card component
+[33m3accd96[m HEAD@{23}: commit: darkmode flicker removed
+[33mec8f378[m HEAD@{24}: commit: dark theme flux component
+[33mdba0470[m HEAD@{25}: commit: UI minor fixes
+[33m4caf698[m HEAD@{26}: commit: frontends only
+[33mb04b0e6[m HEAD@{27}: commit: UI: invoice settings + dashboard + web routes
+[33mc6f9a1e[m HEAD@{28}: commit: pricings + input-component + setting apps integration
+[33m2a194ac[m HEAD@{29}: commit: frontend dashboard + settings
+[33mb1173b4[m HEAD@{30}: commit: setting pic upload
+[33m8bdc28a[m HEAD@{31}: commit: settings + error message component + danger button component
+[33md091411[m HEAD@{32}: commit: designing to a premium looks
+[33m6c30915[m HEAD@{33}: commit: due date-issue
+[33mfe1b019[m HEAD@{34}: commit: invoice _ empty template
+[33m01867eb[m HEAD@{35}: commit: invoice status badge + datatable
+[33m2b8e308[m HEAD@{36}: commit: invoice creation
+[33m366e17b[m HEAD@{37}: commit: invoice settings + respective migrations
+[33ma450e88[m HEAD@{38}: commit: invoice file collision in web.php solved
+[33m4b78b68[m HEAD@{39}: commit: icon images + title of page
+[33m2731d97[m HEAD@{40}: commit: success-message issue
+[33me7956d2[m HEAD@{41}: commit: success-message issue
+[33mc87aa73[m HEAD@{42}: commit: Add success message flash for branding and payment settings; update logo path handling
+[33mecf1ba4[m HEAD@{43}: commit: invoice settings: success msg + branding file handling
+[33m030761e[m HEAD@{44}: commit: tailwind + table edited, everything in tailwind.
+[33mef74bff[m HEAD@{45}: commit: docker files
+[33ma62c321[m HEAD@{46}: clone: from https://github.com/071Sabin/freelancer-CRM.git
