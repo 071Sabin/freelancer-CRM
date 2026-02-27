@@ -12,8 +12,8 @@
 
 /* 👇 Default Sources */
 @source "../../resources/views/**/*.blade.php";
-@source "../../vendor/livewire/flux/resources/views/**/*.blade.php";
 
+@source "../../vendor/livewire/flux/stubs/**/*.blade.php";
 /* 👇 RAPPSOFT */
 @source "./vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php";
 
