@@ -3,6 +3,7 @@
 @tailwind utilities; */
 
 @import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css"; /* 👈 ADD THIS */
 @plugin "@tailwindcss/forms";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -13,7 +14,8 @@
 /* 👇 Default Sources */
 @source "../../resources/views/**/*.blade.php";
 
-@import "../../vendor/livewire/flux/dist/flux.css"; /* 👈 ADD THIS */
+@source "../../vendor/livewire/flux/stubs/**/*.blade.php";
+
 /* 👇 RAPPSOFT */
 @source "./vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php";
 
