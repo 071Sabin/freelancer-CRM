@@ -30,11 +30,16 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 EXPOSE 80
 RUN php artisan storage:link
 
-# Copy the startup script and make it executable
+# Copy the script
 COPY start.sh /usr/local/bin/start.sh
+
+# THIS IS CRITICAL: Strip Windows line endings so Linux doesn't choke
+RUN sed -i -e 's/\r$//' /usr/local/bin/start.sh
+
+# Make it executable
 RUN chmod +x /usr/local/bin/start.sh
 
-# Run the script when the container launches
+# Tell Docker to run the script
 CMD ["/usr/local/bin/start.sh"]
 
 # CMD php artisan migrate --force && apache2-foreground
