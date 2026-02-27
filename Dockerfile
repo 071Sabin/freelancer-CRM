@@ -29,5 +29,13 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 80
 RUN php artisan storage:link
+
+# Copy the startup script and make it executable
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Run the script when the container launches
+CMD ["/usr/local/bin/start.sh"]
+
 # CMD php artisan migrate --force && apache2-foreground
 CMD apache2-foreground
