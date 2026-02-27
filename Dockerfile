@@ -27,5 +27,8 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
+RUN php artisan config:clear
+RUN php artisan config:cache
+
 EXPOSE 80
 CMD php artisan migrate --force && apache2-foreground
