@@ -36,8 +36,8 @@
 
 
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-        <flux:modal.trigger name="add-client">
-            <x-primary-button class="flex gap-1">
+        <flux:modal.trigger name="add-client-modal">
+            <x-primary-button class="flex gap-1" wire:click='resetAddClientForm'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                     <path
                         d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
@@ -48,7 +48,7 @@
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
-        <x-clients.show-add-client-form :currencies="$currencies" />
+        <x-clients.show-add-client-form :currencies="$currencies" :form="$form"/>
     </div>
 
     {{-- CLIENTS DATATABLE --}}
@@ -263,14 +263,16 @@
         </div>
 
         <div wire:loading.remove wire:target="edit">
-            @if (!empty($editingClient))
+            {{-- Check if the form object has a loaded client --}}
+            @if ($form->client)
                 <form wire:submit.prevent="update" class="flex flex-col max-h-[90vh]">
 
                     <div
                         class="flex items-start gap-4 px-6 pt-6 pb-5 border-b sm:px-8 border-neutral-200 dark:border-neutral-700">
                         <div
                             class="flex items-center justify-center shrink-0 w-12 h-12 text-lg font-semibold bg-white border rounded-xl shadow-sm text-neutral-600 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300">
-                            {{ substr($editingClient['client_name'] ?? 'C', 0, 1) }}
+                            {{-- Point directly to the form property --}}
+                            {{ substr($form->client_name ?? 'C', 0, 1) }}
                         </div>
                         <div>
                             <div
@@ -283,7 +285,7 @@
                                 <span class="text-indigo-600 dark:text-indigo-400">Edit Profile</span>
                             </div>
                             <flux:heading size="xl" level="1" class="text-neutral-900 dark:text-white">
-                                {{ $editingClient['client_name'] }}
+                                {{ $form->client_name }}
                             </flux:heading>
                         </div>
                     </div>
@@ -294,8 +296,9 @@
                             <h3 class="mb-4 text-sm font-semibold text-neutral-900 dark:text-white">Contact Details
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                <x-input-field label="Client Name" model="editingClient.client_name" required />
-                                <x-input-field label="Client Email" type="email" model="editingClient.client_email"
+                                {{-- Updated models to form.attribute --}}
+                                <x-input-field label="Client Name" model="form.client_name" required />
+                                <x-input-field label="Client Email" type="email" model="form.client_email"
                                     required />
                             </div>
                         </div>
@@ -306,11 +309,10 @@
                             <h3 class="mb-4 text-sm font-semibold text-neutral-900 dark:text-white">Company Information
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                <x-input-field label="Company Name" model="editingClient.company_name" />
-                                <x-input-field label="Company Email" type="email"
-                                    model="editingClient.company_email" />
-                                <x-input-field label="Website" model="editingClient.company_website" />
-                                <x-input-field label="Phone" model="editingClient.company_phone" />
+                                <x-input-field label="Company Name" model="form.company_name" placeholder="Enter company name" />
+                                <x-input-field label="Company Email" type="email" model="form.company_email" placeholder="Enter company email" />
+                                <x-input-field label="Website" model="form.company_website" placeholder="Enter website URL" />
+                                <x-input-field label="Phone" model="form.company_phone" placeholder="Enter phone number" />
                             </div>
                         </div>
 
@@ -321,7 +323,7 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 
-                                <flux:select wire:model="editingClient.currency_id" label="Currency" searchable>
+                                <flux:select wire:model="form.currency_id" label="Currency" searchable>
                                     @foreach ($currencies as $currency)
                                         <flux:select.option value="{{ $currency->id }}">
                                             {{ $currency->code }} — {{ $currency->symbol }}
@@ -330,9 +332,9 @@
                                 </flux:select>
 
                                 <x-input-field label="Hourly Rate" type="number" step="0.01"
-                                    model="editingClient.hourly_rate" />
+                                    model="form.hourly_rate" />
 
-                                <flux:select wire:model="editingClient.status" label="Status" placeholder="Status...">
+                                <flux:select wire:model="form.status" label="Status" placeholder="Status...">
                                     <flux:select.option value="active">Active</flux:select.option>
                                     <flux:select.option value="inactive">Inactive</flux:select.option>
                                     <flux:select.option value="lead">Lead</flux:select.option>
@@ -343,8 +345,10 @@
                         <x-hr-divider />
 
                         <div class="space-y-5">
-                                <flux:textarea label="Billing Address" placeholder="Billing Address" wire:model="editingClient.billing_address" />
-                                <flux:textarea label="Private Notes" placeholder="Private notes for yourself" wire:model="editingClient.private_notes" />
+                            <flux:textarea label="Billing Address" placeholder="Billing Address"
+                                wire:model="form.billing_address" />
+                            <flux:textarea label="Private Notes" placeholder="-- Private notes for yourself --"
+                                wire:model="form.private_notes" />
                         </div>
                     </div>
 

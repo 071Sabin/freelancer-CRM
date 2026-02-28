@@ -16,6 +16,7 @@
     <link rel="apple-touch-icon" href="{{ asset('uploads/clientpivot-logo-cropped.png') }}">
     <meta name="color-scheme" content="dark light">
 
+    
 
     <script>
         (function() {
@@ -30,7 +31,7 @@
     @livewireStyles
     @fluxAppearance
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- @vite('resources/css/app.css') -->
+     @vite('resources/css/app.css')
 
     <style>
         html {

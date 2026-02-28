@@ -84,7 +84,7 @@ class ProjectsTable extends DataTableComponent
             Column::make('Currency', 'currency_id')->hideIf(true),
 
             Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row) {
-                return strtoupper($row->currency->symbol ?? '$') . '. ' . e(strtoupper($value));
+                return strtoupper($row->currency->symbol ?? '$') . ' ' . e(strtoupper($value));
             }),
 
             // 👇 UPGRADE: Modern "Ring" Badges (Cleaner than borders)

@@ -20,9 +20,8 @@
                         required />
                 </div>
 
-                <flux:select wire:model.live="client_id" label="Client" required>
+                <flux:select wire:model.live="client_id" label="Client" required placeholder="-- select client --">
                     @foreach ($clients as $client)
-                    <flux:select.option value="" selected disabled>-- Select client --</flux:select.option>
                         <flux:select.option value="{{ $client->id }}">
                             {{ $client->client_name }}
                         </flux:select.option>
