@@ -136,6 +136,16 @@ class ClientsTable extends DataTableComponent
                     }
                     $query->where('status', $value);
                 }),
+            SelectFilter::make('Deleted','deleted_at')
+                ->options([
+                    '' => 'All',
+                    'deleted' => 'Deleted',
+                ])
+                ->filter(function ($query, $value) {
+                    if ($value === 'deleted') {
+                        $query->onlyTrashed();
+                    }
+                }),
         ];
     }
 

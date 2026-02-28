@@ -48,7 +48,7 @@
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
-        <x-clients.show-add-client-form :currencies="$currencies" :form="$form"/>
+        <x-clients.show-add-client-form :currencies="$currencies" :form="$form" />
     </div>
 
     {{-- CLIENTS DATATABLE --}}
@@ -309,10 +309,14 @@
                             <h3 class="mb-4 text-sm font-semibold text-neutral-900 dark:text-white">Company Information
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                <x-input-field label="Company Name" model="form.company_name" placeholder="Enter company name" />
-                                <x-input-field label="Company Email" type="email" model="form.company_email" placeholder="Enter company email" />
-                                <x-input-field label="Website" model="form.company_website" placeholder="Enter website URL" />
-                                <x-input-field label="Phone" model="form.company_phone" placeholder="Enter phone number" />
+                                <x-input-field label="Company Name" model="form.company_name"
+                                    placeholder="Enter company name" />
+                                <x-input-field label="Company Email" type="email" model="form.company_email"
+                                    placeholder="Enter company email" />
+                                <x-input-field label="Website" model="form.company_website"
+                                    placeholder="Enter website URL" />
+                                <x-input-field label="Phone" model="form.company_phone"
+                                    placeholder="Enter phone number" />
                             </div>
                         </div>
 
@@ -354,6 +358,11 @@
 
                     <div
                         class="flex items-center justify-end gap-3 px-6 py-4 bg-neutral-50 sm:px-8 border-t border-neutral-200 rounded-b-2xl dark:bg-neutral-900/50 dark:border-neutral-800">
+
+                        <p wire:dirty class="text-sm text-amber-600 mt-2">
+                            Unsaved changes...
+                        </p>
+
                         <flux:modal.close>
                             <x-secondary-button>Cancel</x-secondary-button>
                         </flux:modal.close>
