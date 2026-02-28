@@ -17,6 +17,7 @@ class Client extends Model
 
     protected $fillable = [
         'client_name',
+        'client_email',
         'company_name',
         'company_email',
         'company_website',
@@ -26,6 +27,7 @@ class Client extends Model
         'currency_id',
         'status',
         'private_notes',
+        'user_id',
     ];
 
 
