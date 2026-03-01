@@ -5,6 +5,7 @@ namespace App\Livewire\Invoices;
 use App\Models\Invoice; // Model
 use App\Models\InvoiceSetting;
 use App\Models\Client;
+use App\Models\Currency;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // Transaction ke liye zaroori hai
@@ -21,12 +22,16 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     // Form Variables
     public $client_id = "";
     public $project_id = "";
-    public $invoice_status = 'draft'; 
+    public $invoice_status = 'draft';
     public $currency = 'USD';
-    public $issue_date;
-    public $due_date;
+    public $issue_date = '';
+    public $due_date = '';
     public $due_date_note = '';
-    public $total_invoices;
+    public $total_invoices = '';
+    public $invoices = '';
+    public $clients = '';
+    public $projects = '';
+    public $currencies;
 
     public ?Invoice $editingInvoice = null;
     public ?Invoice $viewingInvoice = null;
@@ -143,37 +148,12 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             // 5. Open Edit Modal directly
             $this->edit($invoice->id);
             $this->dispatch('refreshDatatable');
+            $this->modal('create-invoice-modal')->close();
             return back()->with('success', 'Draft Invoice created successfully!');
         });
     }
 
     public ?InvoiceSetting $settings = null;
-
-    public function mount()
-    {
-        $this->total_invoices = Invoice::where('user_id', Auth::id())->count();
-        $this->settings = InvoiceSetting::where('user_id', Auth::id())->first();
-    }
-
-    public function render()
-    {
-        // Sirf Auth User ka data load karo (Security Fix)
-        // N+1 Problem fix karne ke liye 'with' use kiya
-        $invoices = Invoice::where('user_id', Auth::id())
-            ->with(['client', 'project'])
-            ->latest()
-            ->get();
-
-        // Dropdowns ke liye data yaha se pass karo, Blade me query mat chalao
-        $clients = Client::where('user_id', Auth::id())->get();
-        $projects = Project::where('user_id', Auth::id())->get();
-
-        return view('livewire.invoices.invoice', [
-            'invoices' => $invoices,
-            'clients' => $clients,
-            'projects' => $projects
-        ]);
-    }
 
     // Item Management
     public array $invoiceItems = [];
@@ -193,7 +173,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public function edit($id)
     {
         $this->editingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
-        
+        $this->authorize('view', $this->editingInvoice); // Ensure user can edit this invoice
         $this->invoiceItems = $this->editingInvoice->items->map(function ($item) {
             return [
                 'id' => $item->id,
@@ -210,7 +190,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
 
         // Tax Rate (from metadata if exists, else settings)
         $this->tax_rate = $metadata['tax_rate'] ?? ($settings->default_tax_rate ?? 0);
-        
+
         // Discount
         $this->discount_value = $metadata['discount_value'] ?? ($settings->default_discount_rate ?? 0);
         $this->discount_type = $metadata['discount_type'] ?? 'percentage';
@@ -221,17 +201,17 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
 
         // Dates
         $this->issue_date = $this->editingInvoice->issue_date ? \Carbon\Carbon::parse($this->editingInvoice->issue_date)->format('Y-m-d') : now()->format('Y-m-d');
-        
+
         $this->invoice_status = $this->editingInvoice->invoice_status;
         $this->currency = $this->editingInvoice->currency ?? ($settings->default_currency ?? 'USD');
-        
+
         if ($this->editingInvoice->due_date) {
             $this->due_date = \Carbon\Carbon::parse($this->editingInvoice->due_date)->format('Y-m-d');
         } else {
             $defaultDays = $settings->default_due_days ?? 14;
             $this->due_date = \Carbon\Carbon::parse($this->issue_date)->addDays($defaultDays)->format('Y-m-d');
         }
-        $this->due_date_note = ''; 
+        $this->due_date_note = '';
 
         $this->calculateTotals();
     }
@@ -239,6 +219,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public function view($id)
     {
         $this->viewingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
+        $this->authorize('view', $this->viewingInvoice); // Ensure user can view this invoice
+        // dd($this->authorize('view', $this->viewingInvoice));
     }
 
     public function addItem()
@@ -265,22 +247,37 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     }
 
     // Updated update property hooks to recalculate totals
-    public function updatedTaxRate() { $this->calculateTotals(); }
-    public function updatedDiscountValue() { $this->calculateTotals(); }
-    public function updatedDiscountType() { $this->calculateTotals(); }
-    public function updatedLateFeeValue() { $this->calculateTotals(); }
-    public function updatedLateFeeType() { $this->calculateTotals(); }
+    public function updatedTaxRate()
+    {
+        $this->calculateTotals();
+    }
+    public function updatedDiscountValue()
+    {
+        $this->calculateTotals();
+    }
+    public function updatedDiscountType()
+    {
+        $this->calculateTotals();
+    }
+    public function updatedLateFeeValue()
+    {
+        $this->calculateTotals();
+    }
+    public function updatedLateFeeType()
+    {
+        $this->calculateTotals();
+    }
 
     public function calculateTotals()
     {
         $this->subtotal = 0;
-        
+
         // 1. Calculate Subtotal
         foreach ($this->invoiceItems as $index => $item) {
             $qty = (float) ($item['quantity'] ?? 0);
             $price = (float) ($item['unit_price'] ?? 0);
             $lineTotal = $qty * $price;
-            
+
             $this->invoiceItems[$index]['line_total'] = $lineTotal;
             $this->subtotal += $lineTotal;
         }
@@ -305,16 +302,16 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $lateFeeAmount = 0;
         if ($this->late_fee_value > 0) {
 
-             $currentTotal = $taxableAmount + $this->tax_total;
-             
-             if ($this->late_fee_type === 'percentage') {
-                 $lateFeeAmount = ($currentTotal * $this->late_fee_value) / 100;
-             } else {
-                 $lateFeeAmount = $this->late_fee_value;
-             }
+            $currentTotal = $taxableAmount + $this->tax_total;
+
+            if ($this->late_fee_type === 'percentage') {
+                $lateFeeAmount = ($currentTotal * $this->late_fee_value) / 100;
+            } else {
+                $lateFeeAmount = $this->late_fee_value;
+            }
         }
         $this->late_fee_total = $lateFeeAmount;
-        
+
         // 6. Final Total
         $this->total = $taxableAmount + $this->tax_total + $this->late_fee_total;
     }
@@ -337,7 +334,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
     public function update()
     {
         $this->calculateTotals(); // Ensure totals are fresh
-
+        // dd($this->authorize('update', $this->editingInvoice));
         $this->validate([
             'issue_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:issue_date',
@@ -350,6 +347,8 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             'discount_value' => 'numeric|min:0',
             'late_fee_value' => 'numeric|min:0',
         ]);
+
+        $this->authorize('update', $this->editingInvoice); // Ensure user can update this invoice
 
         DB::transaction(function () {
             // Prepare metadata
@@ -373,7 +372,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             $this->editingInvoice->total = $this->total;
             $this->editingInvoice->balance_due = $this->total - $this->editingInvoice->paid_total;
             $this->editingInvoice->metadata = $metadata;
-            
+
             // $this->editingInvoice->tax_rate = $this->tax_rate; // Column removed reference 
 
             $this->editingInvoice->save();
@@ -407,7 +406,36 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
             }
         });
 
-        $this->dispatch('close-modal', 'edit-invoice-modal');
-        $this->dispatch('notify', 'Invoice updated successfully.'); 
+        $this->modal('edit-invoice-modal')->close();
+        $this->dispatch('refreshDatatable');
+        $this->dispatch('notify', 'Invoice updated successfully.');
+    }
+
+    public function resetForm()
+    {
+        $this->reset(['issue_date','due_date']);
+        $this->resetErrorBag();
+        $this->resetValidation();
+    }
+
+    public function mount()
+    {
+        $currentUser = Auth()->id();
+        $this->total_invoices = Invoice::where('user_id', $currentUser)->count();
+        $this->settings = InvoiceSetting::where('user_id', $currentUser)->first();
+        $this->invoices = Invoice::where('user_id', $currentUser)
+            ->with(['client', 'project'])
+            ->latest()
+            ->get();
+
+            $this->currencies=Currency::all();
+
+        $this->clients = Client::where('user_id', $currentUser)->get();
+        $this->projects = Project::where('user_id', $currentUser)->get();
+    }
+
+    public function render()
+    {
+        return view('livewire.invoices.invoice');
     }
 }

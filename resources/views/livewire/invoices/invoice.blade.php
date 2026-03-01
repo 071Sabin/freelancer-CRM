@@ -31,8 +31,8 @@
 
 
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-        <flux:modal.trigger name="create-invoice">
-            <x-primary-button class="flex gap-1">
+        <flux:modal.trigger name="create-invoice-modal">
+            <x-primary-button class="flex gap-1" wire:click="resetForm">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                     <path fill-rule="evenodd"
                         d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V10.5Z"
@@ -48,7 +48,7 @@
     </div>
 
     <div>
-        <flux:modal name="create-invoice" class="max-w-lg">
+        <flux:modal name="create-invoice-modal" class="max-w-lg">
             <form wire:submit.prevent="create" class="space-y-6">
                 <div>
                     <flux:heading size="lg">Create New Invoice</flux:heading>
@@ -384,7 +384,7 @@
 
     {{-- Edit Invoice Modal --}}
     <flux:modal name="edit-invoice-modal"
-        class="min-h-[600px] w-full md:w-auto md:max-w-5xl !bg-white dark:!bg-neutral-800">
+        class="min-h-[600px] w-full md:w-auto md:max-w-3xl !bg-white dark:!bg-neutral-800">
         <div>
             <div wire:loading wire:target="edit">
                 <div class="flex justify-center p-8">
@@ -400,27 +400,25 @@
 
                         <form wire:submit.prevent="update" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="col-span-1 md:col-span-2">
-                                    <flux:select label="Status" wire:model="invoice_status">
-                                        <flux:select.option value="draft">Draft</flux:select.option>
-                                        <flux:select.option value="sent">Sent</flux:select.option>
-                                        <flux:select.option value="paid">Paid</flux:select.option>
-                                        <flux:select.option value="partially_paid">Partially Paid</flux:select.option>
-                                        <flux:select.option value="overdue">Overdue</flux:select.option>
-                                        <flux:select.option value="void">Void</flux:select.option>
-                                        <flux:select.option value="canceled">Canceled</flux:select.option>
-                                    </flux:select>
-                                </div>
-                                <div class="col-span-1 md:col-span-2">
-                                    <flux:select label="Currency" wire:model="currency">
-                                        <flux:select.option value="USD">USD</flux:select.option>
-                                        <flux:select.option value="EUR">EUR</flux:select.option>
-                                        <flux:select.option value="GBP">GBP</flux:select.option>
-                                        <flux:select.option value="AUD">AUD</flux:select.option>
-                                        <flux:select.option value="CAD">CAD</flux:select.option>
-                                        <flux:select.option value="NPR">NPR</flux:select.option>
-                                    </flux:select>
-                                </div>
+
+                                <flux:select label="Status" wire:model="invoice_status">
+                                    <flux:select.option value="draft">Draft</flux:select.option>
+                                    <flux:select.option value="sent">Sent</flux:select.option>
+                                    <flux:select.option value="paid">Paid</flux:select.option>
+                                    <flux:select.option value="partially_paid">Partially Paid</flux:select.option>
+                                    <flux:select.option value="overdue">Overdue</flux:select.option>
+                                    <flux:select.option value="void">Void</flux:select.option>
+                                    <flux:select.option value="canceled">Canceled</flux:select.option>
+                                </flux:select>
+
+                                <flux:select label="Currency" wire:model="currency">
+                                    @foreach ($currencies as $c)
+                                        <flux:select.option value="{{ $c->code }}">
+                                            {{ $c->code }} - {{ $c->symbol }}
+                                        </flux:select.option>
+                                    @endforeach
+                                </flux:select>
+
                                 <flux:input type="date" label="Issue Date" wire:model.live="issue_date" />
                                 <div>
                                     <flux:input type="date" label="Due Date" wire:model="due_date" />
@@ -461,7 +459,7 @@
                                     @endif
 
                                     @foreach ($invoiceItems as $index => $item)
-                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-start bg-neutral-50 dark:bg-neutral-900/50 md:bg-transparent p-4 rounded-lg md:rounded-none relative group"
+                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-start bg-neutral-100 dark:bg-neutral-900/50 md:bg-transparent p-4 rounded-lg md:rounded-none relative group"
                                             wire:key="item-{{ $index }}">
 
                                             {{-- Description --}}
@@ -524,43 +522,45 @@
                                 <div class="space-y-4">
                                     <flux:heading size="sm">Settings & Adjustments</flux:heading>
 
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <flux:input type="number" label="Tax Rate (%)" min="0"
-                                            step="0.01" wire:model.blur="tax_rate" />
-                                    </div>
+                                    <div class="grid grid-cols-1 gap-6">
 
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div class="space-y-2">
-                                            <flux:label>Discount</flux:label>
-                                            <div class="flex">
-                                                <div class="w-2/3">
-                                                    <flux:input type="number" min="0" step="0.01"
-                                                        wire:model.blur="discount_value" />
-                                                </div>
-                                                <div class="w-1/3 ml-2">
-                                                    <flux:select wire:model.live="discount_type" class="min-w-[80px]">
-                                                        <flux:select.option value="percentage">%</flux:select.option>
-                                                        <flux:select.option value="fixed">$</flux:select.option>
-                                                    </flux:select>
-                                                </div>
+                                        <!-- Tax Rate -->
+                                        <div class="grid grid-cols-3 items-center gap-4">
+                                            <flux:label class="col-span-1">Tax Rate (%)</flux:label>
+                                            <flux:input type="number" min="0" step="0.01"
+                                                class="col-span-2 w-full" wire:model.blur="tax_rate" />
+                                        </div>
+
+                                        <!-- Discount -->
+                                        <div class="grid grid-cols-3 items-center gap-4">
+                                            <flux:label class="col-span-1">Discount</flux:label>
+
+                                            <div class="col-span-2 flex gap-3">
+                                                <flux:input type="number" min="0" step="0.01"
+                                                    class="w-full" wire:model.blur="discount_value" />
+
+                                                <flux:select wire:model.live="discount_type" class="w-24">
+                                                    <flux:select.option value="percentage">%</flux:select.option>
+                                                    <flux:select.option value="fixed">$</flux:select.option>
+                                                </flux:select>
                                             </div>
                                         </div>
 
-                                        <div class="space-y-2">
-                                            <flux:label>Late Fee</flux:label>
-                                            <div class="flex">
-                                                <div class="w-2/3">
-                                                    <flux:input type="number" min="0" step="0.01"
-                                                        wire:model.blur="late_fee_value" />
-                                                </div>
-                                                <div class="w-1/3 ml-2">
-                                                    <flux:select wire:model.live="late_fee_type" class="min-w-[80px]">
-                                                        <flux:select.option value="percentage">%</flux:select.option>
-                                                        <flux:select.option value="fixed">$</flux:select.option>
-                                                    </flux:select>
-                                                </div>
+                                        <!-- Late Fee -->
+                                        <div class="grid grid-cols-3 items-center gap-4">
+                                            <flux:label class="col-span-1">Late Fee</flux:label>
+
+                                            <div class="col-span-2 flex gap-3">
+                                                <flux:input type="number" min="0" step="0.01"
+                                                    class="w-full" wire:model.blur="late_fee_value" />
+
+                                                <flux:select wire:model.live="late_fee_type" class="w-24">
+                                                    <flux:select.option value="percentage">%</flux:select.option>
+                                                    <flux:select.option value="fixed">$</flux:select.option>
+                                                </flux:select>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
 
