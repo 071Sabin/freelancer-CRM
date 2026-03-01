@@ -33,8 +33,8 @@
 
     {{-- ADD PROJECT BUTTON --}}
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-        <flux:modal.trigger name="add-project">
-            <x-primary-button class="flex gap-1">
+        <flux:modal.trigger name="add-project-modal">
+            <x-primary-button class="flex gap-1" wire:click="resetForm">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                     <path fill-rule="evenodd"
                         d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V10.5Z"
@@ -47,7 +47,7 @@
 
 
     {{-- ADD PROJECT FORM COMPONENT --}}
-    <x-projects.show-add-project-form :clients="$clients" :currencies="$currencies" />
+    <x-projects.show-add-project-form :clients="$clients" :currencies="$currencies" :project_form="$project_form" />
 
 
     @if ($projectCount > 0)
@@ -201,56 +201,66 @@
     </flux:modal>
 
     {{-- Edit Project Modal --}}
-    <flux:modal name="edit-project-modal" class="min-h-[500px] w-full md:min-w-[800px]">
-        <div>
-            <div wire:loading wire:target="edit">
-                <div class="flex justify-center p-8">
-                    <flux:icon.loading />
-                </div>
+    <flux:modal name="edit-project-modal"
+        class="w-full max-w-2xl transition-all duration-300 transform scale-95 opacity-0 ease-out opacity-100 scale-100">
+
+        <div wire:loading wire:target="edit"
+            class="absolute inset-0 z-20 flex items-center justify-center bg-white/70 dark:bg-[#141414]/70 backdrop-blur-sm rounded-2xl">
+            <div
+                class="flex flex-col items-center gap-3 p-4 bg-white border shadow-lg rounded-xl border-neutral-100 dark:bg-neutral-900 dark:border-neutral-800">
+                <flux:icon.loading class="w-6 h-6 animate-spin text-neutral-900 dark:text-white" />
+                <span class="text-xs font-semibold tracking-wide text-neutral-600 dark:text-neutral-300">Loading
+                    project...</span>
             </div>
+        </div>
 
-            <div wire:loading.remove wire:target="edit">
-                @if (!empty($editingProject))
-                    <div class="space-y-6">
-                        <div class="border-b border-neutral-100 dark:border-white/5 pb-4">
-                            <h3 class="text-lg md:text-xl font-bold">
-                                Edit Project: <span
-                                    class="text-indigo-600 dark:text-indigo-400">{{ ucwords($editingProject['name']) }}</span>
-                            </h3>
+        <div wire:loading.remove wire:target="edit" class="flex flex-col">
+            @if ($project_form->project)
+                <form wire:submit.prevent="update" class="flex flex-col">
+
+                    <div class="flex items-start gap-4 pb-5 border-b border-neutral-200 dark:border-neutral-600/80">
+                        <div
+                            class="flex items-center justify-center shrink-0 w-12 h-12 text-lg font-semibold bg-white border rounded-xl shadow-sm text-neutral-600 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300">
+                            {{ substr($project_form->name ?? 'P', 0, 1) }}
                         </div>
+                        <div>
+                            <div
+                                class="flex items-center gap-2 mb-1 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                                <span>Projects</span>
+                                <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                </svg>
+                                <span class="text-blue-600 dark:text-blue-400">Edit Project</span>
+                            </div>
+                            <flux:heading size="xl" level="1" class="text-neutral-900 dark:text-white">
+                                {{ $project_form->name }}
+                            </flux:heading>
+                        </div>
+                    </div>
 
-                        <form wire:submit.prevent="update" class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <x-input-field label="Project Name" model="editingProject.name" />
-                                <flux:select wire:model="editingProject.client_id" label="Client"
-                                    placeholder="Choose a client..." searchable>
+                    <div class="space-y-6 mt-3">
+
+                        <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                            <div class="sm:col-span-3">
+                                <x-input-field label="Project Name" type="text" model="project_form.name" required />
+                            </div>
+
+                            {{-- CLIENT LIST --}}
+                            <div>
+                                <flux:select wire:model.live="project_form.client_id" label="Client"
+                                    placeholder="Search..." searchable>
                                     @foreach ($clients as $client)
                                         <flux:select.option value="{{ $client->id }}">
                                             {{ ucwords($client->client_name) }}
                                         </flux:select.option>
                                     @endforeach
                                 </flux:select>
-
-                                <x-input-field label="Deadline" type="date" model="editingProject.deadline"
-                                    required />
                             </div>
-                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                <x-input-field label="Value" type="number" step="0.01"
-                                    model="editingProject.value" />
 
-                                <div>
-                                    <x-input-field type="number" model="editingProject.hourly_rate"
-                                        placeholder="0.00" label="Rate/Hr." step="0.01" required />
-                                </div>
-                                <flux:select wire:model="editingProject.currency_id" label="Currency" searchable>
-                                    @foreach ($currencies as $c)
-                                        <flux:select.option value="{{ (string) $c->id }}">
-                                            {{ $c->code }} - {{ $c->symbol }}
-                                        </flux:select.option>
-                                    @endforeach
-                                </flux:select>
-
-                                <flux:select wire:model="editingProject.status" label="Status">
+                            {{-- STATUS --}}
+                            <div>
+                                <flux:select wire:model="project_form.status" label="Status">
                                     <flux:select.option value="active">Active</flux:select.option>
                                     <flux:select.option value="in_progress">In Progress</flux:select.option>
                                     <flux:select.option value="on_hold">On Hold</flux:select.option>
@@ -259,21 +269,101 @@
                                 </flux:select>
                             </div>
 
-                            <flux:textarea label="Description" wire:model.defer="editingProject.description"
-                                placeholder="Brief project details..." />
-                            <div class="flex justify-end gap-3 pt-6 border-t border-neutral-100 dark:border-white/5">
-                                <flux:modal.close>
-                                    <x-secondary-button>Cancel</x-secondary-button>
-                                </flux:modal.close>
-                                <x-primary-button wire:click="update">Save Changes</x-primary-button>
+                            <x-input-field label="Deadline" type="date" model="project_form.deadline" required />
+
+                        </div>
+
+                        <fieldset
+                            class="p-5 border rounded-xl bg-neutral-50/50 dark:bg-neutral-900/20 border-neutral-200/80 dark:border-neutral-600">
+                            <legend
+                                class="px-2 text-xs font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
+                                Billing
+                            </legend>
+                            <div class="grid grid-cols-1 gap-5 mt-1 sm:grid-cols-3">
+
+                                <flux:select wire:model="project_form.currency_id" label="Currency" searchable>
+                                    @foreach ($currencies as $c)
+                                        <flux:select.option value="{{ (string) $c->id }}">
+                                            {{ $c->code }} ({{ $c->symbol }})
+                                        </flux:select.option>
+                                    @endforeach
+                                </flux:select>
+
+                                <x-input-field label="Project Value" type="number" step="0.01" model="project_form.value" placeholder="0.00" required/>
+
+                                <x-input-field type="number" model="project_form.hourly_rate" placeholder="0.00"
+                                    label="Hourly Rate" step="0.01" required />
                             </div>
-                        </form>
+                        </fieldset>
+
+                        <div>
+                            <flux:textarea label="Project Description" wire:model.defer="project_form.description"
+                                placeholder="Add context, goals, or important notes about this project..."
+                                rows="3" />
+                        </div>
                     </div>
-                @else
-                    <div class="text-center text-neutral-500 py-12">No project selected.</div>
-                @endif
-            </div>
+
+                    <div class="flex items-center justify-between py-4">
+
+                        {{-- LEFT SIDE --}}
+                        <div class="flex items-center min-h-[28px]">
+
+                            <div wire:dirty.class="flex" wire:dirty.remove.class="hidden" wire:target="project_form"
+                                class="hidden items-center gap-2 text-xs sm:text-sm font-medium text-amber-600 dark:text-amber-400">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4 shrink-0">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                                </svg>
+
+                                <span class="leading-none">Unsaved changes</span>
+                            </div>
+
+                        </div>
+
+                        {{-- RIGHT SIDE --}}
+                        <div class="flex items-center gap-3">
+                            <flux:modal.close>
+                                <x-secondary-button>Cancel</x-secondary-button>
+                            </flux:modal.close>
+
+                            <x-primary-button wire:click="update" wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="update">Save Project</span>
+                                <span wire:loading wire:target="update" class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-20" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-100" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                    Saving...
+                                </span>
+                            </x-primary-button>
+                        </div>
+
+                    </div>
+                </form>
+            @else
+                <div class="flex flex-col items-center justify-center px-6 py-20 text-center">
+                    <div
+                        class="relative flex items-center justify-center w-16 h-16 mb-5 bg-white border rounded-2xl dark:bg-neutral-800 shadow-sm border-neutral-100 dark:border-neutral-700 ring-4 ring-neutral-50 dark:ring-neutral-800/50">
+                        <svg class="w-7 h-7 text-neutral-400 dark:text-neutral-400" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-semibold text-neutral-900 dark:text-white">No workspace selected</h3>
+                    <p class="max-w-xs mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+                        Please select a project to view and edit its configuration.
+                    </p>
+                </div>
+            @endif
         </div>
+
     </flux:modal>
 
 </div>

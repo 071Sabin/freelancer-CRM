@@ -57,7 +57,7 @@ class Clients extends Component
 
             $this->modal('edit-client-modal')->close();
             $this->dispatch('refreshDatatable');
-            session()->flash('success', 'Client updated successfully!');
+            session()->flash('success', 'Client updated successfully.');
         } catch (ValidationException $e) {
             $this->dispatch('scroll-to-error');
             throw $e;

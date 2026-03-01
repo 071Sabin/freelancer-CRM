@@ -255,7 +255,7 @@
 
     {{-- Edit Client Modal --}}
     <flux:modal name="edit-client-modal"
-        class="w-full max-w-3xl !p-0 bg-white shadow-2xl rounded-2xl dark:bg-neutral-800">
+        class="w-full max-w-2xl !p-0 bg-white shadow-2xl rounded-2xl dark:bg-neutral-800">
 
         <div wire:loading wire:target="edit"
             class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">
@@ -282,7 +282,7 @@
                                     stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                                 </svg>
-                                <span class="text-indigo-600 dark:text-indigo-400">Edit Profile</span>
+                                <span class="text-blue-600 dark:text-indigo-400">Edit Profile</span>
                             </div>
                             <flux:heading size="xl" level="1" class="text-neutral-900 dark:text-white">
                                 {{ $form->client_name }}
@@ -327,9 +327,9 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 
-                                <flux:select wire:model="form.currency_id" label="Currency" searchable>
+                                <flux:select wire:model="form.currency_id" label="Currency" class="text-xs md:text-sm">
                                     @foreach ($currencies as $currency)
-                                        <flux:select.option value="{{ $currency->id }}">
+                                        <flux:select.option value="{{ $currency->id }}" class="text-xs md:text-sm">
                                             {{ $currency->code }} — {{ $currency->symbol }}
                                         </flux:select.option>
                                     @endforeach
@@ -338,7 +338,7 @@
                                 <x-input-field label="Hourly Rate" type="number" step="0.01"
                                     model="form.hourly_rate" />
 
-                                <flux:select wire:model="form.status" label="Status" placeholder="Status...">
+                                <flux:select wire:model="form.status" label="Status" placeholder="Status..." class="text-xs md:text-sm">
                                     <flux:select.option value="active">Active</flux:select.option>
                                     <flux:select.option value="inactive">Inactive</flux:select.option>
                                     <flux:select.option value="lead">Lead</flux:select.option>
