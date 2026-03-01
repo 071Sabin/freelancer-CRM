@@ -1,7 +1,7 @@
 @props(['currencies', 'form'])
 
 
-<flux:modal name="add-client-modal" class="w-full max-w-2xl !p-0 bg-white shadow-2xl rounded-2xl dark:bg-neutral-800">
+<flux:modal name="add-client-modal" class="w-full max-w-2xl !p-0 shadow-2xl rounded-2xl">
 
     <div wire:loading wire:target="edit"
         class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">

@@ -1,7 +1,7 @@
 @props(['clients', 'currencies','project_form'])
 
 <flux:modal name="add-project-modal"
-    class="w-full max-w-2xl transition-all duration-300 transform scale-95 opacity-0 ease-out opacity-100 scale-100">
+    class="w-full max-w-2xl">
 
     <div wire:loading wire:target="createProject"
         class="absolute inset-0 z-20 flex items-center justify-center bg-white/70 dark:bg-[#141414]/70 backdrop-blur-sm rounded-2xl">
