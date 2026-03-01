@@ -408,7 +408,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
 
         $this->modal('edit-invoice-modal')->close();
         $this->dispatch('refreshDatatable');
-        $this->dispatch('notify', 'Invoice updated successfully.');
+        return back()->with('success', 'Invoice updated successfully.');
     }
 
     public function resetForm()
