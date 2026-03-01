@@ -141,7 +141,7 @@
                                     <p class="text-sm text-gray-600 dark:text-neutral-400 font-semibold">Bio</p>
                                     <p class="text-xs text-neutral-500">Optional</p>
                                 </div>
-                                <flux:textarea label="Order notes" wire:model="bio"
+                                <flux:textarea wire:model="bio"
                                     placeholder="Bio.....">
                                     {{ Auth::guard('web')->user()->bio ?? '' }}</flux:textarea>
                                 
