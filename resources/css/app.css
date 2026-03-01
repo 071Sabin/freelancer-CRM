@@ -22,17 +22,10 @@
 @source "../../app/Livewire/**/*.php";
 
 @theme {
-    /* Flux v2 Styling Setup 
-       Yahan hum colors define karte hain.
-    */
-
     /* Font Family */
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-    /* COLOR CONFIGURATION
-       Flux 'neutral' use karta hai. Hum 'neutral' ko default 'gray' banayenge 
-       taaki dark mode sahi chale.
-    */
+    /* COLOR CONFIGURATION*/
     --color-neutral-50: #fafafa;
     --color-neutral-100: #f5f5f5;
     --color-neutral-200: #e5e5e5;

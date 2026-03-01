@@ -4,7 +4,7 @@
 <div class="w-full group">
 
     <label @if ($attributes->has('id')) for="{{ $attributes->get('id') }}" @endif
-        class="block text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">
+        class="block text-xs md:text-sm font-medium leading-6 text-neutral-900 transition-colors duration-200 dark:text-neutral-300">
         {{ $label }}
         @if ($required ?? false)
             <span class="ml-0.5 font-bold text-red-500" title="Required">*</span>
@@ -16,11 +16,10 @@
             placeholder="{{ $placeholder ?? '' }}"
             {{ $attributes->merge([
                 'class' => '
-                                block w-full rounded-lg border-0 py-2 px-3 sm:text-sm leading-6 
-                                text-neutral-900 bg-white mt-2.5 shadow-xs
-                                ring-1 ring-inset ring-neutral-300 placeholder-neutral-400 
+                                block w-full rounded-lg border-0 py-2 px-3 text-xs lg:text-sm leading-6 
+                                text-neutral-900 bg-white mt-2.5 shadow-xs placeholder-neutral-400 
                                 focus:ring-1 focus:ring-inset focus:ring-indigo-600 
-                                transition-shadow duration-200 ease-in-out dark:border-neutral-600 dark:border-1 dark:border-neutral-50
+                                transition-shadow duration-200 ease-in-out dark:border-neutral-600 border-1 border-neutral-200
                                 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500 disabled:ring-neutral-200 
                                 dark:bg-white/10 dark:text-white dark:ring-neutral-700 dark:placeholder-neutral-400 dark:focus:ring-indigo-500
                             ',

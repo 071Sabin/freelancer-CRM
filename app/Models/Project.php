@@ -23,6 +23,7 @@ class Project extends Model
         'currency_id',
         'hourly_rate',
         'deadline',
+        'user_id',
     ];
 
 
