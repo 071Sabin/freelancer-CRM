@@ -66,7 +66,7 @@
 
     {{-- View Project Modal --}}
     <flux:modal name="view-project-modal"
-        class="w-full max-w-2xl !p-0 bg-white shadow-2xl rounded-2xl dark:bg-neutral-900">
+        class="w-full max-w-2xl !p-0 shadow-2xl rounded-2xl">
 
         <div wire:loading wire:target="view"
             class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">
@@ -202,12 +202,12 @@
 
     {{-- Edit Project Modal --}}
     <flux:modal name="edit-project-modal"
-        class="w-full max-w-2xl transition-all duration-300 transform scale-95 opacity-0 ease-out opacity-100 scale-100">
+        class="w-full max-w-2xl">
 
         <div wire:loading wire:target="edit"
-            class="absolute inset-0 z-20 flex items-center justify-center bg-white/70 dark:bg-[#141414]/70 backdrop-blur-sm rounded-2xl">
+            class="absolute inset-0 z-20 flex items-center justify-center bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-2xl">
             <div
-                class="flex flex-col items-center gap-3 p-4 bg-white border shadow-lg rounded-xl border-neutral-100 dark:bg-neutral-900 dark:border-neutral-800">
+                class="flex flex-col items-center gap-3 p-4 border shadow-lg rounded-xl border-neutral-100 dark:bg-neutral-900 dark:border-neutral-800">
                 <flux:icon.loading class="w-6 h-6 animate-spin text-neutral-900 dark:text-white" />
                 <span class="text-xs font-semibold tracking-wide text-neutral-600 dark:text-neutral-300">Loading
                     project...</span>

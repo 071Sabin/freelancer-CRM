@@ -42,7 +42,7 @@
             </x-primary-button>
         </flux:modal.trigger>
         <a href="{{ route('invoices.settings.general') }}" wire:navigate
-            class="text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
+            class="text-neutral-500 hover:text-neutral-900 dark:hover:text-white">
             <flux:icon.cog-6-tooth />
         </a>
     </div>
@@ -107,8 +107,7 @@
     @endif
 
     {{-- View Invoice Modal --}}
-    <flux:modal name="view-invoice-modal"
-        class="min-h-[600px] w-full md:min-w-[900px] !bg-neutral-100 dark:!bg-neutral-900 p-8">
+    <flux:modal name="view-invoice-modal" class="min-h-[600px] w-full md:min-w-[900px] dark:!bg-neutral-800 p-8">
         <div class="flex flex-col h-full">
             <div wire:loading wire:target="view">
                 <div class="flex justify-center p-8">
@@ -163,7 +162,7 @@
                                 <div class="text-4xl font-light text-neutral-300 uppercase tracking-widest mb-2">Invoice
                                 </div>
                                 <flux:badge size="sm"
-                                    :color="$viewingInvoice->invoice_status === 'paid' ? 'green' : 'zinc'"
+                                    :color="$viewingInvoice->invoice_status === 'paid' ? 'green' : 'neutral'"
                                     class="mb-4">
                                     {{ ucfirst($viewingInvoice->invoice_status) }}
                                 </flux:badge>
@@ -382,7 +381,7 @@
         </div>
     </flux:modal>
 
-    {{-- Edit Invoice Modal --}}
+    {{-- Edit Invoice Modal ORIGINAL --}}
     <flux:modal name="edit-invoice-modal"
         class="min-h-[600px] w-full md:w-auto md:max-w-3xl !bg-white dark:!bg-neutral-800">
         <div>
@@ -395,11 +394,35 @@
             <div wire:loading.remove wire:target="edit">
                 @if ($editingInvoice)
                     <div class="space-y-6">
-                        <flux:heading size="lg">Edit Invoice #{{ $editingInvoice->invoice_number }}
+                        <flux:heading size="lg"
+                            class="flex items-center gap-3 font-semibold text-gray-900 dark:text-gray-100">
+
+                            <!-- Label -->
+                            <span
+                                class="text-xs font-medium tracking-widest uppercase text-gray-500 dark:text-gray-400">
+                                Invoice
+                            </span>
+
+                            <!-- Divider -->
+                            <span class="text-gray-300 dark:text-gray-600">/</span>
+
+                            <!-- Invoice Number -->
+                            <span class="text-base font-bold text-gray-900 dark:text-white">
+                                #{{ $editingInvoice->invoice_number }}
+                            </span>
+
+                            <!-- Status Badge -->
+                            <span
+                                class="text-xs font-medium px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400">
+                                Editing
+                            </span>
+
                         </flux:heading>
 
+                        <x-hr-divider />
+
                         <form wire:submit.prevent="update" class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
                                 <flux:select label="Status" wire:model="invoice_status">
                                     <flux:select.option value="draft">Draft</flux:select.option>
@@ -459,7 +482,7 @@
                                     @endif
 
                                     @foreach ($invoiceItems as $index => $item)
-                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-start bg-neutral-100 dark:bg-neutral-900/50 md:bg-transparent p-4 rounded-lg md:rounded-none relative group"
+                                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-center justify-center bg-neutral-100 dark:bg-neutral-900/50 md:bg-transparent p-4 rounded-lg md:rounded-none relative group"
                                             wire:key="item-{{ $index }}">
 
                                             {{-- Description --}}
@@ -616,5 +639,6 @@
             </div>
         </div>
     </flux:modal>
+
 
 </div>
