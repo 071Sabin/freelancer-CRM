@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
+            $table->uuid('uuid')->nullable()->unique();
 
             // Ownership / relationships
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();

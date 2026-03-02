@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             // Primary key
             $table->bigIncrements('id');
+            $table->uuid('uuid')->nullable()->unique();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             // Essential fields
             $table->string('name');               // Project Name

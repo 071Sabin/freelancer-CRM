@@ -26,14 +26,21 @@ class Project extends Model
         'user_id',
     ];
 
-
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
     /**
      * Accessor for Name
      */
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Str::title($value) : null,
+            get: fn(?string $value) => $value ? Str::title($value) : null,
         );
     }
 
@@ -51,7 +58,7 @@ class Project extends Model
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Str::ucfirst($value) : null,
+            get: fn(?string $value) => $value ? Str::ucfirst($value) : null,
         );
     }
 
@@ -76,5 +83,10 @@ class Project extends Model
         if (!$this->currency) return number_format($this->value, 2);
 
         return $this->currency->symbol . ' ' . number_format($this->value, $this->currency->precision);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     }
 }
