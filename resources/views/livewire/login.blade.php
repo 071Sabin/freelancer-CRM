@@ -1,5 +1,4 @@
-<div
-    class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-black py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
+<div class="py-14 flex items-center justify-center bg-slate-50 dark:bg-black px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
 
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
         <div
@@ -11,7 +10,7 @@
     </div>
 
     <div
-        class="mt-10 w-full max-w-md bg-white dark:bg-slate-900/60 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 p-8 sm:p-10 transition-all duration-300">
+        class="w-full max-w-md bg-white dark:bg-slate-900/60 shadow-2xl rounded-2xl border border-slate-200 dark:border-slate-800 p-8 sm:p-10 transition-all duration-300">
 
         <div class="text-center mb-8">
             <div
@@ -134,7 +133,7 @@
             </button>
         </form>
 
-        <div class="mt-8 text-center">
+        <div class="mt-4 text-center">
             <p class="text-xs lg:text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?
                 <a href="{{ route('register') }}" wire:navigate

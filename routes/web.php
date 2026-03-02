@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\ClientPortal\Portal;
 use App\Livewire\Clients\Clients;
 use App\Livewire\Dashboard;
 use App\Livewire\FreelancerDetails;
@@ -26,6 +27,9 @@ Route::middleware('guest:web')->group(function () {
 Route::get('/register', Register::class)->name('register');
 
 Route::get('/login', Login::class)->name('login');
+Route::get('/p/{uuid}', Portal::class)->name('client.portal');
+
+
 // Route::get('/login', Login::class)->name('login');
 // Route::get('/freelancers', FreelancerDetails::class)->name('freelancers');
 
