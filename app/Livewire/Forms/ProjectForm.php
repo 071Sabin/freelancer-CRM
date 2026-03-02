@@ -147,7 +147,7 @@ class ProjectForm extends Form
 
         if ($this->project) {
             $this->project->update($prjData);
-            // $currentProject = $this->project;
+            $currentProject = $this->project;
         } else {
             $currentProject = Project::create($prjData);
         }

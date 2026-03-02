@@ -59,7 +59,7 @@ class WhatsAppService
             }
 
             // Security: Log the API error and not log or return the access token
-            Log::error("🔴 WhatsApp API Error (User: {$userId}): " . $response->body());
+            Log::error("WhatsApp API Error (User: {$userId}): " . $response->body());
 
             return [
                 'success' => false,
@@ -67,7 +67,7 @@ class WhatsAppService
             ];
         } catch (Exception $e) {
             // Security: Catch generic exceptions so stack traces/tokens don't leak to the frontend.
-            Log::error("🔴 WhatsApp Service Exception: " . $e->getMessage());
+            Log::error("WhatsApp Service Exception: " . $e->getMessage());
 
             return [
                 'success' => false,
