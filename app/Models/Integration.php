@@ -18,7 +18,7 @@ class Integration extends Model
         'wa_business_account_id',
     ];
 
-    // Magic! Ye keys ko DB me encrypt karega aur access karne pe decrypt.
+    // this code below will encrypt the token while saving, and decrypts while accessing
     protected $casts = [
         'ai_api_key' => 'encrypted',
         'wa_access_token' => 'encrypted',

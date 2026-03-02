@@ -4,7 +4,9 @@ namespace App\Livewire\Forms;
 
 use App\Models\Client;
 use App\Models\Project;
+use App\Services\WhatsAppService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -90,11 +92,41 @@ class ProjectForm extends Form
         ];
     }
 
+    // public function storeOrUpdate()
+    // {
+    //     $this->validate();
+
+    //     if($this->project){
+    //         $this->authorize('update', $this->project);
+    //     }
+
+    //     $prjData = [
+    //         'name' => strtolower($this->name),
+    //         'description' => strtolower($this->description),
+    //         'value' => $this->value,
+    //         'client_id' => $this->client_id,
+    //         'status' => strtolower($this->status),
+    //         'currency_id' => $this->currency_id,
+    //         'hourly_rate' => $this->hourly_rate,
+    //         'deadline' => $this->deadline,
+    //         'user_id' => auth()->id(),
+    //     ];
+    //     if ($this->project) {
+    //         $this->project->update($prjData);
+    //     } else {
+    //         $project = Project::create($prjData);
+    //     }
+
+    //     // Reset form fields
+    //     $this->reset();
+    // }
+
+
     public function storeOrUpdate()
     {
         $this->validate();
-        
-        if($this->project){
+
+        if ($this->project) {
             $this->authorize('update', $this->project);
         }
 
@@ -109,13 +141,60 @@ class ProjectForm extends Form
             'deadline' => $this->deadline,
             'user_id' => auth()->id(),
         ];
+
+        // 1. Ek unified variable banayenge dono Create aur Update ke liye
+        $currentProject = null;
+
         if ($this->project) {
             $this->project->update($prjData);
+            // $currentProject = $this->project;
         } else {
-            Project::create($prjData);
+            $currentProject = Project::create($prjData);
         }
 
-        // Reset form fields
+        // project is created but it doesn't have the client relation, so creating that relation
+        $currentProject->load('client');
+
+        // --- WHATSAPP MESSAGE SENDING LOGIC ---
+
+        // first, check if client exists, then check if client has a phone number, if not, skip WhatsApp logic
+        if ($currentProject->client && !empty($currentProject->client->company_phone)) {
+
+            // Generate the link
+            $magicLink = route('client.portal', ['uuid' => $currentProject->uuid]);
+
+            // Note: Make sure column name is correct
+            $clientName = $currentProject->client->client_name ?? 'Client';
+
+            // Professional Message Draft
+            $message = "Hi {$clientName} 👋\n\n";
+            $message .= "We've just updated your project: *{$currentProject->name}*.\n\n";
+            $message .= "You can track the live progress, view details, and access invoices anytime on your secure portal right here:\n";
+            $message .= "🔗 {$magicLink}\n\n";
+            $message .= "Let us know if you have any questions!";
+
+            // Service Call. it's like who's sending whom and what message
+            $waService = app(WhatsAppService::class);
+            $whatsappResponse = $waService->sendMessage(
+                auth()->id(),
+                $currentProject->client->company_phone,
+                $message
+            );
+
+            // Success/Error Toast
+            if ($whatsappResponse['success']) {
+                $statusMsg = $whatsappResponse['simulated']
+                    ? 'Project saved! (WhatsApp logged in simulation mode)'
+                    : 'Project saved & WhatsApp sent!';
+                session()->flash('success', $statusMsg);
+            } else {
+                session()->flash('warning', 'Project saved, but WhatsApp failed: ' . $whatsappResponse['error']);
+            }
+        } else {
+            session()->flash('success', 'Project created successfully! (Client has no phone number, WhatsApp skipped).');
+        }
+
+        // 4. Sabse last me form fields ko reset karenge!
         $this->reset();
     }
 }

@@ -33,11 +33,12 @@
 
 <div class="min-h-screen pt-10 text-neutral-900 dark:text-neutral-100">
 
-    <div class="max-w-3xl mx-auto p-6 space-y-8 bg-neutral-50/70 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-700 rounded-lg">
+    <div
+        class="max-w-3xl mx-auto p-6 space-y-8 bg-neutral-50/70 dark:bg-neutral-800 rounded border border-neutral-200 dark:border-neutral-700 rounded-lg">
         <h2 class="text-sm font-semibold uppercase text-neutral-700 dark:text-neutral-300">
             Client Secure Project Portal
         </h2>
-        <x-hr-divider/>
+        <x-hr-divider />
         {{-- Header --}}
         <div class="flex items-start justify-between">
 
@@ -109,7 +110,7 @@
             </div>
 
         </div>
- <x-hr-divider/>
+        <x-hr-divider />
         {{-- Description --}}
         @if ($project->description)
             <div class="border-t border-neutral-200 dark:border-neutral-800 pt-6">
@@ -118,7 +119,7 @@
                 </p>
             </div>
         @endif
- <x-hr-divider/>
+        <x-hr-divider />
         {{-- Invoices --}}
         <div class="border-t border-neutral-200 dark:border-neutral-800 pt-8 space-y-6">
 
@@ -161,7 +162,7 @@
                             </div>
 
                         </div>
-                         <x-hr-divider/>
+                        <x-hr-divider />
                     @endforeach
 
                 </div>

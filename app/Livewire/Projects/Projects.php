@@ -8,6 +8,8 @@ use App\Models\Currency;
 use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\Title;
+use App\Services\WhatsAppService;
+use Illuminate\Support\Facades\Auth;
 
 
 #[Title('Client Pivot | Projects')]
@@ -44,11 +46,12 @@ class Projects extends Component
     public function createProject()
     {
         try{
+            // this function below contains the creation + update + whatsapp message sent logic
             $this->project_form->storeOrUpdate();
 
             $this->modal('add-project-modal')->close();
             $this->dispatch('refreshDatatable');
-            session()->flash('success', 'Project added successfully.');
+            // session()->flash('success', 'Project added successfully.');
         } catch (\Exception $e) {
             $this->dispatch('scroll-to-error');
             throw $e;
