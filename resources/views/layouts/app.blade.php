@@ -205,11 +205,6 @@
                     <flux:sidebar.item icon="document-currency-dollar" href="{{ route('invoices') }}" wire:navigate
                         :current="request()->routeIs('invoices.*')">Invoices
                     </flux:sidebar.item>
-                    <flux:sidebar.item href="http://localhost/p/3ba65c96-0acf-40c0-9b38-fc7b81da3b75#" wire:navigate>
-                        external link</flux:sidebar.item>
-                    {{-- <flux:sidebar.item icon="cog" href="#" wire:navigate
-                        :current="request()->routeIs('aibyok')">
-                        AI (BYOK)</flux:sidebar.item> --}}
                     <flux:sidebar.group expandable icon="cog" heading="Client Automations" class="grid"
                         :current="request()->routeIs('aibyok')">
                         <flux:sidebar.item href="#">Marketing site</flux:sidebar.item>
