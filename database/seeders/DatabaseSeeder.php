@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Client;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,13 +25,13 @@ class DatabaseSeeder extends Seeder
             
         // User::factory(10)->create();
         // Client::factory(10)->create();
-        DB::table('users')->insert([
-            [
-                'name' => 'Sabin Panthi',
-                'email' => 'sabin@gmail.com',
-                'password' => bcrypt('sabin123'),
-            ],
-        ]);
+        // DB::table('users')->insert([
+        //     [
+        //         'name' => 'Sabin Panthi',
+        //         'email' => 'sabin@gmail.com',
+        //         'password' => bcrypt('sabin123'),
+        //     ],
+        // ]);
 
         DB::table('clients')->insert([
             [
@@ -64,38 +66,43 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
+        Project::create([
+            'uuid' => Str::uuid(),
+            'user_id' => 1,
+            'name' => 'website redesign',
+            'description' => 'complete ui/ux overhaul',
+            'value' => 2500.00,
+            'currency_id' => 1,
+            'hourly_rate' => 50.00,
+            'client_id' => 1,
+            'status' => 'active',
+            'deadline' => now()->addDays(30),
+        ]);
 
-        DB::table('projects')->insert([
-            [
-                'name'        => 'Website Redesign',
-                'user_id'     => 1,
-                'description' => 'Complete redesign of company website UI/UX.',
-                'value'       => 1500.00,
-                'client_id'   => 1,
-                'status'      => 'active',
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
-            [
-                'name'        => 'Mobile App Development',
-                'user_id'     => 1,
-                'description' => 'Build cross-platform mobile application.',
-                'value'       => 3200.00,
-                'client_id'   => 2,
-                'status'      => 'in_progress',
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
-            [
-                'name'        => 'SEO Optimization',
-                'user_id'     => 1,
-                'description' => null,
-                'value'       => 800.00,
-                'client_id'   => 1,
-                'status'      => 'completed',
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
+        Project::create([
+            'uuid' => Str::uuid(),
+            'user_id' => 1,
+            'name' => 'mobile app development',
+            'description' => 'cross platform flutter app',
+            'value' => 5000.00,
+            'currency_id' => 1,
+            'hourly_rate' => 65.00,
+            'client_id' => 1,
+            'status' => 'inactive',
+            'deadline' => now()->addDays(45),
+        ]);
+
+        Project::create([
+            'uuid' => Str::uuid(),
+            'user_id' => 1,
+            'name' => 'seo optimization',
+            'description' => 'technical seo and content update',
+            'value' => 1200.00,
+            'currency_id' => 1,
+            'hourly_rate' => 40.00,
+            'client_id' => 1,
+            'status' => 'lead',
+            'deadline' => now()->addDays(20),
         ]);
     }
 }
