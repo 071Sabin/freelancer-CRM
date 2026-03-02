@@ -16,6 +16,7 @@
     <link rel="apple-touch-icon" href="{{ asset('uploads/clientpivot-logo-cropped.png') }}">
     <meta name="color-scheme" content="dark light">
 
+    <meta property="og:title" content="Client Pivot - Intelligent Client Management for Freelancers">
 
 
     <script>
