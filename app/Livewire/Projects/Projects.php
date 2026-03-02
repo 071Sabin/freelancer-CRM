@@ -65,7 +65,7 @@ class Projects extends Component
             $this->project_form->storeOrUpdate();
             $this->modal('edit-project-modal')->close();
             $this->dispatch('refreshDatatable');
-            session()->flash('success', 'Project updated successfully.');
+            // session()->flash('success', 'Project updated successfully.');
         } catch (\Exception $e) {
             $this->dispatch('scroll-to-error');
             throw $e;
