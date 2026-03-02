@@ -169,8 +169,8 @@ class ProjectForm extends Form
             // Professional Message Draft
             $message = "Hi {$clientName} 👋\n\n";
             $message .= "We've just updated your project: *{$currentProject->name}*.\n\n";
-            $message .= "You can track the live progress, view details, and access invoices anytime on your secure portal right here:\n";
-            $message .= "🔗 {$magicLink}\n\n";
+            $message .= "You can track the live progress, view details, and access invoices anytime on your secure portal right here:\n\n";
+            $message .= $magicLink . "\n\n";
             $message .= "Let us know if you have any questions!";
 
             // Service Call. it's like who's sending whom and what message
