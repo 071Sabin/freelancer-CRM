@@ -54,7 +54,7 @@
     {{-- CLIENTS DATATABLE --}}
     @if ($clientCount > 0)
         <div class="border-none">
-            <livewire:clients.clients-table />
+            <livewire:clients.clients-table lazy />
         </div>
     @else
         <x-empty-state title="No Clients Yet" subtitle="Add a client to start creating invoices and projects.">

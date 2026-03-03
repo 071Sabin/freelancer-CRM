@@ -30,7 +30,6 @@
 
     </div>
 
-
     {{-- ADD PROJECT BUTTON --}}
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
         <flux:modal.trigger name="add-project-modal">
@@ -51,7 +50,7 @@
 
 
     @if ($projectCount > 0)
-        <livewire:projects.projects-table />
+        <livewire:projects.projects-table lazy />
     @else
         <x-empty-state title="No Projects Yet" subtitle="Create your first project to start managing work.">
             <x-slot:icon>
@@ -65,8 +64,7 @@
     @endif
 
     {{-- View Project Modal --}}
-    <flux:modal name="view-project-modal"
-        class="w-full max-w-2xl !p-0 shadow-2xl rounded-2xl">
+    <flux:modal name="view-project-modal" class="w-full max-w-2xl !p-0 shadow-2xl rounded-2xl">
 
         <div wire:loading wire:target="view"
             class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">
@@ -201,8 +199,7 @@
     </flux:modal>
 
     {{-- Edit Project Modal --}}
-    <flux:modal name="edit-project-modal"
-        class="w-full max-w-2xl">
+    <flux:modal name="edit-project-modal" class="w-full max-w-2xl">
 
         <div wire:loading wire:target="edit"
             class="absolute inset-0 z-20 flex items-center justify-center bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-2xl">
@@ -243,7 +240,8 @@
 
                         <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
                             <div class="sm:col-span-3">
-                                <x-input-field label="Project Name" type="text" model="project_form.name" required />
+                                <x-input-field label="Project Name" type="text" model="project_form.name"
+                                    required />
                             </div>
 
                             {{-- CLIENT LIST --}}
@@ -289,7 +287,8 @@
                                     @endforeach
                                 </flux:select>
 
-                                <x-input-field label="Project Value" type="number" step="0.01" model="project_form.value" placeholder="0.00" required/>
+                                <x-input-field label="Project Value" type="number" step="0.01"
+                                    model="project_form.value" placeholder="0.00" required />
 
                                 <x-input-field type="number" model="project_form.hourly_rate" placeholder="0.00"
                                     label="Hourly Rate" step="0.01" required />

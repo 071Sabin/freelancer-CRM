@@ -6,6 +6,7 @@ namespace App\Livewire\Clients;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Client;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
@@ -28,9 +29,11 @@ class ClientsTable extends DataTableComponent
         ]);
     }
 
-    public function builder(): \Illuminate\Database\Eloquent\Builder
+    public function builder(): Builder
     {
-        return Client::query()->where('user_id', auth()->id());
+        return Client::query()
+            ->with('currency')
+            ->where('clients.user_id', auth()->id());
     }
 
 
@@ -57,10 +60,11 @@ class ClientsTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(function ($value, $row) {
+                $displayValue = $value ? e($value) : '—';
                     return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
-                                ' . e($value) . '
+                                ' . $displayValue . '
                             </span>
 
                             <span class="text-xs text-stone-500 dark:text-neutral-400">
@@ -132,7 +136,7 @@ class ClientsTable extends DataTableComponent
                 ])
                 ->filter(function ($query, $value) {
                     if ($value === '') {
-                        return;
+                        return $query;
                     }
                     $query->where('status', $value);
                 }),
@@ -170,5 +174,21 @@ class ClientsTable extends DataTableComponent
 
         // Clear selection after delete
         $this->clearSelected();
+    }
+
+
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div class="w-full min-w-full h-64 flex flex-col items-center justify-center transition-all duration-200">
+            <svg class="animate-spin h-6 w-6 text-neutral-400 dark:text-neutral-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-sm font-medium text-neutral-500 dark:text-neutral-400 tracking-wide">
+                Loading clients...
+            </span>
+        </div>
+        HTML;
     }
 }

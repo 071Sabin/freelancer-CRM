@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('prefix')->default('INV');
             $table->unsignedBigInteger('next_number')->default(1);
             $table->string('number_format')->default('{PREFIX}{NUMBER}');
-
+            
             $table->string('default_currency', 3)->default('USD');
             $table->decimal('default_tax_rate', 5, 2)->nullable();
             $table->boolean('default_tax_inclusive')->default(false);
