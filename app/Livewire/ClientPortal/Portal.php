@@ -3,8 +3,10 @@
 namespace App\Livewire\ClientPortal;
 
 use App\Models\Project;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('ClientPivot | Secure Project Status')]
 class Portal extends Component
 {
     public $project;
@@ -13,10 +15,12 @@ class Portal extends Component
     {
         // searching project with UUID + client + invoices loading together
         $this->project = Project::with(['client', 'invoices'])->where('uuid', $uuid)->firstOrFail();
+        
     }
 
     public function render()
     {
+        
         return view('livewire.client-portal.portal');
     }
 }
