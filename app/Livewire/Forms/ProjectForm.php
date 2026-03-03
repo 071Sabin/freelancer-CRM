@@ -16,9 +16,10 @@ class ProjectForm extends Form
     use AuthorizesRequests;
     public ?Project $project = null;
 
-    public $name = '', $value = '', $description = '', $client_id = '', $status = 'active';
-    public $currency_id = '', $hourly_rate = '', $deadline = '';
-
+    // public $name = '', $value = '', $description = '', $client_id = '', $status = 'active';
+    // public $currency_id = '', $hourly_rate = '', $deadline = '';
+    public $name, $value, $description, $client_id, $deadline, $hourly_rate, $currency_id;
+    public $status = 'active'; // This one is fine as it has a valid default
     public function setProject(Project $project)
     {
         $this->project = $project;
@@ -126,11 +127,11 @@ class ProjectForm extends Form
     public function storeOrUpdate()
     {
         $this->validate();
-        
+
         if ($this->project) {
             $this->authorize('update', $this->project);
         }
-        
+
         $prjData = [
             'name' => strtolower($this->name),
             'description' => strtolower($this->description),
@@ -159,13 +160,13 @@ class ProjectForm extends Form
             session()->flash('success', 'Project saved! (' . $waResponse['message'] . ')');
         } elseif ($waResponse['success']) {
             $statusMsg = $waResponse['simulated']
-                ? 'Project saved! (WhatsApp simulated)'
+                ? ($waResponse['message'] ?? 'WhatsApp simulated.')
                 : 'Project saved & WhatsApp sent!';
             session()->flash('success', $statusMsg);
         } else {
             session()->flash('warning', 'Project saved, but WhatsApp failed: ' . $waResponse['error']);
         }
-        
+
         // reset the form fields at last
         $this->reset();
     }

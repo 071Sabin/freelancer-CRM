@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Integration;
+use App\Models\Project;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -12,12 +13,12 @@ class WhatsAppService
     /**
      * Generate Portal Link and Send WhatsApp Update for a Project.
      */
-    public function sendProjectPortal(\App\Models\Project $project)
+    public function sendProjectPortal(Project $project)
     {
         // 1. Ensure client relation is loaded (loadMissing is safer)
         $project->loadMissing('client');
 
-        // 2. Check if phone exists
+        // 2. Check if phone exists, phone is required while creating client but it's fail safe
         if (!$project->client || empty($project->client->company_phone)) {
             return [
                 'success' => true,

@@ -43,6 +43,7 @@ class Projects extends Component
         $project = Project::with('client', 'currency')->findOrFail($id);
         $this->authorize('update', $project);
         $this->project_form->setProject($project);
+        // $this->resetForm();
     }
 
     public function delete($id){
