@@ -16,17 +16,18 @@ use Illuminate\Support\Facades\Auth;
 class Projects extends Component
 {
     public ProjectForm $project_form;
+
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
-    // public $name, $value, $description, $client_id='', $status = 'active';
-    // public $currency_id, $hourly_rate, $deadline;
     public $currency_id, $hourly_rate;
     public array $editingProject = [];
     public array $viewingProject = [];
 
     protected $listeners = [
+        // dispatched message from frontend => function_name
         'edit-project' => 'edit',
         'view-project' => 'view',
         'delete-project' => 'delete',
+        'resend-whatsapp' => 'resendWhatsapp',
     ];
 
     public function view($id)
@@ -48,7 +49,7 @@ class Projects extends Component
         $project = Project::findOrFail($id);
         $this->authorize('delete', $project);
         $project->delete();
-        $this->dispatch('refreshDataTable');
+        $this->dispatch('refreshDatatable');
         session()->flash('success', 'Project deleted.'); 
     }
 
@@ -78,6 +79,27 @@ class Projects extends Component
         } catch (\Exception $e) {
             $this->dispatch('scroll-to-error');
             throw $e;
+        }
+    }
+
+    // this function resends the whatsapp message clicked from projects data tables
+    public function resendWhatsapp($id)
+    {
+        $project = Project::findOrFail($id);
+
+        if ($project) {
+            $waResponse = app(WhatsAppService::class)->sendProjectPortal($project);
+
+            if ($waResponse['skipped'] ?? false) {
+                session()->flash('success', 'Project saved! (' . $waResponse['message'] . ')');
+            } elseif ($waResponse['success']) {
+                $statusMsg = $waResponse['simulated']
+                    ? 'Project saved! (WhatsApp log simulated)'
+                    : 'Project Details are sent in WhatsApp!';
+                session()->flash('success', $statusMsg);
+            } else {
+                session()->flash('warning', 'Project saved, but WhatsApp failed: ' . $waResponse['error']);
+            }
         }
     }
 

@@ -10,6 +10,42 @@ use Exception;
 class WhatsAppService
 {
     /**
+     * Generate Portal Link and Send WhatsApp Update for a Project.
+     */
+    public function sendProjectPortal(\App\Models\Project $project)
+    {
+        // 1. Ensure client relation is loaded (loadMissing is safer)
+        $project->loadMissing('client');
+
+        // 2. Check if phone exists
+        if (!$project->client || empty($project->client->company_phone)) {
+            return [
+                'success' => true,
+                'skipped' => true,
+                'message' => 'Client has no phone number, WhatsApp skipped.'
+            ];
+        }
+
+        // 3. Generate Link & Message
+        $magicLink = route('client.portal', ['uuid' => $project->uuid]);
+        $clientName = $project->client->client_name ?? 'Client';
+
+        $message = "Hi {$clientName} 👋\n\n";
+        $message .= "We've just updated your project: *{$project->name}*.\n\n";
+        $message .= "You can track the live progress, view details, and access invoices anytime on your secure portal right here:\n\n";
+        $message .= $magicLink . "\n\n";
+        $message .= "Let us know if you have any questions!";
+
+        // 4. Call the core send method
+        $response = $this->sendMessage($project->user_id, $project->client->company_phone, $message);
+
+        // Add skipped = false so the frontend knows it actually tried to send
+        $response['skipped'] = false;
+
+        return $response;
+    }
+
+    /**
      * Send a highly secure WhatsApp Message.
      * Automatically switches between Live API and Local Log based on keys.
      */

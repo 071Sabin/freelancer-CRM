@@ -74,7 +74,6 @@
 
             <div x-ref="progressBar" class="absolute bottom-0 left-0 h-1 bg-red-500/50"
                 style="width: 100%; transition: width 4000ms linear;"></div>
-
         </div>
     </div>
 @endif
