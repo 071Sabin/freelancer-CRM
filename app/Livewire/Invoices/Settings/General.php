@@ -67,6 +67,8 @@ class General extends Component
             ['user_id' => Auth::id()],
             ['prefix' => 'INV', 'next_number' => 1, 'default_currency' => 'USD']
         );
+        
+        $this->number_format = $this->settings->number_format ?? '{PREFIX}{NUMBER}';
 
         $this->fill($this->settings->only([
             'prefix',

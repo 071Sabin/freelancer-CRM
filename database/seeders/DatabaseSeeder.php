@@ -25,13 +25,13 @@ class DatabaseSeeder extends Seeder
             
         // User::factory(10)->create();
         // Client::factory(10)->create();
-        // DB::table('users')->insert([
-        //     [
-        //         'name' => 'Sabin Panthi',
-        //         'email' => 'sabin@gmail.com',
-        //         'password' => bcrypt('sabin123'),
-        //     ],
-        // ]);
+        DB::table('users')->insert([
+            [
+                'name' => 'Sabin Panthi',
+                'email' => 'sabin@gmail.com',
+                'password' => bcrypt('sabin123'),
+            ],
+        ]);
 
         DB::table('clients')->insert([
             [

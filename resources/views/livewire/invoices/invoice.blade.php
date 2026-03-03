@@ -103,7 +103,7 @@
             </x-slot:icon>
         </x-empty-state>
     @else
-        <livewire:invoices.invoice-table />
+        <livewire:invoices.invoice-table lazy />
     @endif
 
     {{-- View Invoice Modal --}}

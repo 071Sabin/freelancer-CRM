@@ -20,7 +20,7 @@ class ProjectsTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setPerPageAccepted([10, 25, 50, 100]);
-
+        
         $this->setSearchPlaceholder('Search Projects...');
 
         $this->setSearchFieldAttributes([
@@ -31,7 +31,11 @@ class ProjectsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Project::query()->where('projects.user_id', auth()->id());
+        // return Project::query()->where('projects.user_id', auth()->id());
+        return Project::query()
+            ->with(['client', 'currency']) // Fetch relationships instantly
+            ->select('projects.*')         // Prevent ID column collisions
+            ->where('projects.user_id', auth()->id());
     }
 
 
@@ -139,18 +143,15 @@ class ProjectsTable extends DataTableComponent
                 ->options([
                     '' => 'All',
                     'active' => 'Active',
-                    'in-progress' => 'In Progress',
-                    'on-hold' => 'On Hold',
+                    'in_progress' => 'In Progress',
+                    'on_hold' => 'On Hold', 
                     'completed' => 'Completed',
                     'cancelled' => 'Cancelled',
                 ])
-                // Explicitly qualify `projects.status` to avoid SQL ambiguity when joins exist.
-                // This filter applies ONLY to the project lifecycle status, not client status.
                 ->filter(function (Builder $query, $value) {
                     if ($value === '') {
-                        return $query; // No filter applied when "All" is selected
+                        return $query;
                     }
-
                     return $query->where('projects.status', $value);
                 }),
         ];
@@ -179,4 +180,21 @@ class ProjectsTable extends DataTableComponent
         // Clear selection after delete
         $this->clearSelected();
     }
+
+
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div class="w-full min-w-full h-64 flex flex-col items-center justify-center transition-all duration-200">
+            <svg class="animate-spin h-6 w-6 text-neutral-400 dark:text-neutral-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-sm font-medium text-neutral-500 dark:text-neutral-400 tracking-wide">
+                Loading projects...
+            </span>
+        </div>
+        HTML;
+    }
+
 }

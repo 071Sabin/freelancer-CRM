@@ -26,6 +26,7 @@ class Projects extends Component
     protected $listeners = [
         'edit-project' => 'edit',
         'view-project' => 'view',
+        'delete-project' => 'delete',
     ];
 
     public function view($id)
@@ -41,6 +42,14 @@ class Projects extends Component
         $project = Project::with('client', 'currency')->findOrFail($id);
         $this->authorize('update', $project);
         $this->project_form->setProject($project);
+    }
+
+    public function delete($id){
+        $project = Project::findOrFail($id);
+        $this->authorize('delete', $project);
+        $project->delete();
+        $this->dispatch('refreshDataTable');
+        session()->flash('success', 'Project deleted.'); 
     }
 
     public function createProject()
