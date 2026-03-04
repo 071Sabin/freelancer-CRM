@@ -3,13 +3,17 @@
     <x-main-heading title="Clients" subtitle="Manage your business relationships and track client progress." />
 
     @if (session('success'))
-        <x-success-message>
-            {{ session('success') }}
-        </x-success-message>
+        <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
 
-    {{-- calling error component from the component --}}
-    <x-error></x-error>
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
+    @endif
+
 
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
