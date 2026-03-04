@@ -3,20 +3,20 @@
     <x-main-heading title="Projects" subtitle="Add and manage your projects." />
 
     @if (session('success'))
-        <x-success-message>
-            {{ session('success') }}
-        </x-success-message>
+        <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
 
-    @session('warning')
-        <x-warning-toast>
-            {{ session('warning') }}
-        </x-warning-toast>
-    @endsession
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
+    @endif
 
     {{-- calling error component from the component --}}
-    <x-error></x-error>
 
+    {{-- <x-error /> --}}
 
     {{-- PROJECT CARDS --}}
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">

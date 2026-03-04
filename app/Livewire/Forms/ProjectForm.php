@@ -16,8 +16,6 @@ class ProjectForm extends Form
     use AuthorizesRequests;
     public ?Project $project = null;
 
-    // public $name = '', $value = '', $description = '', $client_id = '', $status = 'active';
-    // public $currency_id = '', $hourly_rate = '', $deadline = '';
     public $name, $value, $description, $client_id, $deadline, $hourly_rate, $currency_id;
     public $status = 'active'; // This one is fine as it has a valid default
     public function setProject(Project $project)

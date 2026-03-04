@@ -1,8 +1,14 @@
 <div class="space-y-10 pb-10">
     @if (session('success'))
-        <x-success-message>
-            {{ session('success') }}
-        </x-success-message>
+        <x-notification type="success">{{ session('success') }}</x-notification>
+    @endif
+
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
     <div>
         <flux:heading size="xl">General Settings</flux:heading>

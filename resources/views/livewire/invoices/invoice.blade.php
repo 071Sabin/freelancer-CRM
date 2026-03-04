@@ -3,9 +3,15 @@
     <x-main-heading title="Invoices" subtitle="Create, send, and track invoices with clear payment status and totals." />
 
     @if (session('success'))
-        <x-success-message>
-            {{ session('success') }}
-        </x-success-message>
+        <x-notification type="success">{{ session('success') }}</x-notification>
+    @endif
+
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
     {{-- main cards for details --}}

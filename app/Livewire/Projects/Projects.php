@@ -35,6 +35,7 @@ class Projects extends Component
         $project = Project::with('client', 'currency')->findOrFail($id);
         $this->authorize('view', $project);
         $this->viewingProject = $project->toArray();
+        $this->modal('view-project-modal')->show();
     }
 
     public function edit($id)
@@ -43,6 +44,7 @@ class Projects extends Component
         $project = Project::with('client', 'currency')->findOrFail($id);
         $this->authorize('update', $project);
         $this->project_form->setProject($project);
+        $this->modal('edit-project-modal')->show();
         // $this->resetForm();
     }
 
@@ -51,6 +53,7 @@ class Projects extends Component
         $this->authorize('delete', $project);
         $project->delete();
         $this->dispatch('refreshDatatable');
+        $this->modal('delete-project-modal')->close();
         session()->flash('success', 'Project deleted.'); 
     }
 
@@ -92,14 +95,14 @@ class Projects extends Component
             $waResponse = app(WhatsAppService::class)->sendProjectPortal($project);
 
             if ($waResponse['skipped'] ?? false) {
-                session()->flash('success', 'Project saved! (' . $waResponse['message'] . ')');
+                session()->flash('success', '(' . $waResponse['message'] . ')');
             } elseif ($waResponse['success']) {
                 $statusMsg = $waResponse['simulated']
-                    ? 'Project saved! (WhatsApp log simulated)'
+                    ? '(WhatsApp log simulated)'
                     : 'Project Details are sent in WhatsApp!';
                 session()->flash('success', $statusMsg);
             } else {
-                session()->flash('warning', 'Project saved, but WhatsApp failed: ' . $waResponse['error']);
+                session()->flash('warning', 'WhatsApp failed: ' . $waResponse['error']);
             }
         }
     }
@@ -128,6 +131,7 @@ class Projects extends Component
 
     public function render()
     {
+        $this->dispatch('notify-error', message: 'WhatsApp fail ho gaya!');
         return view('livewire.projects.projects');
     }
 }
