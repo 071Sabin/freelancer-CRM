@@ -370,4 +370,69 @@
 
     </flux:modal>
 
+    {{-- DELETE ONE PROJECT, IT'S FOR EACH ROW MODAL --}}
+    <flux:modal name="delete-project-modal" class="min-w-[22rem]">
+        <form wire:submit="delete" class="flex flex-col gap-4 sm:gap-5">
+            <div class="flex items-start gap-3 sm:gap-4">
+                <div
+                    class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-red-100 dark:bg-red-500/20">
+                    <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="pt-0.5">
+                    <flux:heading size="md" class="text-gray-900 dark:text-white font-semibold">Delete project
+                    </flux:heading>
+                    <flux:text class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+                        Are you sure? This will permanently erase all project data.
+                    </flux:text>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <div
+                    class="px-3 py-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700/50">
+                    <div class="flex flex-col text-sm">
+                        <div class="flex items-center justify-between pb-2">
+                            <span class="text-gray-500 dark:text-gray-400">Project</span>
+                            <span
+                                class="font-medium text-gray-900 dark:text-white truncate max-w-[150px] sm:max-w-[200px]">{{ $deleteProjectName }}</span>
+                        </div>
+                        <div
+                            class="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-zinc-700/50">
+                            <span class="text-gray-500 dark:text-gray-400">Client</span>
+                            <span
+                                class="font-medium text-gray-900 dark:text-white truncate max-w-[150px] sm:max-w-[200px]">{{ $deleteClientName }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="px-3 py-2 rounded-md bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20">
+                    <flux:text class="text-xs sm:text-sm text-red-700 dark:text-red-400 flex items-center gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span><strong class="font-medium">Warning:</strong> This action cannot be undone.</span>
+                    </flux:text>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 sm:gap-3 pt-1">
+                <flux:modal.close>
+                    <flux:button variant="ghost"
+                        class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                        Cancel
+                    </flux:button>
+                </flux:modal.close>
+                <flux:button type="submit" variant="danger" class="w-full sm:w-auto shadow-sm">
+                    Delete Project
+                </flux:button>
+            </div>
+        </form>
+    </flux:modal>
 </div>

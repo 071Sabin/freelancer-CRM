@@ -47,6 +47,7 @@ class Clients extends Component
 
         // $client = Client::where('user_id', Auth::id())->findOrFail($id);
         $this->form->setClient($client);
+        $this->modal('edit-client-modal')->show();
     }
 
     // this function is used for both client creation and updating particular client
@@ -69,6 +70,7 @@ class Clients extends Component
         $client = Client::with('currency')->findOrFail($id);
         $this->authorize('view', $client);
         $this->viewingClient = $client->toArray();
+        $this->modal('view-client-modal')->show();
     }
 
     public function resetAddClientForm()

@@ -1,11 +1,11 @@
 <div class="flex items-center gap-1">
-        <flux:button variant="ghost" size="sm" icon="eye"
-            wire:click="$dispatch('view-project', { id: {{ $row->id }} })"
-            class="text-neutral-400 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors duration-200" />
+    <flux:button variant="ghost" size="sm" icon="eye"
+        wire:click="$dispatch('view-project', { id: {{ $row->id }} })"
+        class="text-neutral-400 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors duration-200" />
 
-        <flux:button variant="ghost" size="sm" icon="pencil"
-            wire:click="$dispatch('edit-project', { id: {{ $row->id }} })"
-            class="text-neutral-400 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors duration-200" />
+    <flux:button variant="ghost" size="sm" icon="pencil"
+        wire:click="$dispatch('edit-project', { id: {{ $row->id }} })"
+        class="text-neutral-400 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors duration-200" />
 
 
     <flux:dropdown>
@@ -44,16 +44,21 @@
 
             <flux:menu.separator />
 
-            <flux:modal.trigger name="delete-project-modal">
+            {{-- <flux:modal.trigger name="delete-project-modal">
                 <flux:menu.item variant="danger" icon="trash">
                     Delete Project
                 </flux:menu.item>
-            </flux:modal.trigger>
+            </flux:modal.trigger> --}}
+
+            <flux:menu.item variant="danger" icon="trash"
+                wire:click="$dispatch('confirm-delete', { id: {{ $row->id }} })">
+                Delete Project
+            </flux:menu.item>
         </flux:menu>
     </flux:dropdown>
 
 
-    <flux:modal name="delete-project-modal" class="min-w-[22rem]">
+    {{-- <flux:modal name="delete-project-modal" class="min-w-[22rem]">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Delete project?</flux:heading>
@@ -72,8 +77,9 @@
                 </flux:modal.close>
 
                 <x-danger-button type='submit'
-                    wire:click="$dispatch('delete-project', { id: {{ $row->id }} })">delete project</x-danger-button>
+                    wire:click="$dispatch('delete-project', { id: {{ $row->id }} })">delete
+                    project</x-danger-button>
             </div>
         </div>
-    </flux:modal>
+    </flux:modal> --}}
 </div>

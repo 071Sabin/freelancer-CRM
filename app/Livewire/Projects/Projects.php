@@ -18,7 +18,7 @@ class Projects extends Component
     public ProjectForm $project_form;
 
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
-    public $currency_id, $hourly_rate;
+    public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
     public array $editingProject = [];
     public array $viewingProject = [];
 
@@ -26,7 +26,7 @@ class Projects extends Component
         // dispatched message from frontend => function_name
         'edit-project' => 'edit',
         'view-project' => 'view',
-        'delete-project' => 'delete',
+        'confirm-delete' => 'prepDelete',
         'resend-whatsapp' => 'resendWhatsapp',
     ];
 
@@ -48,10 +48,23 @@ class Projects extends Component
         // $this->resetForm();
     }
 
-    public function delete($id){
+    public function prepDelete($id){
         $project = Project::findOrFail($id);
+        $this->project_to_delete = $id;
+        $this->deleteProjectName = $project->name;
+        $this->deleteClientName = $project->client->client_name;
+        $this->modal('delete-project-modal')->show();
+    }
+
+    public function delete(){
+        if (! $this->project_to_delete) return;
+        $project = Project::findOrFail($this->project_to_delete);
+        // Authorization policy check
         $this->authorize('delete', $project);
+
         $project->delete();
+        // reset the variables while past id might be there
+        $this->reset(['project_to_delete', 'deleteProjectName', 'deleteClientName']);
         $this->dispatch('refreshDatatable');
         $this->modal('delete-project-modal')->close();
         session()->flash('success', 'Project deleted.'); 
