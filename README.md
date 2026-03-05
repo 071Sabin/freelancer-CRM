@@ -1,171 +1,291 @@
-# Freelancer CRM — Laravel + Livewire
+# ClientPivot CRM
 
-A lightweight Customer & Project Relationship Management (CRM) application built with Laravel, Livewire and Tailwind/Vite. This repository provides a small production-ready starter for managing clients, projects and freelancers via Livewire components and a minimal authentication flow.
+ClientPivot is a Laravel 12 + Livewire 3 CRM tailored for freelancers and small service teams to manage clients, projects, invoices, and client communication from one workspace.
 
-Key highlights
-- Built on Laravel (framework) with PHP 8.2 compatibility
-- Reactive UI using Livewire 3 and Volt
-- Server-side features: Clients, Projects, Freelancer listing, Authentication
-- Simple migrations, Eloquent models, and Livewire components for fast iteration
+It includes end-to-end flows for:
+- client lifecycle management
+- project tracking
+- invoice creation and PDF export
+- secure client portal sharing
+- WhatsApp-based project updates
+- per-user invoice settings and branding
 
-Contents
-- **Overview & Features** — What this app does and who it's for
-- **Tech stack** — Libraries and versions used in the project
-- **Install & Run** — Step-by-step developer setup for Windows/macOS/Linux
-- **Database** — Migrations and important tables (clients, projects, freelancers)
-- **Development** — Running the app, building assets, and available npm/composer scripts
-- **Testing & CI** — How to run automated tests
-- **Contributing** — How to help or extend the project
-- **License & Authors**
+## Core Features
 
----
+### Authentication and Workspace Access
+- Custom Livewire login and registration screens.
+- Auth-protected workspace routes (`/dashboard`, `/clients`, `/projects`, `/invoices`, `/settings`).
+- Session logout with token regeneration.
 
-**Project Overview**
+### Dashboard
+- Live KPIs for:
+  - total clients
+  - in-progress projects
+  - active projects
+  - latest projects snapshot
 
-Freelancer CRM is a focused example application intended for small teams and freelancers to track clients and projects. It demonstrates a practical Livewire-driven UI with server-side logic for CRUD-like workflows.
+### Client Management
+- Full CRUD with soft deletes.
+- Structured client profile fields:
+  - contact + company metadata
+  - billing address
+  - default hourly rate
+  - default currency
+  - status (`active`, `inactive`, `lead`)
+  - private notes
+- Server-side data table with:
+  - search
+  - status filters
+  - deleted-only filter
+  - bulk delete actions
 
-Primary features
-- Client management with address, billing details and soft-deletes
-- Project creation and association to clients (value, description, status)
-- Freelancer directory (simple listing and sorting)
-- Basic authentication and protected dashboard routes
+### Project Management
+- Full CRUD with soft deletes.
+- Project model includes:
+  - UUID-based external reference
+  - value and hourly rate
+  - currency linkage
+  - deadline + status
+  - client and owner relationships
+- Data table includes:
+  - searchable/sortable project and client columns
+  - status filtering
+  - bulk delete actions
+- Auto-sync from selected client:
+  - currency
+  - hourly rate
+- WhatsApp integration:
+  - sends project portal link on create/update
+  - supports resend from table actions
+  - graceful simulation mode if keys are not configured
 
-**Tech stack**
+### Invoicing
+- Invoice lifecycle with status model:
+  - `draft`, `sent`, `partially_paid`, `paid`, `overdue`, `void`, `canceled`
+- Concurrency-safe invoice numbering:
+  - per-user settings row lock (`lockForUpdate`)
+  - unique per-user invoice number constraint
+- Invoice editing supports:
+  - dynamic line items
+  - tax, discount, and late fee calculations
+  - due-date auto-compute from default settings
+  - total/balance computation
+- Invoice listing table includes:
+  - payment progress UI
+  - overdue highlighting
+  - status filtering (with overdue logic)
+  - bulk delete actions
+- PDF export via DomPDF from both form flow and table actions.
+
+### Invoice Settings Suite
+- General settings:
+  - invoice prefix + next number
+  - default currency
+  - locale/timezone
+  - company profile and address fields
+- Payment settings:
+  - default tax rate
+  - default discount rate
+  - default due days
+  - partial payment toggle
+  - late fee type/rate/amount
+- Branding settings:
+  - upload and replace invoice logo
+
+### Integrations (BYOK)
+- Per-user encrypted keys in `integrations` table.
+- AI provider selection:
+  - OpenAI
+  - Gemini
+- WhatsApp Cloud API credentials:
+  - access token
+  - phone number ID
+  - business account ID
+- Sensitive fields are encrypted at model-cast level.
+
+### Secure Client Portal
+- Public, UUID-based project portal route: `/p/{uuid}`.
+- Displays:
+  - project summary
+  - client details
+  - billing/invoice summary
+- Used directly in WhatsApp project update messages.
+
+## Architecture Overview
+
+### Stack
+- PHP `^8.2`
+- Laravel `^12.0`
+- Livewire `^3.6`
+- Livewire Flux + Volt
+- Rappasoft Livewire Tables
+- Tailwind CSS + Vite
+- MySQL (default) via Laravel DB layer
+- DomPDF (`barryvdh/laravel-dompdf`)
+
+### Domain Modules
+- `Clients`
+- `Projects`
+- `Invoices`
+- `Invoice Settings`
+- `Integrations`
+- `Client Portal`
+
+### Data Model Highlights
+- Ownership scoped by `user_id` across business entities.
+- Soft deletes on core CRM entities (`clients`, `projects`, `invoices`).
+- Invoice subsystem includes dedicated tables for:
+  - items
+  - taxes
+  - payments
+  - attachments
+  - custom fields
+  - activity logs
+  - status histories
+- Currency master table with seeded global currency list.
+
+## Security and Access Control
+- Policy classes enforce record ownership checks for:
+  - clients
+  - projects
+  - invoices
+  - integrations
+- Integration secrets are encrypted at rest using Eloquent encrypted casts.
+- External project sharing uses UUID-based links (not incremental IDs).
+
+## Local Development Setup
+
+### Prerequisites
 - PHP 8.2+
-- Laravel ^12.0 (framework)
-- Livewire ^3.6 (component-driven interactivity)
-- Tailwind CSS + Vite for frontend tooling
-- MySQL / PostgreSQL / SQLite (any supported by Laravel)
-
-Key dependencies (see composer.json and package.json)
-- Backend: [composer.json](composer.json) — Laravel, Livewire, Sanctum, Livewire Tables
-- Frontend: [package.json](package.json) — Vite, Tailwind, Bootstrap, Axios
-
-**Code map (important files)**
-- Routes: [routes/web.php](routes/web.php)
-- Livewire components: [app/Livewire](app/Livewire) (e.g. `Projects`, `FreelancerDetails`, `Login`, `Register`)
-- Models: [app/Models](app/Models) (`Client`, `Project`, `Freelancers`)
-- Migrations: [database/migrations](database/migrations) (clients, projects)
-- Views: [resources/views](resources/views) (Blade layouts and Livewire templates)
-
----
-
-Getting started (developer setup)
-
-Prerequisites
-- PHP 8.2 or newer
 - Composer
-- Node.js (16+) and npm
-- A database (MySQL, PostgreSQL, or SQLite)
+- Node.js + npm
+- MySQL (or other supported Laravel DB)
 
-Quick install
+### Quick Start
+1. Install dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+2. Configure environment:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+3. Configure DB in `.env`, then run:
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
+4. Start development services:
+   ```bash
+   composer run dev
+   ```
 
-1. Clone the repository
+`composer run dev` runs:
+- Laravel server
+- queue listener
+- Vite dev server
 
+### One-Command Bootstrap
 ```bash
-git clone <repo-url> freelancer-crm
-cd freelancer-crm
+composer run setup
 ```
+This installs PHP/Node dependencies, generates key, migrates, and builds assets.
 
-2. Install PHP dependencies
+## Docker Setup
 
-```bash
-composer install
-```
+Project includes `Dockerfile` and `compose.yaml` (Laravel Sail-style services).
 
-3. Copy the example env and set keys
+Important behavior:
+- container startup script runs:
+  - `php artisan migrate:fresh --force`
+  - `php artisan db:seed --force`
+- this **resets database data on startup**.
 
-```bash
-cp .env.example .env
-php artisan key:generate
-# Edit .env to configure DB_CONNECTION, DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
-```
+Use this flow only when data reset is acceptable (e.g., local/dev sandbox).
 
-4. Create the database and run migrations
+## Seed Data
 
-For SQLite (quick local dev):
+`DatabaseSeeder` seeds:
+- one user
+- sample clients
+- sample projects
+- currency master records
 
-```bash
-touch database/database.sqlite
-php artisan migrate
-```
+Default seeded user:
+- Email: `sabin@gmail.com`
+- Password: `sabin123`
 
-For MySQL/Postgres: ensure the database exists then:
+## Available Routes
 
-```bash
-php artisan migrate
-```
+### Public
+- `/` (welcome)
+- `/about`
+- `/pricing`
+- `/login`
+- `/register`
+- `/p/{uuid}` (client portal)
 
-5. Install frontend dependencies and build
+### Authenticated
+- `/dashboard`
+- `/clients`
+- `/projects`
+- `/invoices`
+- `/invoices/settings`
+- `/invoices/settings/payments`
+- `/invoices/settings/branding`
+- `/settings`
 
-```bash
-npm install
-# Development build (hot reload)
-npm run dev
-# Or production build
-npm run build
-```
+### API
+- `/api/user` (Sanctum-protected)
 
-6. Run the app
+## Testing
 
-For local development the project provides a `dev` script to run Vite, queue and server concurrently. Alternatively run the server alone:
-
-```bash
-php artisan serve
-# then open http://127.0.0.1:8000
-```
-
-Or use the Composer `dev` task (requires `npx` and concurrently):
-
-```bash
-composer run dev
-```
-
-Routes of interest
-- Public: `/` (welcome), `/login`, `/register`, `/freelancers`
-- Protected (requires auth): `/dashboard`, `/clients`, `/projects`, `/settings`
-
-**Database notes**
-- `clients` migration defines: `client_name`, `company_name`, `company_email`, `billing_address`, `hourly_rate`, `currency`, `status`, `private_notes`.
-- `projects` migration defines: `name`, `description`, `value`, `client_id`, `status` and uses soft deletes.
-- See migrations: [database/migrations/2025_11_18_141546_clients.php](database/migrations/2025_11_18_141546_clients.php) and [database/migrations/2025_11_25_164539_create_projects_table.php](database/migrations/2025_11_25_164539_create_projects_table.php)
-
-**Authentication**
-- The project includes a minimal login flow using a `Freelancers` authenticatable model and route-based Livewire components in [app/Livewire/Login.php](app/Livewire/Login.php). Adjust guards/providers in [config/auth.php] if you integrate additional user types.
-
-**Testing**
-- Run the Laravel test suite with:
-
+Run full test suite:
 ```bash
 php artisan test
 ```
 
-Composer & npm tasks
-- `composer setup` — bootstrap full install + migrate + build (use with care)
-- `composer dev` — runs the local development stack (concurrently)
-- `npm run dev` — starts Vite dev server
-- `npm run build` — builds frontend assets for production
+Current repository includes Laravel auth/profile feature tests plus baseline examples.
 
-**Deployment notes**
-- Standard Laravel deployment practices apply. Ensure:
-	- `APP_ENV=production` and `APP_DEBUG=false`
-	- Run `php artisan migrate --force` on the production server
-	- Build assets: `npm run build`
-	- Configure a worker for queues (or use supervisor)
+## Useful Commands
 
-If you prefer containers, a simple Dockerfile + docker-compose can be added to run PHP-FPM, a web server, Node build step and a DB service.
+```bash
+# format code
+./vendor/bin/pint
 
-**Contribution & Development**
-- Bug reports and PRs are welcome. Follow these guidelines:
-	1. Open an issue describing the change or bug
-	2. Branch from `main` with a descriptive name
-	3. Add tests where relevant and keep changes focused
-	4. Run `composer test` and `npm run build` before submitting a PR
+# run tests
+php artisan test
 
-**License**
-- This project is released under the MIT License — see `composer.json`.
+# production asset build
+npm run build
+```
 
-**Authors & Acknowledgements**
-- Original codebase and scaffolding: Laravel + Livewire community
-- This repository was developed as a compact Freelancer/Client CRM example. For questions or contributions, open an issue.
+## Project Structure
 
+- `app/Livewire` - feature components and forms
+- `app/Models` - domain models and relationships
+- `app/Policies` - authorization policies
+- `app/Services/WhatsAppService.php` - outbound WhatsApp message service
+- `database/migrations` - schema design
+- `database/seeders` - sample and master data
+- `resources/views/livewire` - feature UI templates
+- `resources/views/invoices/pdf.blade.php` - PDF invoice template
+- `routes/web.php` - web route map
+
+## Scope Notes
+
+Implemented in UI/business flow:
+- clients
+- projects
+- invoices
+- settings
+- integrations
+- portal sharing
+
+Data-model-ready (schema exists, UI/automation can be extended further):
+- invoice payments ledger
+- invoice attachments
+- invoice custom fields
+- invoice activity and status audit trails
