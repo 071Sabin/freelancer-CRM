@@ -7,6 +7,7 @@ use App\Models\InvoiceSetting;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Project;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB; // Transaction ke liye zaroori hai
 use Illuminate\Support\Str;
@@ -321,7 +322,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $invoice = Invoice::with(['client', 'project', 'items', 'user'])->findOrFail($id);
         $settings = InvoiceSetting::where('user_id', Auth::id())->first();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.pdf', [
+        $pdf = Pdf::loadView('invoices.pdf', [
             'invoice' => $invoice,
             'settings' => $settings,
         ]);
