@@ -215,6 +215,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $this->due_date_note = '';
 
         $this->calculateTotals();
+        $this->modal('edit-invoice-modal')->show();
     }
 
     public function view($id)
@@ -222,6 +223,7 @@ class InvoiceIndex extends Component // Renamed to avoid conflict with Model
         $this->viewingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
         $this->authorize('view', $this->viewingInvoice); // Ensure user can view this invoice
         // dd($this->authorize('view', $this->viewingInvoice));
+        $this->modal('view-invoice-modal')->show();
     }
 
     public function addItem()

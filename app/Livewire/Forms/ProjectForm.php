@@ -15,9 +15,11 @@ class ProjectForm extends Form
 {
     use AuthorizesRequests;
     public ?Project $project = null;
+    
 
     public $name, $value, $description, $client_id, $deadline, $hourly_rate, $currency_id;
     public $status = 'active'; // This one is fine as it has a valid default
+
     public function setProject(Project $project)
     {
         $this->project = $project;
@@ -122,7 +124,7 @@ class ProjectForm extends Form
     // }
 
 
-    public function storeOrUpdate()
+    public function storeOrUpdate($notify_client)
     {
         $this->validate();
 
@@ -152,17 +154,21 @@ class ProjectForm extends Form
             $currentProject = Project::create($prjData);
         }
 
-        $waResponse = app(WhatsAppService::class)->sendProjectPortal($currentProject);
+        if ($notify_client) {
+            $waResponse = app(WhatsAppService::class)->sendProjectPortal($currentProject);
 
-        if ($waResponse['skipped'] ?? false) {
-            session()->flash('success', 'Project saved! (' . $waResponse['message'] . ')');
-        } elseif ($waResponse['success']) {
-            $statusMsg = $waResponse['simulated']
-                ? ($waResponse['message'] ?? 'WhatsApp simulated.')
-                : 'Project saved & WhatsApp sent!';
-            session()->flash('success', $statusMsg);
+            if ($waResponse['skipped'] ?? false) {
+                session()->flash('success', 'Project saved! (' . $waResponse['message'] . ')');
+            } elseif ($waResponse['success']) {
+                $statusMsg = $waResponse['simulated']
+                    ? ($waResponse['message'] ?? 'WhatsApp simulated.')
+                    : 'Project saved & WhatsApp sent!';
+                session()->flash('success', $statusMsg);
+            } else {
+                session()->flash('warning', 'Project saved, but WhatsApp failed: ' . $waResponse['error']);
+            }
         } else {
-            session()->flash('warning', 'Project saved, but WhatsApp failed: ' . $waResponse['error']);
+            session()->flash('success', 'Project saved, no WhatsApp notification sent to client.');
         }
 
         // reset the form fields at last
