@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 class Projects extends Component
 {
     public ProjectForm $project_form;
-
+    public $notify_client=true;
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
     public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
     public array $editingProject = [];
@@ -73,8 +73,8 @@ class Projects extends Component
     public function createProject()
     {
         try{
-            // this function below contains the creation + update + whatsapp message sent logic
-            $this->project_form->storeOrUpdate();
+            // this function below contains the creation + update + whatsapp message sent logic + either to send whatsapp message to client or not
+            $this->project_form->storeOrUpdate($this->notify_client);
 
             $this->modal('add-project-modal')->close();
             $this->dispatch('refreshDatatable');
@@ -89,7 +89,8 @@ class Projects extends Component
     {
         // dd($this->project_form->project);
         try {
-            $this->project_form->storeOrUpdate();
+             // this function below contains the creation + update + whatsapp message sent logic
+            $this->project_form->storeOrUpdate($this->notify_client);
             $this->modal('edit-project-modal')->close();
             $this->dispatch('refreshDatatable');
             // session()->flash('success', 'Project updated successfully.');

@@ -305,6 +305,12 @@
                                 placeholder="Add context, goals, or important notes about this project..."
                                 rows="3" />
                         </div>
+                                            <div
+                        class="mt-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg border border-zinc-200 dark:border-zinc-700">
+                        <flux:checkbox wire:model="notify_client"
+                            label="Send update notification to client via WhatsApp"
+                            description="If unchecked, the project will be saved silently." />
+                    </div>
                     </div>
 
                     <div class="flex items-center justify-between py-4">
