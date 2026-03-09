@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\WhatsAppService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -16,7 +17,6 @@ class ProjectForm extends Form
     use AuthorizesRequests;
     public ?Project $project = null;
     
-
     public $name, $value, $description, $client_id, $deadline, $hourly_rate, $currency_id;
     public $status = 'active'; // This one is fine as it has a valid default
 
