@@ -71,7 +71,7 @@
                 <flux:select label="Client" wire:model="client_id" placeholder="Select client">
                     @foreach ($clients as $client)
                         <flux:select.option value="{{ $client->id }}">
-                            {{ $client->client_name }}
+                            {{ ucwords($client->client_name) }}
                         </flux:select.option>
                     @endforeach
                 </flux:select>

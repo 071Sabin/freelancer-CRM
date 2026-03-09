@@ -14,9 +14,6 @@
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
-    {{-- calling error component from the component --}}
-
-    {{-- <x-error /> --}}
 
     {{-- PROJECT CARDS --}}
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
@@ -37,7 +34,7 @@
 
     {{-- ADD PROJECT BUTTON --}}
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-            <x-primary-button class="flex gap-1" wire:click="addOrEditProjectModal">
+            <x-primary-button class="flex gap-1" wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
                     <path fill-rule="evenodd"
                         d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V10.5Z"
@@ -49,7 +46,7 @@
 
 
     {{-- ADD & EDIT PROJECT FORM COMPONENT --}}
-    <x-projects.show-add-project-form :clients="$clients" :currencies="$currencies" :project_form="$project_form" />
+    <livewire:projects.project-form-modal />
 
 
     @if ($projectCount > 0)
