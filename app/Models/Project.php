@@ -61,14 +61,20 @@ class Project extends Model
             get: fn(?string $value) => $value ? Str::ucfirst($value) : null,
         );
     }
-
+    /**
+     * The Relationship
+     */
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
-    /**
-     * The Relationship
-     */
+
+    public function tasks()
+    {
+        // Tasks will always be sorted by their position, ensuring a consistent order in the UI.
+        return $this->hasMany(\App\Models\Task::class)->orderBy('position', 'asc');
+    }
+
     public function currency()
     {
         return $this->belongsTo(Currency::class);

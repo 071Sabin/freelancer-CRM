@@ -14,6 +14,7 @@ use App\Livewire\Settings;
 
 use App\Livewire\Invoices\Invoice;
 use App\Livewire\Invoices\InvoiceIndex;
+use App\Livewire\Projects\Workspace;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,7 @@ Route::middleware('guest:web')->group(function () {
 Route::get('/register', Register::class)->name('register');
 
 Route::get('/login', Login::class)->name('login');
-Route::get('/p/{uuid}', Portal::class)->name('client.portal');
+Route::get('/p/view/{uuid}', Portal::class)->name('client.portal');
 
 
 // Route::get('/login', Login::class)->name('login');
@@ -37,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/clients', Clients::class)->name('clients');
     Route::get('/projects', Projects::class)->name('projects');
+
+    Route::get('/projects/{uuid}', Workspace::class)->name('projects.workspace');
+
     Route::get('/invoices', InvoiceIndex::class)->name('invoices');
     Route::prefix('invoices/settings')
         ->name('invoices.settings.')
