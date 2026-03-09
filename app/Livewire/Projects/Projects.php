@@ -17,30 +17,22 @@ class Projects extends Component
 {
     public ProjectForm $project_form;
     public $notify_client = true;
+    
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
     public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
     public array $editingProject = [];
     public array $viewingProject = [];
 
+    // these are dispatched from the ProjectsTable
     protected $listeners = [
         // dispatched message from frontend => function_name
-        'edit-project' => 'edit',
-        'view-project' => 'view',
+        'edit-project' => 'addOrEditProjectModal',
         'confirm-delete' => 'prepDelete',
         'resend-whatsapp' => 'resendWhatsapp',
     ];
 
-    public function edit($id)
+    public function prepDelete($id)
     {
-        $this->resetForm();
-        $project = Project::with('client', 'currency')->findOrFail($id);
-        $this->authorize('update', $project);
-        $this->project_form->setProject($project);
-        $this->modal('edit-project-modal')->show();
-        // $this->resetForm();
-    }
-
-    public function prepDelete($id){
         $project = Project::findOrFail($id);
         $this->project_to_delete = $id;
         $this->deleteProjectName = $project->name;
@@ -48,8 +40,9 @@ class Projects extends Component
         $this->modal('delete-project-modal')->show();
     }
 
-    public function delete(){
-        if (! $this->project_to_delete) return;
+    public function delete()
+    {
+        if (!$this->project_to_delete) return;
         $project = Project::findOrFail($this->project_to_delete);
         // Authorization policy check
         $this->authorize('delete', $project);
@@ -59,12 +52,28 @@ class Projects extends Component
         $this->reset(['project_to_delete', 'deleteProjectName', 'deleteClientName']);
         $this->dispatch('refreshDatatable');
         $this->modal('delete-project-modal')->close();
-        session()->flash('success', 'Project deleted.'); 
+        session()->flash('success', 'Project deleted.');
     }
 
+    public function addOrEditProjectModal($id = 0)
+    {
+        $this->resetForm();
+        if ($id) {
+            $project = Project::with('client', 'currency')->findOrFail($id);
+            $this->authorize('update', $project);
+            $this->project_form->setProject($project);
+        } else {
+            // CREATE MODE - clearing the old data in form
+            $this->project_form->reset();
+        }
+
+        $this->modal('addEdit-project-modal')->show();
+    }
+
+    // this is the post request form triggered by the modal
     public function createProject()
     {
-        try{
+        try {
             // this function below contains the creation + update + whatsapp message sent logic + either to send whatsapp message to client or not
             $this->project_form->storeOrUpdate($this->notify_client);
 
@@ -77,11 +86,12 @@ class Projects extends Component
         }
     }
 
+    // this is the post request form triggered by the modal
     public function update()
     {
         // dd($this->project_form->project);
         try {
-             // this function below contains the creation + update + whatsapp message sent logic
+            // this function below contains the creation + update + whatsapp message sent logic
             $this->project_form->storeOrUpdate($this->notify_client);
             $this->modal('edit-project-modal')->close();
             $this->dispatch('refreshDatatable');
@@ -98,6 +108,8 @@ class Projects extends Component
         $project = Project::findOrFail($id);
 
         if ($project) {
+
+            $this->authorize('update', $project);
             $waResponse = app(WhatsAppService::class)->sendProjectPortal($project);
 
             if ($waResponse['skipped'] ?? false) {
@@ -137,7 +149,6 @@ class Projects extends Component
 
     public function render()
     {
-        $this->dispatch('notify-error', message: 'WhatsApp fail ho gaya!');
         return view('livewire.projects.projects');
     }
 }
