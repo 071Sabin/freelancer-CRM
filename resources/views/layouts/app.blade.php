@@ -379,6 +379,7 @@
                 </flux:modal.close>
             </div>
         </flux:modal>
+
     @endauth
 
 

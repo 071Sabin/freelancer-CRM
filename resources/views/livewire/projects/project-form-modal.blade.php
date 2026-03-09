@@ -1,7 +1,5 @@
-@props(['clients', 'currencies', 'project_form'])
-
 <flux:modal name="addEdit-project-modal" class="w-full max-w-2xl">
-
+    
     <div wire:loading wire:target="createProject"
         class="absolute inset-0 z-20 flex items-center justify-center bg-white/70 dark:bg-[#141414]/70 backdrop-blur-sm rounded-2xl">
         <div
@@ -62,8 +60,7 @@
                     </div>
 
                     <div>
-                        <flux:select wire:model.live="project_form.client_id" label="Client" placeholder="Search..."
-                            searchable>
+                        <flux:select wire:model.live="project_form.client_id" label="Client" placeholder="Search...">
                             @foreach ($clients as $client)
                                 <flux:select.option value="{{ $client->id }}">{{ ucwords($client->client_name) }}
                                 </flux:select.option>
@@ -92,7 +89,7 @@
                         class="px-2 text-xs font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
                         Billing</legend>
                     <div class="grid grid-cols-1 gap-5 mt-1 md:grid-cols-3">
-                        <flux:select wire:model="project_form.currency_id" label="Currency" searchable>
+                        <flux:select wire:model="project_form.currency_id" label="Currency" searchable placeholder="-- Currency --">
                             @foreach ($currencies as $c)
                                 <flux:select.option value="{{ (string) $c->id }}">{{ $c->code }} -
                                     {{ $c->symbol }}</flux:select.option>

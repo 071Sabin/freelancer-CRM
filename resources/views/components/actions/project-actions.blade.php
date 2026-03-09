@@ -16,7 +16,7 @@
     {{-- Edit Action --}}
     <flux:tooltip content="Edit project" position="top">
         <flux:button variant="ghost" size="sm" icon="pencil"
-            wire:click="$dispatch('edit-project', { id: {{ $row->id }} })"
+            wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal', { id: {{ $row->id }} })"
             class="text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100/80 dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-800/60 transition-all duration-200 ease-out active:scale-[0.97]" />
     </flux:tooltip>
 

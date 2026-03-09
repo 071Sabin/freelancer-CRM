@@ -8,29 +8,23 @@ use App\Models\Currency;
 use App\Models\Project;
 use Livewire\Component;
 use Livewire\Attributes\Title;
-use App\Services\WhatsAppService;
-use Illuminate\Support\Facades\Auth;
 
 
 #[Title('Client Pivot | Projects')]
 class Projects extends Component
 {
     public ProjectForm $project_form;
-    public $notify_client = true;
-    
+
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
     public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
-    public array $editingProject = [];
-    public array $viewingProject = [];
 
     // these are dispatched from the ProjectsTable
     protected $listeners = [
         // dispatched message from frontend => function_name
-        'edit-project' => 'addOrEditProjectModal',
         'confirm-delete' => 'prepDelete',
-        'resend-whatsapp' => 'resendWhatsapp',
     ];
 
+    // display the delete modal popup after clicking delete on each row, not bulk delete but one at a time
     public function prepDelete($id)
     {
         $project = Project::findOrFail($id);
@@ -40,6 +34,7 @@ class Projects extends Component
         $this->modal('delete-project-modal')->show();
     }
 
+    // this function to delete the specific project from the extra menu list in data table delete button on each row
     public function delete()
     {
         if (!$this->project_to_delete) return;
@@ -53,83 +48,6 @@ class Projects extends Component
         $this->dispatch('refreshDatatable');
         $this->modal('delete-project-modal')->close();
         session()->flash('success', 'Project deleted.');
-    }
-
-    public function addOrEditProjectModal($id = 0)
-    {
-        $this->resetForm();
-        if ($id) {
-            $project = Project::with('client', 'currency')->findOrFail($id);
-            $this->authorize('update', $project);
-            $this->project_form->setProject($project);
-        } else {
-            // CREATE MODE - clearing the old data in form
-            $this->project_form->reset();
-        }
-
-        $this->modal('addEdit-project-modal')->show();
-    }
-
-    // this is the post request form triggered by the modal
-    public function createProject()
-    {
-        try {
-            // this function below contains the creation + update + whatsapp message sent logic + either to send whatsapp message to client or not
-            $this->project_form->storeOrUpdate($this->notify_client);
-
-            $this->modal('add-project-modal')->close();
-            $this->dispatch('refreshDatatable');
-            // session()->flash('success', 'Project added successfully.');
-        } catch (\Exception $e) {
-            $this->dispatch('scroll-to-error');
-            throw $e;
-        }
-    }
-
-    // this is the post request form triggered by the modal
-    public function update()
-    {
-        // dd($this->project_form->project);
-        try {
-            // this function below contains the creation + update + whatsapp message sent logic
-            $this->project_form->storeOrUpdate($this->notify_client);
-            $this->modal('edit-project-modal')->close();
-            $this->dispatch('refreshDatatable');
-            // session()->flash('success', 'Project updated successfully.');
-        } catch (\Exception $e) {
-            $this->dispatch('scroll-to-error');
-            throw $e;
-        }
-    }
-
-    // this function resends the whatsapp message clicked from projects data tables
-    public function resendWhatsapp($id)
-    {
-        $project = Project::findOrFail($id);
-
-        if ($project) {
-
-            $this->authorize('update', $project);
-            $waResponse = app(WhatsAppService::class)->sendProjectPortal($project);
-
-            if ($waResponse['skipped'] ?? false) {
-                session()->flash('success', '(' . $waResponse['message'] . ')');
-            } elseif ($waResponse['success']) {
-                $statusMsg = $waResponse['simulated']
-                    ? '(WhatsApp log simulated)'
-                    : 'Project Details are sent in WhatsApp!';
-                session()->flash('success', $statusMsg);
-            } else {
-                session()->flash('warning', 'WhatsApp failed: ' . $waResponse['error']);
-            }
-        }
-    }
-
-    public function resetForm()
-    {
-        $this->project_form->reset();
-        $this->resetErrorBag();
-        $this->resetValidation();
     }
 
     public function mount()
