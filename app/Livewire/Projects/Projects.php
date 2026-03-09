@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 class Projects extends Component
 {
     public ProjectForm $project_form;
-    public $notify_client=true;
+    public $notify_client = true;
     public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
     public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
     public array $editingProject = [];
@@ -29,14 +29,6 @@ class Projects extends Component
         'confirm-delete' => 'prepDelete',
         'resend-whatsapp' => 'resendWhatsapp',
     ];
-
-    public function view($id)
-    {
-        $project = Project::with('client', 'currency')->findOrFail($id);
-        $this->authorize('view', $project);
-        $this->viewingProject = $project->toArray();
-        $this->modal('view-project-modal')->show();
-    }
 
     public function edit($id)
     {
