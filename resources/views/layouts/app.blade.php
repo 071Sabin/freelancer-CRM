@@ -202,7 +202,8 @@
                         :current="request()->routeIs('clients') || request()->routeIs('clients.*')">Clients
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document-text" href="{{ route('projects') }}" wire:navigate
-                        :current="request()->routeIs('projects') || request()->routeIs('projects.*')">Projects</flux:sidebar.item>
+                        :current="request()->routeIs('projects') || request()->routeIs('projects.*')">Projects
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="document-currency-dollar" href="{{ route('invoices') }}" wire:navigate
                         :current="request()->routeIs('invoices') || request()->routeIs('invoices.*')">Invoices
                     </flux:sidebar.item>
@@ -379,7 +380,6 @@
                 </flux:modal.close>
             </div>
         </flux:modal>
-
     @endauth
 
 

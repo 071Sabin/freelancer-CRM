@@ -145,7 +145,9 @@
             <div class="p-5 bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 ">
                 <div class="flex justify-between items-center mb-4">
                     <flux:heading size="md">Invoices</flux:heading>
-                    <flux:button size="sm" variant="ghost" icon="plus">Create</flux:button>
+                    <flux:button size="sm" variant="ghost" icon="plus"
+                        wire:click="$dispatchTo('invoices.invoice-form-modal', 'open-create-invoice', { projectId: {{ $project->id }}, clientId: {{ $project->client_id }} })">
+                        Create</flux:button>
                 </div>
 
                 <div
@@ -155,9 +157,9 @@
             </div>
 
             <div class="p-5 bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 ">
-                <flux:heading size="md" class="mb-3">Project Scope</flux:heading>
+                <flux:heading size="md" class="mb-3">Project Description</flux:heading>
                 <div
-                    class="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line bg-neutral-50 dark:bg-neutral-900/50 p-3 rounded-lg border border-neutral-200 dark:border-neutral-700/50">
+                    class="text-sm text-neutral-600 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-900/50 p-3 rounded-lg border border-neutral-200 dark:border-neutral-700/50">
                     {{ $project->description ?: 'No specific description provided.' }}
                 </div>
             </div>
@@ -165,8 +167,7 @@
         </div>
     </div>
 
-
-
-
+    <livewire:invoices.invoice-form-modal />
+    
     <livewire:projects.project-form-modal />
 </div>

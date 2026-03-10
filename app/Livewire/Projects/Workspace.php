@@ -7,8 +7,10 @@ use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Project;
 use App\Services\WhatsAppService;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('ClientPivot | workspace')]
 class Workspace extends Component
 {
     public Project $project;
@@ -19,7 +21,7 @@ class Workspace extends Component
         'edit-project' => 'editModal',
     ];
 
-    // sending whatsapp messaeg from single button in workspace is handled by projec-form-modal component, it's dispatched to that component
+    // sending whatsapp messaeg from single button in workspace is handled by project-form-modal component, it's dispatched to that component
     // with the respective project id.
 
     public function mount($uuid)

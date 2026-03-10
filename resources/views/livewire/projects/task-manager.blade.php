@@ -80,10 +80,12 @@
     <x-hr-divider />
 
     <div class="space-y-2">
-        <h1 class="font-semibold text-lg">Tasks List</h1>
+        @if ($tasks)
+            <h1 class="font-semibold text-lg">Tasks List</h1>
+        @endif
         @forelse ($tasks as $task)
             <div
-                    class="flex items-start justify-between gap-3 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg group hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
+                class="flex items-start justify-between gap-3 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg group hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
 
                 <div class="flex items-start gap-3 min-w-0">
                     <flux:checkbox wire:click="toggleTask({{ $task->id }})" :checked="$task->is_completed"
@@ -91,8 +93,7 @@
 
                     <div class="flex flex-col min-w-0">
                         <span
-                            class="font-medium text-sm sm:text-base
-                {{ $task->is_completed ? 'line-through text-zinc-400' : 'text-zinc-800 dark:text-zinc-200' }}">
+                            class="font-medium text-sm sm:text-base {{ $task->is_completed ? 'line-through text-zinc-400' : 'text-zinc-800 dark:text-zinc-200' }}">
                             {{ $task->title }}
                         </span>
 
