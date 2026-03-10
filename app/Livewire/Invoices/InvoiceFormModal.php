@@ -122,6 +122,7 @@ class InvoiceFormModal extends Component
         $this->modal('create-invoice-modal')->show();
     }
 
+    // this creates draft invoice and saves as draft. then opens the edit modal
     public function create()
     {
         $this->validate();
@@ -205,6 +206,7 @@ class InvoiceFormModal extends Component
 
             // 5. Open Edit Modal directly
             $this->edit($invoice->id);
+            $this->dispatch('invoice-saved');
             $this->dispatch('refreshDatatable');
             $this->modal('create-invoice-modal')->close();
             // return back()->with('success', 'Draft Invoice created successfully!');
@@ -436,8 +438,10 @@ class InvoiceFormModal extends Component
         });
 
         $this->modal('edit-invoice-modal')->close();
+        $this->dispatch('invoice-saved');
         $this->dispatch('refreshDatatable');
         return back()->with('success', 'Invoice updated successfully.');
+        
     }
 
     /**
