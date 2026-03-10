@@ -1,4 +1,5 @@
 {{-- @props(['projects']) --}}
+
 @php
     $total = $tasks->count();
     $completed = $tasks->where('is_completed', true)->count();

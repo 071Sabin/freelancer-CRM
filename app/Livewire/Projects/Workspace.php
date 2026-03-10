@@ -16,7 +16,7 @@ class Workspace extends Component
 {
     public Project $project;
     public ProjectForm $project_form;
-    public $clients, $currencies, $invoices;
+    public $clients, $currencies;
     
     protected $listeners = [
         'edit-project' => 'editModal',
@@ -34,7 +34,6 @@ class Workspace extends Component
         $this->authorize('view', $this->project);
 
         $currentUser = auth()->id();
-        $this->invoices = Invoice::where('user_id', $currentUser)->get();
         // dd($this->invoices);
         $this->currencies = Currency::orderBy('code', 'asc')->get();
         $this->clients = Client::where('clients.user_id', $currentUser)->orderBy('client_name', 'asc')->get();

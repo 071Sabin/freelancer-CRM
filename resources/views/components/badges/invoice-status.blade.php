@@ -1,62 +1,72 @@
 @props(['invoice_status', 'due_date'])
 
 @php
-    use Carbon\Carbon;
+use Carbon\Carbon;
 
-    // 🔥 AUTO OVERDUE DETECTION (enterprise logic)
-    if ($invoice_status !== 'paid' && $invoice_status !== 'void' && $invoice_status !== 'canceled') {
-        if (!empty($due_date) && Carbon::parse($due_date)->isPast()) {
-            $invoice_status = 'overdue';
-        }
+/*
+|--------------------------------------------------------------------------
+| Automatic Overdue Detection
+|--------------------------------------------------------------------------
+*/
+if (!in_array($invoice_status, ['paid','void','canceled']) && !empty($due_date)) {
+    if (Carbon::parse($due_date)->isPast()) {
+        $invoice_status = 'overdue';
     }
+}
 
-    $map = [
-        'draft' => [
-            'class' =>
-                'bg-neutral-200/70 text-neutral-800 ring-1 ring-neutral-300 dark:bg-neutral-700/40 dark:text-neutral-200 dark:ring-neutral-600',
-            'icon' => '📝',
-        ],
+/*
+|--------------------------------------------------------------------------
+| Professional Status Map
+|--------------------------------------------------------------------------
+*/
 
-        'sent' => [
-            'class' => 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
-            'icon' => '📤',
-        ],
+$map = [
 
-        'partially_paid' => [
-            'class' => 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-            'icon' => '💰',
-        ],
+    'draft' => [
+        'class' => 'bg-neutral-100 text-neutral-700 ring-1 ring-neutral-300
+                    dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700'
+    ],
 
-        'paid' => [
-            'class' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
-            'icon' => '✅',
-        ],
+    'sent' => [
+        'class' => 'bg-blue-50 text-blue-700 ring-1 ring-blue-200
+                    dark:bg-blue-900/20 dark:text-blue-300 dark:ring-blue-800'
+    ],
 
-        'overdue' => [
-            // 👇 PREMIUM GLOW EFFECT
-            'class' =>
-                'bg-red-100 text-red-800 ring-1 ring-red-300 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800',
-            'icon' => '⚠️',
-        ],
+    'partially_paid' => [
+        'class' => 'bg-amber-50 text-amber-700 ring-1 ring-amber-200
+                    dark:bg-amber-900/20 dark:text-amber-300 dark:ring-amber-800'
+    ],
 
-        'void' => [
-            'class' => 'bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
-            'icon' => '🚫',
-        ],
+    'paid' => [
+        'class' => 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200
+                    dark:bg-emerald-900/20 dark:text-emerald-300 dark:ring-emerald-800'
+    ],
 
-        'canceled' => [
-            'class' => 'bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-            'icon' => '❌',
-        ],
-    ];
+    'overdue' => [
+        'class' => 'bg-red-50 text-red-700 ring-1 ring-red-200
+                    dark:bg-red-900/20 dark:text-red-300 dark:ring-red-800'
+    ],
 
-    $config = $map[$invoice_status] ?? $map['draft'];
+    'void' => [
+        'class' => 'bg-zinc-100 text-zinc-700 ring-1 ring-zinc-300
+                    dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700'
+    ],
 
-    $label = str($invoice_status)->replace('_', ' ')->title();
+    'canceled' => [
+        'class' => 'bg-slate-100 text-slate-700 ring-1 ring-slate-300
+                    dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
+    ],
+];
+
+$config = $map[$invoice_status] ?? $map['draft'];
+
+$label = str($invoice_status)->replace('_',' ')->title();
 @endphp
 
+
 <span
-    class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full hover:scale-105 {{ $config['class'] }}">
-    <span class="text-[10px]">{{ $config['icon'] }}</span>
+    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
+           transition-colors duration-150
+           {{ $config['class'] }}">
     {{ $label }}
 </span>
