@@ -199,12 +199,12 @@
                         :current="request()->routeIs('dashboard')">Dashboard
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="users" href="{{ route('clients') }}" wire:navigate
-                        :current="request()->routeIs('clients')">Clients
+                        :current="request()->routeIs('clients') || request()->routeIs('clients.*')">Clients
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document-text" href="{{ route('projects') }}" wire:navigate
-                        :current="request()->routeIs('projects')">Projects</flux:sidebar.item>
+                        :current="request()->routeIs('projects') || request()->routeIs('projects.*')">Projects</flux:sidebar.item>
                     <flux:sidebar.item icon="document-currency-dollar" href="{{ route('invoices') }}" wire:navigate
-                        :current="request()->routeIs('invoices.*')">Invoices
+                        :current="request()->routeIs('invoices') || request()->routeIs('invoices.*')">Invoices
                     </flux:sidebar.item>
                     <flux:sidebar.group expandable icon="cog" heading="Client Automations" class="grid"
                         :current="request()->routeIs('aibyok')">

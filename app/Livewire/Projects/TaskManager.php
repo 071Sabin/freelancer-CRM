@@ -10,8 +10,8 @@ class TaskManager extends Component
 {
     public Project $project;
 
-    #[Validate('required|min:3|max:255')]
     public $newTaskTitle = '';
+    public $newTaskDesc = '';
 
     public function mount(Project $project)
     {
@@ -20,19 +20,23 @@ class TaskManager extends Component
 
     public function addTask()
     {
-        $this->validate();
+        $this->validate([
+            'newTaskTitle' => 'required|string|max:255',
+            'newTaskDesc' => 'nullable|string',
+        ]);
 
         // New task position finding with last task + 1 
         $lastPosition = $this->project->tasks()->max('position') ?? 0;
 
         $this->project->tasks()->create([
             'title' => $this->newTaskTitle,
+            'description' => $this->newTaskDesc ?? '',
             'position' => $lastPosition + 1,
             'is_completed' => false,
         ]);
 
-        $this->reset('newTaskTitle');
-        session()->flash('success','Task added successfully!');
+        $this->reset();
+        session()->flash('success', 'Task added successfully!');
     }
 
     public function toggleTask($taskId)

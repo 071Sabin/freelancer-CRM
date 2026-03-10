@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{uuid}', Workspace::class)->name('projects.workspace');
 
     Route::get('/invoices', InvoiceIndex::class)->name('invoices');
+    
     Route::prefix('invoices/settings')
         ->name('invoices.settings.')
         ->group(function () {

@@ -1,24 +1,50 @@
 <div class="flex items-center gap-0.5 sm:gap-1">
-    {{-- View Action --}}
-    <flux:tooltip content="View project" position="top">
-        
-        <a href="{{ route('projects.workspace', ['uuid' => $row->uuid]) }}" wire:navigate>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                <path fill-rule="evenodd"
-                    d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
-                    clip-rule="evenodd" />
-            </svg>
-        </a>
+    <div class="flex items-center gap-1">
 
-    </flux:tooltip>
+        {{-- View Action --}}
+        <flux:tooltip content="View project" position="top">
 
-    {{-- Edit Action --}}
-    <flux:tooltip content="Edit project" position="top">
-        <flux:button variant="ghost" size="sm" icon="pencil"
-            wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal', { id: {{ $row->id }} })"
-            class="text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100/80 dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-800/60 transition-all duration-200 ease-out active:scale-[0.97]" />
-    </flux:tooltip>
+            <a href="{{ route('projects.workspace', ['uuid' => $row->uuid]) }}" wire:navigate
+                class="flex items-center justify-center size-8 rounded-md
+                   text-zinc-500 hover:text-zinc-900
+                   hover:bg-zinc-100
+                   dark:text-zinc-400 dark:hover:text-zinc-100
+                   dark:hover:bg-zinc-800
+                   transition-all duration-200 ease-out
+                   active:scale-95">
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                    <path fill-rule="evenodd"
+                        d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                        clip-rule="evenodd" />
+                </svg>
+
+            </a>
+
+        </flux:tooltip>
+
+
+        {{-- Edit Action --}}
+        <flux:tooltip content="Edit project" position="top">
+
+            <button
+                wire:click="$dispatchTo('projects.project-form-modal','open-project-modal',{ id: {{ $row->id }} })"
+                class="flex items-center justify-center size-8 rounded-md
+                   text-zinc-500 hover:text-zinc-900
+                   hover:bg-zinc-100
+                   dark:text-zinc-400 dark:hover:text-zinc-100
+                   dark:hover:bg-zinc-800
+                   transition-all duration-200 ease-out
+                   active:scale-95">
+
+                <flux:icon.pencil class="size-4" />
+
+            </button>
+
+        </flux:tooltip>
+
+    </div>
 
     {{-- More Actions Dropdown --}}
     <flux:dropdown>

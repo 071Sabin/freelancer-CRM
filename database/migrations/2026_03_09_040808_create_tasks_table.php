@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
 
             $table->string('title');
+            $table->string('description')->nullable();
 
             // Default false, because task is not completed as soon as it's created.
             $table->boolean('is_completed')->default(false);
