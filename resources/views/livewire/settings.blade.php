@@ -4,9 +4,15 @@
     <x-main-heading title="Settings" subtitle="Manage account, security, appearance and integrations" />
 
     @if (session('success'))
-        <x-success-message>
-            {{ session('success') }}
-        </x-success-message>
+        <x-notification type="success">{{ session('success') }}</x-notification>
+    @endif
+
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
     <x-error></x-error>
