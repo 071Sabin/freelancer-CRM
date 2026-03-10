@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+<div class="">
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
@@ -34,7 +34,7 @@
                     <flux:subheading class="flex items-center gap-2 text-sm text-neutral-500">
                         <flux:icon.user class="size-4 text-neutral-400 shrink-0" />
 
-                        <span class="font-medium text-neutral-800 dark:text-neutral-400 truncate">
+                        <span class="text-xs md:text-sm text-neutral-800 dark:text-neutral-400 truncate">
                             {{ $project->client->client_name }}
                         </span>
                     </flux:subheading>
@@ -82,7 +82,7 @@
         </div>
 
         <div class="flex items-center gap-3 my-2 justify-center">
-            <flux:button variant="ghost" icon="pencil"
+            <flux:button variant="ghost" icon="pencil" class="text-xs md:text-sm"
                 wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal', { id: {{ $project->id }} })">
                 Edit
             </flux:button>
