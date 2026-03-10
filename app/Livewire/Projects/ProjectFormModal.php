@@ -14,7 +14,12 @@ class ProjectFormModal extends Component
 {
     public $notify_client;
     public ProjectForm $project_form;
-    
+
+    /**
+     * Triggers:
+     * 1. projects/workspace.blade.php -> triggers to open the edit modal
+     * 2. normally modal call from projects.blade.php to open to add and from projectTable actions column to edit the project
+     */
     #[On('open-project-modal')]
     public function addOrEditProjectModal($id = 0)
     {
@@ -68,6 +73,11 @@ class ProjectFormModal extends Component
         $this->resetValidation();
     }
 
+    /**
+     * Triggers:
+     * 1. from ProjectTable.php actions column, sending whatsapp to client
+     * 2. from the project workspace.blade.php "send update" button
+     */
     #[On('send-whatsapp-to-client')]
     // this function resends the whatsapp message clicked from projects data tables
     public function resendWhatsapp($id)
@@ -93,7 +103,6 @@ class ProjectFormModal extends Component
 
     public function render()
     {
-        // Data yahi fetch kar taaki parent se pass na karna pade
         return view('livewire.projects.project-form-modal', [
             'clients' => Client::all(),
             'currencies' => Currency::all(),

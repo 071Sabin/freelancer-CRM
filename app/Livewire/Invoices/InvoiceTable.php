@@ -168,21 +168,6 @@ class InvoiceTable extends DataTableComponent
         ];
     }
 
-    public function downloadPdf($id)
-    {
-        $invoice = Invoice::with(['client', 'project', 'items', 'user'])->findOrFail($id);
-        $settings = \App\Models\InvoiceSetting::where('user_id', auth()->id())->first(); // Use auth helper directly or import facade
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.pdf', [
-            'invoice' => $invoice,
-            'settings' => $settings,
-        ]);
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, 'invoice-'.$invoice->invoice_number.'.pdf');
-    }
-
     public function bulkActions(): array
     {
         return [
