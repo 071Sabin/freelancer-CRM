@@ -17,34 +17,34 @@
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
-<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
 
-    {{-- LEFT --}}
-    <div class="min-w-0">
-        <h2 class="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-            Project Tasks & Milestones
-        </h2>
+        {{-- LEFT --}}
+        <div class="min-w-0">
+            <h2 class="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                Project Tasks & Milestones
+            </h2>
 
-        <p class="text-sm text-neutral-500 mt-0.5 max-w-md">
-            Manage tasks to automatically update the client's progress bar.
-        </p>
+            <p class="text-sm text-neutral-500 mt-0.5 max-w-md">
+                Manage tasks to automatically update the client's progress bar.
+            </p>
+        </div>
+
+
+        {{-- RIGHT (PROGRESS) --}}
+        <div class="flex items-center gap-2 sm:flex-col sm:items-end sm:text-right shrink-0">
+
+            <span class="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400">
+                {{ $percentage }}%
+            </span>
+
+            <span class="text-[10px] sm:text-xs uppercase tracking-wide text-neutral-500">
+                Progress
+            </span>
+
+        </div>
+
     </div>
-
-
-    {{-- RIGHT (PROGRESS) --}}
-    <div class="flex items-center gap-2 sm:flex-col sm:items-end sm:text-right shrink-0">
-
-        <span class="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400">
-            {{ $percentage }}%
-        </span>
-
-        <span class="text-[10px] sm:text-xs uppercase tracking-wide text-neutral-500">
-            Progress
-        </span>
-
-    </div>
-
-</div>
 
     <form wire:submit.prevent="addTask"
         class="mb-8 overflow-hidden rounded-xl bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-700">
@@ -78,25 +78,35 @@
     </form>
 
     <x-hr-divider />
+
     <div class="space-y-2">
         <h1 class="font-semibold text-lg">Tasks List</h1>
         @forelse ($tasks as $task)
             <div
-                class="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg group transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                    class="flex items-start justify-between gap-3 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg group hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
 
-                <div class="flex items-center gap-3">
-                    <flux:checkbox wire:click="toggleTask({{ $task->id }})" :checked="$task->is_completed" />
+                <div class="flex items-start gap-3 min-w-0">
+                    <flux:checkbox wire:click="toggleTask({{ $task->id }})" :checked="$task->is_completed"
+                        class="mt-1" />
 
-                    <span
-                        class="text-sm font-medium transition-all duration-200 {{ $task->is_completed ? 'line-through text-zinc-400 dark:text-zinc-500' : 'text-zinc-800 dark:text-zinc-200' }}">
-                        {{ $task->title }}
-                    </span>
+                    <div class="flex flex-col min-w-0">
+                        <span
+                            class="font-medium text-sm sm:text-base
+                {{ $task->is_completed ? 'line-through text-zinc-400' : 'text-zinc-800 dark:text-zinc-200' }}">
+                            {{ $task->title }}
+                        </span>
+
+                        @if ($task->description)
+                            <span class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+                                {{ $task->description }}
+                            </span>
+                        @endif
+                    </div>
                 </div>
 
-                <flux:button wire:click="deleteTask({{ $task->id }})"
-                    wire:confirm="Are you sure you want to delete this task?" variant="ghost" size="sm"
-                    icon="trash"
-                    class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity" />
+                <flux:button wire:click="deleteTask({{ $task->id }})" wire:confirm="Delete this task?"
+                    variant="ghost" size="sm" icon="trash"
+                    class="opacity-0 group-hover:opacity-100 text-red-500 transition" />
             </div>
         @empty
             <div class="text-center py-6 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">

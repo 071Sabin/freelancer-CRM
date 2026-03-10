@@ -25,11 +25,20 @@
 
             {{-- Project Title + Status --}}
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 min-w-0">
+                <div class="flex flex-col">
+                    <h1
+                        class="font-semibold text-neutral-900 dark:text-neutral-100 text-lg sm:text-xl lg:text-2xl leading-tight tracking-tight truncate">
+                        {{ $project->name }}
+                    </h1>
+                    {{-- Client --}}
+                    <flux:subheading class="flex items-center gap-2 text-sm text-neutral-500">
+                        <flux:icon.user class="size-4 text-neutral-400 shrink-0" />
 
-                <h1
-                    class="font-semibold text-neutral-900 dark:text-neutral-100 text-lg sm:text-xl lg:text-2xl leading-tight tracking-tight truncate">
-                    {{ $project->name }}
-                </h1>
+                        <span class="font-medium text-neutral-800 dark:text-neutral-400 truncate">
+                            {{ $project->client->client_name }}
+                        </span>
+                    </flux:subheading>
+                </div>
                 @php
                     $status = strtolower($project->status ?? '');
 
@@ -55,28 +64,20 @@
                             '</span>',
                     };
                 @endphp
-                <div>{!! $statusHtml !!}</div>
-                <div class="flex items-center gap-2">
-                    <flux:tooltip content="View as Client">
-                        {{-- Open Client Portal --}}
-                        <a href="{{ route('client.portal', ['uuid' => $project->uuid]) }}" target="_blank"
-                            class="text-gray-500 hover:text-blue-600" x-data x-tooltip="'Open in New Tab'">
-                            <flux:icon.arrow-top-right-on-square class="w-5 h-5" />
-                        </a>
-                    </flux:tooltip>
+
+                <div class="flex gap-3">
+                    <div>{!! $statusHtml !!}</div>
+                    <div class="flex items-center gap-2">
+                        <flux:tooltip content="View as Client">
+                            {{-- Open Client Portal --}}
+                            <a href="{{ route('client.portal', ['uuid' => $project->uuid]) }}" target="_blank"
+                                class="text-gray-500 hover:text-blue-600" x-data x-tooltip="'Open in New Tab'">
+                                <flux:icon.arrow-top-right-on-square class="w-5 h-5" />
+                            </a>
+                        </flux:tooltip>
+                    </div>
                 </div>
             </div>
-
-            {{-- Client --}}
-            <flux:subheading class="flex items-center gap-2 text-sm text-neutral-500">
-
-                <flux:icon.user class="size-4 text-neutral-400 shrink-0" />
-
-                <span class="font-medium text-neutral-800 dark:text-neutral-200 truncate">
-                    {{ $project->client->client_name }}
-                </span>
-
-            </flux:subheading>
 
         </div>
 

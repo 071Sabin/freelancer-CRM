@@ -9,7 +9,7 @@ use Livewire\Component;
 class TaskManager extends Component
 {
     public Project $project;
-
+    public $tasks;
     public $newTaskTitle = '';
     public $newTaskDesc = '';
 
@@ -22,7 +22,7 @@ class TaskManager extends Component
     {
         $this->validate([
             'newTaskTitle' => 'required|string|max:255',
-            'newTaskDesc' => 'nullable|string',
+            'newTaskDesc' => 'nullable|string|max:255',
         ]);
 
         // New task position finding with last task + 1 
@@ -30,12 +30,12 @@ class TaskManager extends Component
 
         $this->project->tasks()->create([
             'title' => $this->newTaskTitle,
-            'description' => $this->newTaskDesc ?? '',
+            'description' => $this->newTaskDesc,
             'position' => $lastPosition + 1,
             'is_completed' => false,
         ]);
 
-        $this->reset();
+        $this->reset(['newTaskTitle', 'newTaskDesc']);
         session()->flash('success', 'Task added successfully!');
     }
 
@@ -55,8 +55,7 @@ class TaskManager extends Component
 
     public function render()
     {
-        return view('livewire.projects.task-manager', [
-            'tasks' => $this->project->tasks
-        ]);
+        $this->tasks = $this->project->tasks;
+        return view('livewire.projects.task-manager');
     }
 }
