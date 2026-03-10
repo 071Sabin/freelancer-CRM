@@ -16,8 +16,8 @@ class Login extends Component
     public function useAuthentication()
     {
         $credentials = $this->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:8|max:16',
         ]);
 
         if (Auth::attempt($credentials)) {

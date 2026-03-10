@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Task extends Model
 {
@@ -12,6 +13,7 @@ class Task extends Model
 
     protected $fillable = [
         'project_id',
+        'description',
         'title',
         'is_completed',
         'position',
@@ -23,6 +25,20 @@ class Task extends Model
         'is_completed' => 'boolean',
         'position' => 'integer',
     ];
+
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => \Illuminate\Support\Str::title($value)
+        );
+    }
+
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => \Illuminate\Support\Str::ucfirst($value)
+        );
+    }
 
     public function project(): BelongsTo
     {
