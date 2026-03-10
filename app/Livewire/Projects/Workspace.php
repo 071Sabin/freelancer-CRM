@@ -5,6 +5,7 @@ namespace App\Livewire\Projects;
 use App\Livewire\Forms\ProjectForm;
 use App\Models\Client;
 use App\Models\Currency;
+use App\Models\Invoice;
 use App\Models\Project;
 use App\Services\WhatsAppService;
 use Livewire\Attributes\Title;
@@ -15,7 +16,7 @@ class Workspace extends Component
 {
     public Project $project;
     public ProjectForm $project_form;
-    public $clients, $currencies;
+    public $clients, $currencies, $invoices;
     
     protected $listeners = [
         'edit-project' => 'editModal',
@@ -33,6 +34,8 @@ class Workspace extends Component
         $this->authorize('view', $this->project);
 
         $currentUser = auth()->id();
+        $this->invoices = Invoice::where('user_id', $currentUser)->get();
+        // dd($this->invoices);
         $this->currencies = Currency::orderBy('code', 'asc')->get();
         $this->clients = Client::where('clients.user_id', $currentUser)->orderBy('client_name', 'asc')->get();
     }
