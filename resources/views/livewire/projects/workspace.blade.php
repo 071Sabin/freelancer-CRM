@@ -142,17 +142,59 @@
 
         <div class="space-y-6">
 
-            <div class="p-5 bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 ">
+            <div class="p-5 bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700">
+
                 <div class="flex justify-between items-center mb-4">
                     <flux:heading size="md">Invoices</flux:heading>
+
                     <flux:button size="sm" variant="ghost" icon="plus"
                         wire:click="$dispatchTo('invoices.invoice-form-modal', 'open-create-invoice', { projectId: {{ $project->id }}, clientId: {{ $project->client_id }} })">
-                        Create</flux:button>
+                        Create
+                    </flux:button>
                 </div>
 
+                {{-- Scrollable container --}}
                 <div
-                    class="border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg p-6 text-center text-neutral-500 text-sm">
-                    No invoices generated yet.
+                    class="max-h-64 overflow-y-auto pr-1 space-y-2 scrollbar-thin scrollbar-thumb-neutral-300 dark:scrollbar-thumb-neutral-600">
+
+                    @forelse($invoices as $invoice)
+                        <div
+                            class="flex items-center justify-between p-3 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900/40">
+
+                            <div class="flex flex-col">
+                                <span class="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                                    {{ $invoice->invoice_number }}
+                                </span>
+
+                                <span class="text-xs text-neutral-500">
+                                    Due {{ \Carbon\Carbon::parse($invoice->due_date)->format('d M Y') }}
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+
+                                <span
+                                    class="text-xs px-2 py-1 rounded-md
+                        @if ($invoice->invoice_status === 'paid') bg-green-100 text-green-700
+                        @elseif($invoice->invoice_status === 'overdue') bg-red-100 text-red-700
+                        @else bg-neutral-200 text-neutral-700 @endif">
+                                    {{ ucfirst($invoice->invoice_status) }}
+                                </span>
+
+                                <span class="text-sm font-semibold text-neutral-700 dark:text-neutral-200">
+                                    {{ $invoice->currency }} {{ number_format($invoice->total, 2) }}
+                                </span>
+
+                            </div>
+                        </div>
+
+                    @empty
+                        <div
+                            class="border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg p-6 text-center text-neutral-500 text-sm">
+                            No invoices yet
+                        </div>
+                    @endforelse
+
                 </div>
             </div>
 
@@ -168,6 +210,6 @@
     </div>
 
     <livewire:invoices.invoice-form-modal />
-    
+
     <livewire:projects.project-form-modal />
 </div>
