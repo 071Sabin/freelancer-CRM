@@ -1,5 +1,5 @@
 <div>
-    
+
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
@@ -11,7 +11,7 @@
     @if (session('error'))
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
-    
+
     <flux:modal name="addEdit-project-modal" class="w-full max-w-2xl">
 
         <div wire:loading wire:target="createProject"
@@ -74,8 +74,7 @@
                         </div>
 
                         <div>
-                            <flux:select wire:model.live="project_form.client_id" label="Client"
-                                placeholder="Search...">
+                            <flux:select wire:model.live="project_form.client_id" label="Client" placeholder="Search...">
                                 @foreach ($clients as $client)
                                     <flux:select.option value="{{ $client->id }}">{{ ucwords($client->client_name) }}
                                     </flux:select.option>

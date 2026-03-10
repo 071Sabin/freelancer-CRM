@@ -1,6 +1,10 @@
 {{-- @props(['projects']) --}}
-
-<div class="p-6">
+@php
+    $total = $tasks->count();
+    $completed = $tasks->where('is_completed', true)->count();
+    $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
+@endphp
+<div class="p-4 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700">
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
@@ -13,32 +17,69 @@
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
-    <div class="flex items-center justify-between mb-4">
-        <div>
-            <flux:heading size="lg">Project Tasks & Milestones</flux:heading>
-            <flux:subheading>Manage tasks to automatically update the client's progress bar.</flux:subheading>
-        </div>
+<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
 
-        @php
-            $total = $tasks->count();
-            $completed = $tasks->where('is_completed', true)->count();
-            $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
-        @endphp
+    {{-- LEFT --}}
+    <div class="min-w-0">
+        <h2 class="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+            Project Tasks & Milestones
+        </h2>
 
-        <div class="text-right">
-            <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $percentage }}%</span>
-            <p class="text-xs text-zinc-500 uppercase tracking-wide">Progress</p>
-        </div>
+        <p class="text-sm text-neutral-500 mt-0.5 max-w-md">
+            Manage tasks to automatically update the client's progress bar.
+        </p>
     </div>
 
-    <form wire:submit.prevent="addTask" class="flex items-center gap-2 mb-6">
-        <div class="flex-1">
-            <flux:input wire:model="newTaskTitle" placeholder="e.g., Setup Database Schema..." required />
+
+    {{-- RIGHT (PROGRESS) --}}
+    <div class="flex items-center gap-2 sm:flex-col sm:items-end sm:text-right shrink-0">
+
+        <span class="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400">
+            {{ $percentage }}%
+        </span>
+
+        <span class="text-[10px] sm:text-xs uppercase tracking-wide text-neutral-500">
+            Progress
+        </span>
+
+    </div>
+
+</div>
+
+    <form wire:submit.prevent="addTask"
+        class="mb-8 overflow-hidden rounded-xl bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-700">
+
+        <div class="p-4 sm:p-5 space-y-5">
+            <x-input-field type="text" model="newTaskTitle" placeholder="e.g., Setup database schema..."
+                label="Task Title" required />
+            <x-input-field type="text" model="newTaskDesc" placeholder="Add necessary context or instructions..."
+                label="Task Description" />
         </div>
-        <flux:button type="submit" variant="primary" icon="plus">Add Task</flux:button>
+
+        <div
+            class="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 bg-neutral-50/80 dark:bg-neutral-800/40 px-4 sm:px-5 py-3 border-t border-neutral-200 dark:border-neutral-800">
+
+            <div class="hidden sm:flex items-center text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                <svg class="size-4 mr-1.5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Hit <kbd
+                    class="mx-1 rounded border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 px-1.5 py-0.5 font-sans font-semibold text-neutral-600 dark:text-neutral-300">Enter</kbd>
+                to save quickly
+            </div>
+
+            <x-primary-button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center shadow-sm">
+                <flux:icon.plus class="size-4 mr-1.5" />
+                Add Task
+            </x-primary-button>
+        </div>
     </form>
 
+    <x-hr-divider />
     <div class="space-y-2">
+        <h1 class="font-semibold text-lg">Tasks List</h1>
         @forelse ($tasks as $task)
             <div
                 class="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg group transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800">
