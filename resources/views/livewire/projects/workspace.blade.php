@@ -39,6 +39,7 @@
                         </span>
                     </flux:subheading>
                 </div>
+                
                 @php
                     $status = strtolower($project->status ?? '');
 
@@ -136,7 +137,7 @@
             </div>
 
             {{-- this handles the tasks creation, deletion etc. --}}
-            <livewire:projects.task-manager />
+            <livewire:projects.task-manager :project="$project" />
 
         </div>
 

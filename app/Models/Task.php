@@ -19,7 +19,7 @@ class Task extends Model
         'position',
     ];
 
-    // 🚨 DATA INTEGRITY: This ensures that in the API or frontend,
+    // DATA INTEGRITY: This ensures that in the API or frontend,
     // `is_completed` always appears as true/false, not 1 or 0.
     protected $casts = [
         'is_completed' => 'boolean',
