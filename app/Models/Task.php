@@ -25,6 +25,7 @@ class Task extends Model
     protected $casts = [
         'is_completed' => 'boolean',
         'position' => 'integer',
+        'is_visible_to_client' => 'boolean',
     ];
 
     protected function title(): Attribute

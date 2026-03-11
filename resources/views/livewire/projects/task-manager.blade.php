@@ -91,7 +91,7 @@
 
         @forelse ($tasks as $task)
             <div
-                class="group flex items-start justify-between gap-3 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+                class="group flex items-start justify-between gap-3 p-3 sm:p-4 bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
 
                 {{-- Content Container --}}
                 <div class="flex items-start gap-3 min-w-0 flex-1">
@@ -103,13 +103,13 @@
                     {{-- Task Details --}}
                     <div class="flex flex-col min-w-0">
                         <span
-                            class="font-medium text-sm sm:text-base truncate {{ $task->is_completed ? 'line-through text-zinc-400' : 'text-zinc-800 dark:text-zinc-200' }}"
+                            class="font-medium text-sm sm:text-base truncate {{ $task->is_completed ? 'line-through text-neutral-400' : 'text-neutral-800 dark:text-neutral-200' }}"
                             title="{{ $task->title }}">
                             {{ $task->title }}
                         </span>
 
                         @if ($task->description)
-                            <span class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-0.5"
+                            <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-0.5"
                                 title="{{ $task->description }}">
                                 {{ $task->description }}
                             </span>
@@ -127,26 +127,62 @@
 
                 {{-- Action Buttons --}}
                 {{-- UX Fix: opacity-100 on mobile, hover/focus reveal on sm and above --}}
-                <div
-                    class="flex items-center gap-1 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+<div class="flex items-center gap-1 sm:gap-1.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
 
-                    <flux:button wire:click="toggleVisibility({{ $task->id }})" variant="ghost" size="sm"
-                        icon="{{ $task->is_visible_to_client ? 'eye-slash' : 'eye' }}"
-                        class="text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                        title="{{ $task->is_visible_to_client ? 'Hide from Client' : 'Show to Client' }}"
-                        aria-label="{{ $task->is_visible_to_client ? 'Hide task from client' : 'Show task to client' }}" />
+    {{-- Toggle Visibility --}}
+    <flux:button wire:click="toggleVisibility({{ $task->id }})" variant="ghost"
+        icon="{{ $task->is_visible_to_client ? 'eye-slash' : 'eye' }}"
+        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        title="{{ $task->is_visible_to_client ? 'Hide from Client' : 'Show to Client' }}"
+        aria-label="{{ $task->is_visible_to_client ? 'Hide task from client' : 'Show task to client' }}" />
 
-                    <flux:button wire:click="deleteTask({{ $task->id }})"
-                        wire:confirm="Are you sure you want to delete this task?" variant="ghost" size="sm"
-                        icon="trash"
-                        class="text-zinc-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                        aria-label="Delete task" />
-                </div>
+    {{-- Edit Task --}}
+    <flux:button wire:click="editTask({{ $task->id }})" variant="ghost"
+        icon="pencil" 
+        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-blue-500 transition-colors" 
+        aria-label="Edit task" />
+
+    {{-- Delete Task (Moved to the far right for safety) --}}
+    <flux:button wire:click="deleteTask({{ $task->id }})"
+        wire:confirm="Are you sure you want to delete this task?" variant="ghost"
+        icon="trash"
+        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+        aria-label="Delete task" />
+
+</div>
             </div>
         @empty
-            <div class="text-center py-6 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">
-                <p class="text-sm text-zinc-500">No tasks added yet. Create one to start tracking progress.</p>
+            <div class="text-center py-6 border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg">
+                <p class="text-sm text-neutral-500">No tasks added yet. Create one to start tracking progress.</p>
             </div>
         @endforelse
+
+        {{-- Edit Task Modal --}}
+        <flux:modal name="edit-task-modal" class="md:w-96">
+            <form wire:submit.prevent="updateTask" class="space-y-4">
+
+                <div>
+                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Edit Task</h3>
+                    <p class="text-sm text-neutral-500">Update your milestone details.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <x-input-field type="text" model="editTaskTitle" label="Task Title" required />
+                    <x-input-field type="text" model="editTaskDesc" label="Task Description" />
+
+                    <div class="pt-2">
+                        <flux:checkbox wire:model="editTaskVisible" label="Visible to Client" />
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+                    <x-primary-button type="submit">Save Changes</x-primary-button>
+                </div>
+
+            </form>
+        </flux:modal>
     </div>
 </div>
