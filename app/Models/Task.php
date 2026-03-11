@@ -17,6 +17,7 @@ class Task extends Model
         'title',
         'is_completed',
         'position',
+        'is_visible_to_client',
     ];
 
     // DATA INTEGRITY: This ensures that in the API or frontend,

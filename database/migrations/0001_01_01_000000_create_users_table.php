@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('profile_pic')->nullable();
             $table->string('password');
             $table->rememberToken(); // optional but recommended for auth
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
 

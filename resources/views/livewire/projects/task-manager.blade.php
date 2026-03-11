@@ -35,15 +35,12 @@
 
         {{-- RIGHT (PROGRESS) --}}
         <div class="flex items-center gap-2 sm:flex-col sm:items-end sm:text-right shrink-0">
-
             <span class="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400">
-                {{ $percentage }}%
+                {{ $percentage ?? 0 }}%
             </span>
-
             <span class="text-[10px] sm:text-xs uppercase tracking-wide text-neutral-500">
                 Progress
             </span>
-
         </div>
 
     </div>
@@ -56,6 +53,11 @@
                 label="Task Title" required />
             <x-input-field type="text" model="newTaskDesc" placeholder="Add necessary context or instructions..."
                 label="Task Description" />
+            
+            {{-- NEW: Visible to Client Checkbox in Form --}}
+            <div class="pt-2">
+                <flux:checkbox wire:model="newTaskVisible" label="Visible to Client Portal" description="Show this task as a milestone to the client." />
+            </div>
         </div>
 
         <div
@@ -82,9 +84,10 @@
     <x-hr-divider />
 
     <div class="space-y-2">
-        @if ($tasks)
-            <h1 class="font-semibold text-lg">Tasks List</h1>
+        @if ($tasks && $tasks->count() > 0)
+            <h1 class="font-semibold text-lg text-neutral-800 dark:text-neutral-200">Tasks List</h1>
         @endif
+        
         @forelse ($tasks as $task)
             <div
                 class="flex items-start justify-between gap-3 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg group hover:bg-zinc-100 dark:hover:bg-zinc-800 transition">
@@ -104,12 +107,30 @@
                                 {{ $task->description }}
                             </span>
                         @endif
+
+                        {{-- NEW: Small Badge to show if it's visible to client --}}
+                        @if ($task->is_visible_to_client)
+                            <span class="mt-1.5 inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                                <flux:icon.eye class="size-3" /> Client Visible
+                            </span>
+                        @endif
                     </div>
                 </div>
 
-                <flux:button wire:click="deleteTask({{ $task->id }})" wire:confirm="Delete this task?"
-                    variant="ghost" size="sm" icon="trash"
-                    class="opacity-0 group-hover:opacity-100 text-red-500 transition" />
+                {{-- Action Buttons (Eye Toggle + Delete) --}}
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                    
+                    {{-- NEW: Toggle Visibility Button --}}
+                    <flux:button wire:click="toggleVisibility({{ $task->id }})" 
+                        variant="ghost" size="sm" 
+                        icon="{{ $task->is_visible_to_client ? 'eye-slash' : 'eye' }}"
+                        class="text-zinc-500 hover:text-blue-500" 
+                        title="{{ $task->is_visible_to_client ? 'Hide from Client' : 'Show to Client' }}" />
+
+                    <flux:button wire:click="deleteTask({{ $task->id }})" wire:confirm="Delete this task?"
+                        variant="ghost" size="sm" icon="trash"
+                        class="text-red-500 hover:text-red-700" />
+                </div>
             </div>
         @empty
             <div class="text-center py-6 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg">
