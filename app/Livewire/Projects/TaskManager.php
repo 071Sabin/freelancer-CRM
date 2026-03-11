@@ -9,7 +9,7 @@ use Livewire\Component;
 class TaskManager extends Component
 {
     public Project $project;
-    public $tasks;
+    
     public $newTaskTitle = '';
     public $newTaskDesc = '';
 
@@ -25,10 +25,12 @@ class TaskManager extends Component
             'newTaskDesc' => 'nullable|string|max:255',
         ]);
 
+
         // New task position finding with last task + 1 
         $lastPosition = $this->project->tasks()->max('position') ?? 0;
 
         $this->project->tasks()->create([
+            'project_id' => $this->project->id,
             'title' => $this->newTaskTitle,
             'description' => $this->newTaskDesc,
             'position' => $lastPosition + 1,
@@ -50,12 +52,13 @@ class TaskManager extends Component
     public function deleteTask($taskId)
     {
         $this->project->tasks()->findOrFail($taskId)->delete();
-        $this->dispatch('notify', ['message' => 'Task removed.', 'type' => 'success']);
+        session()->flash('success', 'Task removed.');
     }
 
     public function render()
     {
-        $this->tasks = $this->project->tasks;
-        return view('livewire.projects.task-manager');
+        return view('livewire.projects.task-manager', [
+            'tasks' => $this->project->tasks()->orderBy('position')->get()
+        ]);
     }
 }

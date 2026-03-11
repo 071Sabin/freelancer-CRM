@@ -35,8 +35,8 @@ class Workspace extends Component
 
         $currentUser = auth()->id();
         // dd($this->invoices);
-        $this->currencies = Currency::orderBy('code', 'asc')->get();
-        $this->clients = Client::where('clients.user_id', $currentUser)->orderBy('client_name', 'asc')->get();
+        // $this->currencies = Currency::orderBy('code', 'asc')->get();
+        // $this->clients = Client::where('clients.user_id', $currentUser)->orderBy('client_name', 'asc')->get();
     }
 
     public function render()

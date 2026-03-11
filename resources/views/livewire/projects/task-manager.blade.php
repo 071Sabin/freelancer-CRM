@@ -5,6 +5,7 @@
     $completed = $tasks->where('is_completed', true)->count();
     $percentage = $total > 0 ? round(($completed / $total) * 100) : 0;
 @endphp
+
 <div class="p-4 dark:bg-neutral-800 rounded-lg border shadow-sm border-neutral-200 dark:border-neutral-700">
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
