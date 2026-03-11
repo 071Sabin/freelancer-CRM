@@ -91,7 +91,7 @@
 
         @forelse ($tasks as $task)
             <div
-                class="group flex items-start justify-between gap-3 p-3 sm:p-4 bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+                class="group flex items-center justify-between gap-3 p-3 sm:p-4 bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
 
                 {{-- Content Container --}}
                 <div class="flex items-start gap-3 min-w-0 flex-1">
@@ -127,29 +127,28 @@
 
                 {{-- Action Buttons --}}
                 {{-- UX Fix: opacity-100 on mobile, hover/focus reveal on sm and above --}}
-<div class="flex items-center gap-1 sm:gap-1.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+                <div
+                    class="flex items-center gap-1 sm:gap-1.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
 
-    {{-- Toggle Visibility --}}
-    <flux:button wire:click="toggleVisibility({{ $task->id }})" variant="ghost"
-        icon="{{ $task->is_visible_to_client ? 'eye-slash' : 'eye' }}"
-        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-        title="{{ $task->is_visible_to_client ? 'Hide from Client' : 'Show to Client' }}"
-        aria-label="{{ $task->is_visible_to_client ? 'Hide task from client' : 'Show task to client' }}" />
+                    {{-- Toggle Visibility --}}
+                    <flux:button wire:click="toggleVisibility({{ $task->id }})" variant="ghost"
+                        icon="{{ $task->is_visible_to_client ? 'eye-slash' : 'eye' }}"
+                        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        title="{{ $task->is_visible_to_client ? 'Hide from Client' : 'Show to Client' }}"
+                        aria-label="{{ $task->is_visible_to_client ? 'Hide task from client' : 'Show task to client' }}" />
 
-    {{-- Edit Task --}}
-    <flux:button wire:click="editTask({{ $task->id }})" variant="ghost"
-        icon="pencil" 
-        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-blue-500 transition-colors" 
-        aria-label="Edit task" />
+                    {{-- Edit Task --}}
+                    <flux:button wire:click="editTask({{ $task->id }})" variant="ghost" icon="pencil"
+                        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-blue-500 transition-colors"
+                        aria-label="Edit task" />
 
-    {{-- Delete Task (Moved to the far right for safety) --}}
-    <flux:button wire:click="deleteTask({{ $task->id }})"
-        wire:confirm="Are you sure you want to delete this task?" variant="ghost"
-        icon="trash"
-        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-        aria-label="Delete task" />
+                    {{-- Delete Task (Moved to the far right for safety) --}}
+                    <flux:button wire:click="deleteTask({{ $task->id }})"
+                        wire:confirm="Are you sure you want to delete this task?" variant="ghost" icon="trash"
+                        class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-neutral-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                        aria-label="Delete task" />
 
-</div>
+                </div>
             </div>
         @empty
             <div class="text-center py-6 border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-lg">
