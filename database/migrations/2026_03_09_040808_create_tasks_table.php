@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('description')->nullable();
+            $table->boolean('is_visible_to_client')->default(false);
 
             // Default false, because task is not completed as soon as it's created.
             $table->boolean('is_completed')->default(false);

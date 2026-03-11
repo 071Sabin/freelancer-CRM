@@ -3,13 +3,14 @@
 namespace App\Livewire\Projects;
 
 use App\Models\Project;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class TaskManager extends Component
 {
     public Project $project;
-    
+
+    public $newTaskVisible=false;
+
     public $newTaskTitle = '';
     public $newTaskDesc = '';
 
@@ -18,6 +19,14 @@ class TaskManager extends Component
         $this->project = $project;
     }
 
+public function toggleVisibility($taskId)
+{
+    $task = $this->project->tasks()->findOrFail($taskId);
+    
+    $task->update(['is_visible_to_client' => !$task->is_visible_to_client]);
+    // dd($this->is_visible_to_client);
+}
+
     public function addTask()
     {
         $this->validate([
@@ -25,14 +34,14 @@ class TaskManager extends Component
             'newTaskDesc' => 'nullable|string|max:255',
         ]);
 
-
-        // New task position finding with last task + 1 
+        // New task position finding with last task + 1
         $lastPosition = $this->project->tasks()->max('position') ?? 0;
 
         $this->project->tasks()->create([
             'project_id' => $this->project->id,
             'title' => $this->newTaskTitle,
             'description' => $this->newTaskDesc,
+            'is_visible_to_client' => $this->newTaskVisible,
             'position' => $lastPosition + 1,
             'is_completed' => false,
         ]);
@@ -45,7 +54,7 @@ class TaskManager extends Component
     {
         $task = $this->project->tasks()->findOrFail($taskId);
         $task->update([
-            'is_completed' => !$task->is_completed
+            'is_completed' => ! $task->is_completed,
         ]);
     }
 
@@ -58,7 +67,7 @@ class TaskManager extends Component
     public function render()
     {
         return view('livewire.projects.task-manager', [
-            'tasks' => $this->project->tasks()->orderBy('position')->get()
+            'tasks' => $this->project->tasks()->orderBy('position')->get(),
         ]);
     }
 }
