@@ -103,20 +103,91 @@
         <x-hr-divider />
 
         {{-- NEW: Progress Bar --}}
+        {{-- DYNAMIC: Progress Bar --}}
         <div class="space-y-3">
             <div class="flex justify-between items-end">
                 <h2 class="text-sm font-semibold tracking-wide uppercase text-neutral-700 dark:text-neutral-300">
                     Project Progress
                 </h2>
-                <span class="text-sm font-bold text-neutral-900 dark:text-white">45%</span>
+                <span class="text-sm font-bold text-neutral-900 dark:text-white">{{ $progressPercentage }}%</span>
             </div>
             <div class="w-full bg-neutral-100 dark:bg-neutral-800 rounded-full h-2.5 overflow-hidden">
                 <div class="bg-neutral-900 dark:bg-neutral-100 h-full rounded-full transition-all duration-1000 ease-out"
-                    style="width: 45%"></div>
+                    style="width: {{ $progressPercentage }}%"></div>
             </div>
             <p class="text-xs text-neutral-500 dark:text-neutral-400 font-medium">Currently executing planned
                 milestones.</p>
         </div>
+
+        {{-- NEW: Client Visible Milestones --}}
+        @if ($clientTasks && $clientTasks->count() > 0)
+            <x-hr-divider />
+
+            <div class="space-y-4">
+                <h2 class="text-sm font-semibold tracking-wide uppercase text-neutral-700 dark:text-neutral-300">
+                    Project Milestones
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach ($clientTasks as $task)
+                        <div
+                            class="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm">
+
+                            {{-- Icon based on status --}}
+                            <div class="shrink-0 mt-0.5">
+                                @if ($task->is_completed)
+                                    <flux:icon.check-circle class="size-5 text-emerald-500" />
+                                @else
+                                    <flux:icon.clock class="size-5 text-amber-500" />
+                                @endif
+                            </div>
+
+                            {{-- Task Info --}}
+                            <div class="min-w-0">
+                                <p
+                                    class="text-sm font-semibold {{ $task->is_completed ? 'text-neutral-400 line-through dark:text-neutral-500' : 'text-neutral-900 dark:text-neutral-100' }}">
+                                    {{ $task->title }}
+                                </p>
+                                @if ($task->description)
+                                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">
+                                        {{ $task->description }}
+                                    </p>
+                                @endif
+                            </div>
+
+                        </div>
+                    @endforeach
+                    
+                    {{-- THE GHOST TASK: Sirf tab dikhega jab internal tasks bache honge --}}
+                    @if ($hasPendingInternalTasks)
+                        <div
+                            class="flex items-start gap-3 p-4 rounded-xl bg-neutral-50/50 dark:bg-neutral-800/20 border-2 border-dashed border-neutral-200 dark:border-neutral-700">
+
+                            {{-- Spinning Loader Icon --}}
+                            <div class="shrink-0 mt-0.5">
+                                <svg class="size-5 text-blue-500 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </div>
+
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                                    Internal Finalization & QA
+                                </p>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1 line-clamp-2">
+                                    Developer is working on backend tasks, testing, and deployment.
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <x-hr-divider />
 
