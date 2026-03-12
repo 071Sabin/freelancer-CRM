@@ -14,7 +14,7 @@ class Portal extends Component
     public $project;
     public $progressPercentage = 0;
     public $clientTasks; // Tasks that clients will see whose visibility is set true
-    public $hasPendingInternalTasks;
+    public $hasPendingInternalTasks=false;
 
 
     public function downloadInvoice($invoiceId)
