@@ -40,34 +40,9 @@
                     </flux:subheading>
                 </div>
                 
-                @php
-                    $status = strtolower($project->status ?? '');
-
-                    $statusHtml = match ($status) {
-                        'active'
-                            => '<span class="inline-flex items-center rounded-md bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-500/10 dark:text-blue-400 dark:ring-blue-500/20">Active</span>',
-
-                        'in_progress'
-                            => '<span class="inline-flex items-center rounded-md bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-800 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-500 dark:ring-amber-400/20">In Progress</span>',
-
-                        'on_hold'
-                            => '<span class="inline-flex items-center rounded-md bg-yellow-50 px-2.5 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-400 dark:ring-yellow-400/20">On Hold</span>',
-
-                        'completed'
-                            => '<span class="inline-flex items-center rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/20">Completed</span>',
-
-                        'cancelled'
-                            => '<span class="inline-flex items-center rounded-md bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">Cancelled</span>',
-
-                        default
-                            => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2.5 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">' .
-                            ucfirst(str_replace('_', ' ', $status ?: 'unknown')) .
-                            '</span>',
-                    };
-                @endphp
 
                 <div class="flex gap-3">
-                    <div>{!! $statusHtml !!}</div>
+                    <x-badges.project-status :project_status="$project->status" />
                     <div class="flex items-center gap-2">
                         <flux:tooltip content="View as Client">
                             {{-- Open Client Portal --}}

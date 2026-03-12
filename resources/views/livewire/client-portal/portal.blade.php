@@ -1,37 +1,3 @@
-@php
-    use Illuminate\Support\Str;
-    $statusMap = [
-        'active' => [
-            'label' => 'Active',
-            'classes' => 'bg-blue-50 text-blue-700 border-blue-200 
-                          dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
-        ],
-        'in_progress' => [
-            'label' => 'In Progress',
-            'classes' => 'bg-blue-50 text-blue-700 border-blue-200 
-                          dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
-        ],
-        'on_hold' => [
-            'label' => 'On Hold',
-            'classes' => 'bg-amber-50 text-amber-700 border-amber-200 
-                          dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800',
-        ],
-        'completed' => [
-            'label' => 'Completed',
-            'classes' => 'bg-green-50 text-green-700 border-green-200 
-                          dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-        ],
-        'cancelled' => [
-            'label' => 'Cancelled',
-            'classes' => 'bg-rose-50 text-rose-700 border-rose-200 
-                          dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800',
-        ],
-    ];
-
-    $status = $project->status ?? 'in_progress';
-    $currentStatus = $statusMap[$status] ?? $statusMap['in_progress'];
-@endphp
-
 <div class="min-h-screen sm:px-6 text-neutral-900 dark:text-neutral-100">
 
     <div
@@ -64,23 +30,12 @@
                         </span>
                     </span>
 
-                    {{-- Status (mobile only) --}}
-                    <span
-                        class="inline-flex sm:hidden items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border {{ $currentStatus['classes'] }}">
-                        <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
-                        {{ $currentStatus['label'] }}
-                    </span>
+                    {{-- Status --}}
+                    <x-badges.project-status :project_status="$project->status" />
 
                 </div>
-
             </div>
 
-            {{-- Status (desktop) --}}
-            <div
-                class="hidden sm:inline-flex w-fit items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide border {{ $currentStatus['classes'] }}">
-                <span class="h-2 w-2 rounded-full bg-current"></span>
-                {{ $currentStatus['label'] }}
-            </div>
 
         </div>
 
@@ -107,7 +62,7 @@
                 class="p-3 sm:p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
                 <p
                     class="text-xs sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                    Hourly Rate
+                    Rate/Hr.
                 </p>
 
                 <p
@@ -179,7 +134,7 @@
             </div>
 
             {{-- Progress Track & Fill --}}
-            <div class="relative w-full h-2.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800/60 ring-1 ring-inset ring-zinc-200/50 dark:ring-zinc-700/50 shadow-inner"
+            <div class="relative w-full h-1.5 md:h-2.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800/60 ring-1 ring-inset ring-zinc-200/50 dark:ring-zinc-700/50 shadow-inner"
                 role="progressbar" aria-valuenow="{{ $progressPercentage }}" aria-valuemin="0" aria-valuemax="100"
                 aria-label="Project completion status">
 
@@ -214,7 +169,6 @@
         {{-- NEW: Client Visible Milestones --}}
         @if ($clientTasks && $clientTasks->count() > 0)
             <x-hr-divider />
-
 
             <div class="w-full">
 
@@ -254,10 +208,11 @@
 
                                 {{-- Card --}}
                                 <div
-                                    class="flex-1 min-w-0 rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 transition-colors {{ $task->is_completed ? 'bg-zinc-50 dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600' }}"> 
+                                    class="flex-1 min-w-0 rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 transition-colors {{ $task->is_completed ? 'bg-zinc-50 dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600' }}">
                                     <div class="flex items-center justify-between gap-2">
                                         <span
-                                            class="truncate text-xs sm:text-sm font-medium {{ $task->is_completed ? 'text-zinc-400 line-through' : 'text-zinc-800 dark:text-zinc-100' }}" title="{{ $task->title }}">
+                                            class="truncate text-xs sm:text-sm font-medium {{ $task->is_completed ? 'text-zinc-400 line-through' : 'text-zinc-800 dark:text-zinc-100' }}"
+                                            title="{{ $task->title }}">
                                             {{ Str::limit($task->title, 30) }}
                                         </span>
 
@@ -296,20 +251,17 @@
                                     <div class="flex items-center justify-between gap-2 mb-1">
 
                                         <span
-                                            class="text-xs sm:text-sm font-medium text-indigo-900 dark:text-indigo-100">
-                                            Finalizing Your Project
-                                        </span>
+                                            class="text-xs sm:text-sm font-medium text-indigo-900 dark:text-indigo-100">Final Review in Progress</span>
 
                                         <span
                                             class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 animate-pulse">
                                             Active
                                         </span>
-
                                     </div>
 
                                     <p
                                         class="text-[11px] sm:text-xs text-indigo-700/80 dark:text-indigo-300/80 leading-relaxed">
-                                        Performing final checks and preparation before delivering the completed work.
+                                            Final touches, testing, and quality checks are being completed before the project is delivered.
                                     </p>
                                 </div>
                             </div>
@@ -368,11 +320,10 @@
                                 </div>
 
                                 {{-- Actions --}}
-                                <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
+                                <div class="flex items-center justify-between flex-wrap">
 
                                     {{-- Status --}}
                                     <x-badges.invoice-status :invoice_status="$invoice->invoice_status" :due_date="$invoice->due_date" />
-
 
 
                                     {{-- Button --}}

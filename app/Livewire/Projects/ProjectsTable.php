@@ -94,15 +94,11 @@ class ProjectsTable extends DataTableComponent
             // 👇 UPGRADE: Modern "Ring" Badges (Cleaner than borders)
             Column::make('Status', 'status')
                 ->sortable()
-                ->format(fn($value) => match ($value) {
-                    'active' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30">Active</span>',
-                    'in_progress' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/30">In Progress</span>',
-                    'on_hold' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-neutral-50 text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">On Hold</span>',
-                    'completed' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/30">Completed</span>',
-                    'cancelled' => '<span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/10 dark:bg-rose-400/10 dark:text-rose-400 dark:ring-rose-400/30">Cancelled</span>',
-                    default => '<span class="text-xs text-neutral-500">Unknown</span>',
-                })
-                ->html(),
+                ->format(
+                    fn($value, $row) => view('components.badges.project-status', [
+                        'project_status' => $value,
+                    ])
+                ),
 
             // 👇 UPGRADE: Precise Date with Relative time on secondary line
             Column::make('Deadline', 'deadline')
