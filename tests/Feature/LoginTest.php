@@ -17,8 +17,6 @@ class LoginTest extends TestCase
             'email' => 'sabin@gmail.com',
             'password' => 'sabin123',
         ]);
-
         $response->assertStatus(200);
-
     }
 }
