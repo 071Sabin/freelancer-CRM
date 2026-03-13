@@ -31,26 +31,27 @@
                         {{ $project->name }}
                     </h1>
                     {{-- Client --}}
-                    <flux:subheading class="flex items-center gap-2 text-sm text-neutral-500">
-                        <flux:icon.user class="size-4 text-neutral-400 shrink-0" />
+                    <div class="flex gap-3 my-1">
+                        <flux:subheading class="flex items-center gap-2 text-sm text-neutral-500">
+                            <flux:icon.user class="size-4 text-neutral-400 shrink-0" />
 
-                        <span class="text-xs md:text-sm text-neutral-800 dark:text-neutral-400 truncate">
-                            {{ $project->client->client_name }}
-                        </span>
-                    </flux:subheading>
-                </div>
-                
+                            <span class="text-xs md:text-sm text-neutral-800 dark:text-neutral-400 truncate">
+                                {{ $project->client->client_name }}
+                            </span>
+                        </flux:subheading>
 
-                <div class="flex gap-3">
-                    <x-badges.project-status :project_status="$project->status" />
-                    <div class="flex items-center gap-2">
-                        <flux:tooltip content="View as Client">
-                            {{-- Open Client Portal --}}
-                            <a href="{{ route('client.portal', ['uuid' => $project->uuid]) }}" target="_blank"
-                                class="text-gray-500 hover:text-blue-600" x-data x-tooltip="'Open in New Tab'">
-                                <flux:icon.arrow-top-right-on-square class="w-5 h-5" />
-                            </a>
-                        </flux:tooltip>
+                        <div class="flex gap-3">
+                            <x-badges.project-status :project_status="$project->status" />
+                            <div class="flex items-center gap-2">
+                                <flux:tooltip content="View as Client">
+                                    {{-- Open Client Portal --}}
+                                    <a href="{{ route('client.portal', ['uuid' => $project->uuid]) }}" target="_blank"
+                                        class="text-gray-500 hover:text-blue-600" x-data x-tooltip="'Open in New Tab'">
+                                        <flux:icon.arrow-top-right-on-square class="w-5 h-5" />
+                                    </a>
+                                </flux:tooltip>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

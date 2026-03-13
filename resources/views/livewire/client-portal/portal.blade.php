@@ -112,7 +112,6 @@
                     {{ $project->created_at->format('M d, Y') }}
                 </p>
             </div>
-
         </div>
 
         <x-hr-divider />
@@ -306,7 +305,7 @@
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
                                 {{-- Invoice Info --}}
-                                <div class="min-w-0">
+                                <div class="">
 
                                     <p
                                         class="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate">
@@ -320,7 +319,7 @@
                                 </div>
 
                                 {{-- Actions --}}
-                                <div class="flex items-center justify-between flex-wrap">
+                                <div class="flex items-center justify-between w-full flex-wrap">
 
                                     {{-- Status --}}
                                     <x-badges.invoice-status :invoice_status="$invoice->invoice_status" :due_date="$invoice->due_date" />
