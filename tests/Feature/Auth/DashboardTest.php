@@ -56,7 +56,7 @@ class DashboardTest extends TestCase
             ->assertSet('activeProjects', 1)
             ->assertSet('recentProjects', function ($projects) {
                 return $projects->count() === 3; // Checks that exactly 3 projects are in the list
-            })            
+            })
 
             // total revenue should be 200 because revenue = total of paid status and we have $100*2 invoices paid status above
             ->assertSet('totalRevenue', 200.00)

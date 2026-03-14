@@ -14,11 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class ProjectFactory extends Factory
 {
     use RefreshDatabase;
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+
     public function definition(): array
     {
         return [
