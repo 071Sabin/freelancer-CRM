@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Client;
+namespace Tests\Feature\Client\Clients;
 
 use App\Livewire\Clients\Clients;
 use App\Livewire\Clients\ClientsTable;

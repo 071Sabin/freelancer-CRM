@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Livewire\Dashboard;
 use App\Livewire\Login;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,5 +32,11 @@ class LoginTest extends TestCase
             ->call('useAuthentication')
             ->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_user_can_logout(){
+        $user = User::factory()->create();
+        $this->actingAs($user)->post(route('logout'))
+        ->assertRedirect(route('login'));
     }
 }
