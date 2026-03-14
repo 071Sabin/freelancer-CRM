@@ -13,7 +13,7 @@ use Tests\TestCase;
 class LoginTest extends TestCase
 {
     use RefreshDatabase;
-
+ 
     public function test_login_page_renders_correctly()
     {
         // Visit the route
