@@ -14,32 +14,38 @@
             {{-- calling update function because in Clients.php this single function handles the update/create clients. even add/edit client form is the same for both edit/create client both --}}
             <form wire:submit.prevent="addClient" class="flex flex-col max-h-[90vh]">
 
-<div class="flex flex-col gap-4 px-6 pt-6 pb-5 border-b sm:flex-row sm:items-start sm:px-8 border-neutral-200 dark:border-neutral-700">
-    
-    {{-- Professional Icon Badge --}}
-    <div class="flex items-center justify-center shrink-0 w-12 h-12 bg-indigo-50 border rounded-xl shadow-sm border-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:text-indigo-400">
-        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-        </svg>
-    </div>
+                <div
+                    class="flex flex-col gap-4 px-6 pt-6 pb-5 border-b sm:flex-row sm:items-start sm:px-8 border-neutral-200 dark:border-neutral-700">
 
-    {{-- Typography & Context --}}
-    <div class="flex flex-col justify-center min-h-[3rem]">
-        {{-- Breadcrumb Context --}}
-        <div class="flex items-center gap-2 mb-1 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-            <span>Clients</span>
-            <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-            <span class="text-indigo-600 dark:text-indigo-400">Add New</span>
-        </div>
-        
-        {{-- Main Heading (Scaled down to xl so it doesn't break mobile) --}}
-        <flux:heading size="xl" level="1" class="text-neutral-900 dark:text-white leading-none">
-            Add Client
-        </flux:heading>
-    </div>
-</div>
+                    {{-- Professional Icon Badge --}}
+                    <div
+                        class="flex items-center justify-center shrink-0 w-12 h-12 bg-indigo-50 border rounded-xl shadow-sm border-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:border-indigo-500/20 dark:text-indigo-400">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+
+                    {{-- Typography & Context --}}
+                    <div class="flex flex-col justify-center min-h-[3rem]">
+                        {{-- Breadcrumb Context --}}
+                        <div
+                            class="flex items-center gap-2 mb-1 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                            <span>Clients</span>
+                            <svg class="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                            <span class="text-indigo-600 dark:text-indigo-400">Add New</span>
+                        </div>
+
+                        {{-- Main Heading (Scaled down to xl so it doesn't break mobile) --}}
+                        <flux:heading size="xl" level="1"
+                            class="text-neutral-900 dark:text-white leading-none">
+                            Add Client
+                        </flux:heading>
+                    </div>
+                </div>
 
                 <div class="px-6 py-6 overflow-y-auto sm:px-8 space-y-8">
 
@@ -112,7 +118,7 @@
                     <flux:modal.close>
                         <x-secondary-button>Cancel</x-secondary-button>
                     </flux:modal.close>
-                    
+
                     <x-primary-button type="submit">Save changes</x-primary-button>
                 </div>
 
