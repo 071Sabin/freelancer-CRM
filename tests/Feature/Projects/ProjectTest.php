@@ -85,6 +85,9 @@ class ProjectTest extends TestCase
 
     public function test_authenticated_user_can_update_projects()
     {
+        $knownDate = now()->startOfSecond();
+        $this->travelTo($knownDate);
+        
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $currency = Currency::first();
@@ -116,7 +119,8 @@ class ProjectTest extends TestCase
             'client_id' => $client->id,
             'status' => 'active',
             'currency_id' => $currency->id,
-            'hourly_rate' => 100
+            'hourly_rate' => 100,
+            'deadline' => now()->addDays(23),
         ]);
     }
 }
