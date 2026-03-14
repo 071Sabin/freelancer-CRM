@@ -370,7 +370,7 @@
                         <flux:modal.close>
                             <x-secondary-button>Cancel</x-secondary-button>
                         </flux:modal.close>
-                        <x-primary-button type="submit">Save changes</x-primary-button>
+                        <x-primary-button type="submit">save changes</x-primary-button>
                     </div>
 
                 </form>
