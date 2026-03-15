@@ -156,10 +156,10 @@ class ProjectForm extends Form
 
         if ($notify_client) {
             $waResponse = app(WhatsAppService::class)->sendProjectPortal($currentProject);
-
+            // dd($waResponse);
             if ($waResponse['skipped'] ?? false) {
                 session()->flash('success', 'Project saved! (' . $waResponse['message'] . ')');
-            } elseif ($waResponse['success']) {
+                } elseif ($waResponse['success']) {
                 $statusMsg = $waResponse['simulated']
                     ? ($waResponse['message'] ?? 'WhatsApp simulated.')
                     : 'Project saved & WhatsApp sent!';

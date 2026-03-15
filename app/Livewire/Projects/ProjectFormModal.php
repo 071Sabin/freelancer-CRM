@@ -90,6 +90,7 @@ class ProjectFormModal extends Component
 
             if ($waResponse['skipped'] ?? false) {
                 session()->flash('success', '(' . $waResponse['message'] . ')');
+                dd(session()->all());
             } elseif ($waResponse['success']) {
                 $statusMsg = $waResponse['simulated']
                     ? '(WhatsApp log simulated)'

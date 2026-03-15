@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Project;
 use App\Models\User;
+use App\Services\WhatsAppService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
@@ -87,7 +88,7 @@ class ProjectTest extends TestCase
     {
         $knownDate = now()->startOfSecond();
         $this->travelTo($knownDate);
-        
+
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $currency = Currency::first();
@@ -122,5 +123,44 @@ class ProjectTest extends TestCase
             'hourly_rate' => 100,
             'deadline' => now()->addDays(23),
         ]);
+    }
+
+    public function test_authenticated_user_can_add_project_and_send_whatsapp_notification()
+    {
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+        $currency = Currency::first();
+        $project = Project::factory()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'name' => 'Old Boring Name'
+        ]);
+
+        // 1. THE STUNT DOUBLE (Arrange)
+        // We intercept the WhatsAppService before Livewire even boots up.
+        $this->mock(WhatsAppService::class, function ($mock) {
+            $mock->shouldReceive('sendProjectPortal')
+                ->withAnyArgs()
+                ->once()
+                ->andReturn([
+                    'success' => true,
+                    'skipped' => true,
+                    'message' => 'Client has no phone number, WhatsApp skipped.'
+                ]);
+        });
+
+        // 2. THE STUNT DOUBLE (Act)
+        Livewire::actingAs($user)->test(ProjectFormModal::class)
+            ->set('project_form.name', 'Notification Project')
+            ->set('project_form.description', 'Testing the WhatsApp mock')
+            ->set('project_form.value', 100)
+            ->set('project_form.client_id', $client->id)
+            ->set('project_form.status', 'active')
+            ->set('project_form.currency_id', $currency->id)
+            ->set('project_form.hourly_rate', 100)
+            ->set('project_form.deadline', now()->addDays(30))
+            ->set('notify_client', true)
+            ->call('createProject')
+            ->assertHasNoErrors();
     }
 }
