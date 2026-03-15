@@ -54,7 +54,8 @@ class TaskManagerTest extends TestCase
         ]);
     }
 
-    public function test_edit_task_modal_shown_after_clicking_edit_button(){
+    public function test_edit_task_modal_shown_after_clicking_edit_button()
+    {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
@@ -70,19 +71,20 @@ class TaskManagerTest extends TestCase
             ->assertSee('Edit Task');
     }
 
-    public function test_auth_users_can_edit_tasks(){
+    public function test_auth_users_can_edit_tasks()
+    {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
         $task = Task::factory()->create(['project_id' => $project->id]);
-        
+
         Livewire::actingAs($user)->test(TaskManager::class, ['project' => $project])
-        ->set('editingTaskId', $task->id)
-        ->set('editTaskTitle', 'Edited Task')
-        ->set('editTaskDesc', 'Edited Task Description')
-        ->set('editTaskVisible', true)
-        ->call('updateTask')
-        ->assertHasNoErrors();
+            ->set('editingTaskId', $task->id)
+            ->set('editTaskTitle', 'Edited Task')
+            ->set('editTaskDesc', 'Edited Task Description')
+            ->set('editTaskVisible', true)
+            ->call('updateTask')
+            ->assertHasNoErrors();
 
         $this->assertDatabaseHas('tasks', [
             'project_id' => $project->id,
@@ -93,15 +95,16 @@ class TaskManagerTest extends TestCase
         ]);
     }
 
-    public function test_auth_users_can_delete_tasks(){
+    public function test_auth_users_can_delete_tasks()
+    {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
         $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
         $task = Task::factory()->create(['project_id' => $project->id]);
 
         Livewire::actingAs($user)->test(TaskManager::class, ['project' => $project])
-        ->call('deleteTask', $task->id)
-        ->assertHasNoErrors();
+            ->call('deleteTask', $task->id)
+            ->assertHasNoErrors();
 
         $this->assertDatabaseMissing('tasks', [
             'project_id' => $project->id,
@@ -109,6 +112,44 @@ class TaskManagerTest extends TestCase
             'description' => 'edited task description',
             'is_visible_to_client' => true,
             'is_completed' => false,
+        ]);
+    }
+
+    public function test_auth_users_can_toggle_tasks_client_visibility()
+    {
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+        $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
+        $task = Task::factory()->create([
+            'project_id' => $project->id,
+            'is_visible_to_client' => true,
+        ]);
+
+        Livewire::actingAs($user)->test(TaskManager::class, ['project' => $project])
+            ->call('toggleVisibility', $task->id)
+            ->assertHasNoErrors();
+        
+            $this->assertDatabaseHas('tasks',[
+                'is_visible_to_client' => false,
+            ]);
+    }
+
+    public function test_auth_users_can_toggle_tasks_completion()
+    {
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+        $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
+        $task = Task::factory()->create([
+            'project_id' => $project->id,
+            'is_completed' => false,
+        ]);
+
+        Livewire::actingAs($user)->test(TaskManager::class, ['project' => $project])
+            ->call('toggleTask', $task->id)
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas('tasks', [
+            'is_completed' => true,
         ]);
     }
 }
