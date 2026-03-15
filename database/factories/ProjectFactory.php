@@ -13,7 +13,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  */
 class ProjectFactory extends Factory
 {
-    use RefreshDatabase;
 
     public function definition(): array
     {

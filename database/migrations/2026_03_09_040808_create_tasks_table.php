@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            // 🚨 STRICT CONSTRAINT: cascadeOnDelete ensures that if a Project
+            // STRICT CONSTRAINT: cascadeOnDelete ensures that if a Project
             // is deleted in the future, all its related tasks are automatically
             // deleted from the database as well.
             // No orphaned data allowed!

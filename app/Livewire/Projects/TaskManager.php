@@ -44,8 +44,8 @@ class TaskManager extends Component
 
         $this->project->tasks()->create([
             'project_id' => $this->project->id,
-            'title' => $this->newTaskTitle,
-            'description' => $this->newTaskDesc,
+            'title' => strtolower($this->newTaskTitle),
+            'description' => strtolower($this->newTaskDesc),
             'is_visible_to_client' => $this->newTaskVisible,
             'position' => $lastPosition + 1,
             'is_completed' => false,
@@ -89,8 +89,8 @@ class TaskManager extends Component
         if ($this->editingTaskId) {
             $task = $this->project->tasks()->findOrFail($this->editingTaskId);
             $task->update([
-                'title' => $this->editTaskTitle,
-                'description' => $this->editTaskDesc,
+                'title' => strtolower($this->editTaskTitle),
+                'description' => strtolower($this->editTaskDesc),
                 'is_visible_to_client' => $this->editTaskVisible,
             ]);
 

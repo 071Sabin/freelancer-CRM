@@ -163,4 +163,15 @@ class ProjectTest extends TestCase
             ->call('createProject')
             ->assertHasNoErrors();
     }
+
+    public function test_authenticated_user_can_delete_projects_from_each_row(){
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+        $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
+
+        Livewire::actingAs($user)->test(Projects::class)
+        ->set('project_to_delete', $project->id)
+            ->call('delete')
+            ->assertHasNoErrors();
+    }
 }

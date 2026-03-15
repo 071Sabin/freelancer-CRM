@@ -57,6 +57,3 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('dashboard');
     });
 });
-
-
-// 
