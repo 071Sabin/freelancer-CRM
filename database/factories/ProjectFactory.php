@@ -22,7 +22,7 @@ class ProjectFactory extends Factory
             'name' => $this->faker->catchPhrase(),
             'description' => $this->faker->sentence(),
             'value' => 100.00,
-            'currency_id' => null,
+            'currency_id' => 1,
             'hourly_rate' => 50.00,
             'client_id' => Client::factory(),
             'status' => 'active',
