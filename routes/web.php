@@ -15,6 +15,7 @@ use App\Livewire\Settings;
 use App\Livewire\Invoices\Invoice;
 use App\Livewire\Invoices\InvoiceIndex;
 use App\Livewire\Projects\Workspace;
+use App\Livewire\Settings\StripeCallback;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
         });
     
     Route::get('/settings', Settings::class)->name('settings');
+    Route::get('/stripe/callback', StripeCallback::class)->name('stripe.callback');
+    
     Route::post('/logout', [Dashboard::class, 'logout'])->name('logout');
     Route::get('/logout', function () {
         return redirect()->route('dashboard');

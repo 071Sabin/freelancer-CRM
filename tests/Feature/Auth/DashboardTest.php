@@ -36,8 +36,12 @@ class DashboardTest extends TestCase
         Project::factory()->completed()->create(['user_id' => $user->id, 'client_id' => $client->id]);
 
         // creating 2 paid invoices $200 in revenue
-        Invoice::factory()->count(2)->paid()->create(['user_id' => $user->id, 'client_id' => $client->id]);
-
+        Invoice::factory()->count(2)->paid()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'total' => 100.00,       // <-- You must explicitly give it money!
+            'paid_total' => 100.00,  // (Depending on how your Dashboard calculates revenue)
+        ]);
         // creating 1 overdue invoice
         Invoice::factory()->overdue()->create(['user_id' => $user->id, 'client_id' => $client->id]);
 

@@ -481,6 +481,10 @@
             {{-- INTEGRATIONS --}}
             <livewire:integrations.integrations />
 
+
+            <flux:button wire:click="connectStripe" class="bg-[#635BFF] hover:bg-[#4B45C6] text-white">
+                Connect with Stripe
+            </flux:button>
             <!-- API Keys -->
             <section id="panel-api" role="tabpanel"
                 class="tab-panel hidden bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">

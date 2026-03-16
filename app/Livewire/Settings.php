@@ -58,6 +58,19 @@ class Settings extends Component
             return redirect()->back()->with('success', 'Profile updated successfully.');
         }
     }
+
+    public function connectStripe()
+    {
+        $clientId = env('STRIPE_CLIENT_ID');
+        $redirectUri = route('stripe.callback');
+
+        $url = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id={$clientId}&scope=read_write&redirect_uri={$redirectUri}";
+
+        // Livewire me external URL par bhejane ka tarika:
+        return redirect()->away($url);
+    }
+
+    
     public function render()
     {
         return view('livewire.settings');

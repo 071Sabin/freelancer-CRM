@@ -91,7 +91,6 @@ class TaskManagerTest extends TestCase
             'title' => 'edited task',
             'description' => 'edited task description',
             'is_visible_to_client' => true,
-            'is_completed' => false,
         ]);
     }
 
