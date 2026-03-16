@@ -16,18 +16,21 @@ class General extends Component
 
     public InvoiceSetting $settings;
 
-    public string $prefix;
-    public int $next_number;
-    public string $number_format = '{PREFIX}{NUMBER}';
-    public string $default_currency;
-    public string $invoice_language = 'en';
-    public string $date_format = 'Y-m-d';
-    public string $timezone = 'UTC';
+    public ?string $prefix = 'INV';
+    public ?int $next_number = 1;
+    public ?string $number_format = '{PREFIX}{NUMBER}';
+    public ?string $default_currency = 'USD';
+    public ?string $invoice_language = 'en';
+    public ?string $date_format = 'Y-m-d';
+    public ?string $timezone = 'UTC';
+
+    // Ye already sahi the tere
     public ?string $company_name = null;
     public ?string $company_email = null;
     public ?string $company_phone = null;
     public ?string $company_website = null;
     public ?string $tax_id = null;
+
     public array $company_address = [
         'line1' => '',
         'line2' => '',
@@ -65,10 +68,14 @@ class General extends Component
     {
         $this->settings = InvoiceSetting::firstOrCreate(
             ['user_id' => Auth::id()],
-            ['prefix' => 'INV', 'next_number' => 1, 'default_currency' => 'USD']
+            [
+                'prefix' => 'INV',
+                'next_number' => 1,
+                'default_currency' => 'USD',
+            ]
         );
         
-        $this->number_format = $this->settings->number_format ?? '{PREFIX}{NUMBER}';
+        $this->number_format = $this->settings->number_format ?? '{PREFIX}-{NUMBER}';
 
         $this->fill($this->settings->only([
             'prefix',
