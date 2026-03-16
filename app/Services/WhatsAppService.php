@@ -92,7 +92,9 @@ class WhatsAppService
                 ]);
 
             if ($response->successful()) {
-                return ['success' => true, 'simulated' => false, 'data' => $response->json()];
+                return ['success' => true, 'simulated' => false, 'data' => $response->json(),
+                'message' => 'Project Details are sent in WhatsApp!'
+                ];
             }
 
             // Security: Log the API error and not log or return the access token

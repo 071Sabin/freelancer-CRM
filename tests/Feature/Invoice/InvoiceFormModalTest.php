@@ -137,8 +137,24 @@ class InvoiceFormModalTest extends TestCase
 
         // Hacker tries to open the founder's invoice modal
         Livewire::actingAs($hacker)
-            ->test(\App\Livewire\Invoices\InvoiceFormModal::class)
+            ->test(InvoiceFormModal::class)
             ->call('edit', $invoice->id)
             ->assertForbidden(); // Proves Laravel blocks them with a 403!
+    }
+
+    public function test_user_can_download_invoice_pdf()
+    {
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+        $invoice = Invoice::factory()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'invoice_number' => 'INV-99999'
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(InvoiceFormModal::class)
+            ->call('downloadPdf', $invoice->id)
+            ->assertFileDownloaded('invoice-INV-99999.pdf');
     }
 }

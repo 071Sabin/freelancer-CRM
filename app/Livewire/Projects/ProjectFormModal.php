@@ -93,11 +93,11 @@ class ProjectFormModal extends Component
                 dd(session()->all());
             } elseif ($waResponse['success']) {
                 $statusMsg = $waResponse['simulated']
-                    ? '(WhatsApp log simulated)'
-                    : 'Project Details are sent in WhatsApp!';
+                    ? $waResponse['message']
+                    : $waResponse['message'];
                 session()->flash('success', $statusMsg);
             } else {
-                session()->flash('warning', 'WhatsApp failed: ' . $waResponse['error']);
+                session()->flash('warning', $waResponse['error']);
             }
         }
     }

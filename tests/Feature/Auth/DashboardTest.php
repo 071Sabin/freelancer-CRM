@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Livewire\Dashboard;
 use App\Models\Client;
+use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Project;
 use App\Models\User;
@@ -23,9 +24,10 @@ class DashboardTest extends TestCase
     {
         // ARRANGE, set the trap
         $user = User::factory()->create();
+        $currency=Currency::first();
 
         // creating client to assign invoice to this client
-        $client = Client::factory()->create(['user_id' => $user->id]);
+        $client = Client::factory()->create(['user_id' => $user->id, 'currency_id' => $currency->id]);
 
         Project::factory()->create([
             'user_id' => $user->id,

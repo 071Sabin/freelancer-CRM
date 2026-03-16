@@ -36,7 +36,7 @@ class ClientFactory extends Factory
 
             // Financials
             'hourly_rate' => '50.00', // Hardcoded instead of random for predictable testing math
-            'currency_id' => null,    // Relies on seeders, so we keep it null by default
+            'currency_id' => 1,     // relies on seeder
 
             // Status & Notes
             'status' => 'active',
