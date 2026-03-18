@@ -132,82 +132,76 @@ class InvoiceFormModal extends Component
 
         $user = Auth::user();
 
+        try {
+            DB::transaction(function () use ($user) {
 
-        return DB::transaction(function () use ($user) {
+                // 1. Load + lock settings
+                $settings = InvoiceSetting::where('user_id', $user->id)->firstOrFail();
 
-            // 1. Load the settings and LOCK them (Race Condition Fix)
-            // 'lockForUpdate' ensures that until this invoice is created,
-            // no other process can read the next_number.
-            $settings = InvoiceSetting::where('user_id', $user->id)->first();
-            // dd($settings->id);
+                $settings = InvoiceSetting::where('id', $settings->id)
+                    ->lockForUpdate()
+                    ->first();
 
-            // Lock the settings row explicitly to handle concurrency safely
-            $settings = InvoiceSetting::where('id', $settings->id)->lockForUpdate()->first();
+                // 2. Generate invoice number
+                $invoiceNumber = sprintf(
+                    '%s-%05d',
+                    $settings->prefix,
+                    $settings->next_number
+                );
 
-            // 2. Invoice Number Generate
-            $invoiceNumber = sprintf(
-                '%s-%05d',
-                $settings->prefix,
-                $settings->next_number
-            );
+                // 3. Create invoice
+                $invoice = Invoice::create([
+                    'user_id'        => $user->id,
+                    'client_id'      => $this->client_id,
+                    'project_id'     => $this->project_id,
+                    'approved_by'    => null,
+                    'uuid'           => (string) Str::uuid(),
+                    'invoice_number' => $invoiceNumber,
+                    'type'           => 'invoice',
+                    'invoice_status' => 'draft',
+                    'reference'      => null,
+                    'public_token'   => Str::random(64),
+                    'issue_date'     => $this->issue_date,
+                    'due_date'       => $this->due_date,
+                    'currency'       => $settings->default_currency,
+                    'subtotal'       => 0,
+                    'tax_total'      => 0,
+                    'discount_total' => 0,
+                    'shipping_total' => 0,
+                    'adjustment_total' => 0,
+                    'total'          => 0,
+                    'paid_total'     => 0,
+                    'balance_due'    => 0,
+                    'is_tax_inclusive' => (bool) $settings->default_tax_inclusive,
+                    'notes'          => $settings->default_notes,
+                    'terms'          => $settings->default_terms,
+                    'payment_terms'  => $settings->default_payment_terms,
+                    'due_days'       => $settings->default_due_days,
+                    'metadata'       => [
+                        'tax_rate' => $settings->default_tax_rate ?? 0,
+                    ],
+                ]);
 
-            // 3. Draft Invoice Create
-            $invoice = Invoice::create([
-                'user_id'        => $user->id,
-                'client_id'      => $this->client_id,
-                'project_id'     => $this->project_id,
-                'approved_by'    => null,
-                'uuid'           => (string) Str::uuid(),
-                'invoice_number' => $invoiceNumber,
-                'type'           => 'invoice',
-                'invoice_status' => 'draft',
-                'reference'      => null,
-                'public_token'   => Str::random(64),
-                'issue_date'     => $this->issue_date,
-                'due_date'       => $this->due_date,
-                'approved_at'    => null,
-                'viewed_at'      => null,
-                'canceled_at'    => null,
-                'voided_at'      => null,
-                'currency'       => $settings->default_currency,
-                'base_currency'  => null,
-                'exchange_rate'  => null,
-                // Default values migration me set hain, par explicit rehna safe hai
-                'subtotal'       => 0,
-                'tax_total'      => 0,
-                'discount_total' => 0,
-                'shipping_total' => 0,
-                'adjustment_total' => 0,
-                'total'          => 0,
-                'paid_total'     => 0,
-                'balance_due'    => 0,
-                'is_tax_inclusive' => (bool) $settings->default_tax_inclusive,
-                // 'tax_rate' column removed, will use metadata or just calculation
-                'notes'          => $settings->default_notes,
-                'terms'          => $settings->default_terms,
-                'payment_terms'  => $settings->default_payment_terms,
-                'due_days'       => $settings->default_due_days,
-                'sent_at'        => null,
-                'paid_at'        => null,
-                'client_snapshot' => null,
-                'company_snapshot' => null,
-                'billing_address' => null,
-                'shipping_address' => null,
-                'metadata'       => [
-                    'tax_rate' => $settings->default_tax_rate ?? 0,
-                ],
-            ]);
+                // 4. Increment number
+                $settings->increment('next_number');
 
-            // 4. Increment Number
-            $settings->increment('next_number');
+                // 5. UI actions
+                $this->edit($invoice->id);
+                $this->dispatch('invoice-saved');
+                $this->dispatch('refreshDatatable');
+                $this->modal('create-invoice-modal')->close();
+            });
+        } catch (\Throwable $e) {
 
-            // 5. Open Edit Modal directly
-            $this->edit($invoice->id);
-            $this->dispatch('invoice-saved');
-            $this->dispatch('refreshDatatable');
-            $this->modal('create-invoice-modal')->close();
-            // return back()->with('success', 'Draft Invoice created successfully!');
-        });
+            // Uncomment this while debugging (real error)
+            // dd($e->getMessage(), $e->getTrace());
+
+            // Or better:
+            // logger($e);
+
+            session()->flash('error', 'Something went wrong while creating invoice.');
+            return;
+        }
     }
 
 
