@@ -13,6 +13,7 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 
 // handles view, edit, download, create invoices, 
@@ -30,6 +31,8 @@ class InvoiceFormModal extends Component
     public $due_date_note = '';
     public $clients = '';
     public $projects = '';
+    public $clientSearch = '';  // Added for Flux search input
+    public $projectSearch = ''; // Added for Flux search input
     public $currencies;
     public ?InvoiceSetting $settings = null;
     public ?Invoice $editingInvoice = null;
@@ -135,14 +138,8 @@ class InvoiceFormModal extends Component
             // 1. Load the settings and LOCK them (Race Condition Fix)
             // 'lockForUpdate' ensures that until this invoice is created,
             // no other process can read the next_number.
-            $settings = InvoiceSetting::firstOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'prefix' => 'INV',
-                    'next_number' => 1,
-                    'default_currency' => 'USD',
-                ]
-            );
+            $settings = InvoiceSetting::where('user_id', $user->id)->first();
+            // dd($settings->id);
 
             // Lock the settings row explicitly to handle concurrency safely
             $settings = InvoiceSetting::where('id', $settings->id)->lockForUpdate()->first();
@@ -462,8 +459,46 @@ class InvoiceFormModal extends Component
         $currentUser = Auth::id();
         $this->settings = InvoiceSetting::where('user_id', $currentUser)->first();
         $this->currencies = Currency::all();
-        $this->clients = Client::where('user_id', $currentUser)->get();
-        $this->projects = Project::where('user_id', $currentUser)->get();
+        // $this->clients = Client::where('user_id', $currentUser)->get();
+        // $this->projects = Project::where('user_id', $currentUser)->get();
+    }
+
+
+    #[Computed]
+    public function searchedClients()
+    {
+        $query = Client::where('user_id', Auth::id())
+            ->when($this->clientSearch, function ($query) {
+                $query->where('client_name', 'like', '%' . $this->clientSearch . '%');
+            });
+
+        $clients = $query->limit(15)->get();
+
+        // Prevent Flux from losing the selected label if the chosen client isn't in the top 15 search results
+        if ($this->client_id && !$clients->contains('id', $this->client_id)) {
+            $selected = Client::find($this->client_id);
+            if ($selected) $clients->push($selected);
+        }
+
+        return $clients;
+    }
+
+    #[Computed]
+    public function searchedProjects()
+    {
+        $query = Project::where('user_id', Auth::id())
+            ->when($this->projectSearch, function ($query) {
+                $query->where('name', 'like', '%' . $this->projectSearch . '%');
+            });
+
+        $projects = $query->limit(8)->get();
+
+        if ($this->project_id && !$projects->contains('id', $this->project_id)) {
+            $selected = Project::find($this->project_id);
+            if ($selected) $projects->push($selected);
+        }
+
+        return $projects;
     }
     
     public function render()

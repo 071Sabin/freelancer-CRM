@@ -12,6 +12,9 @@ use Illuminate\Support\Str;
 class Invoice extends Model
 {
     use SoftDeletes, HasFactory;
+    protected $table = 'invoices';
+    protected $primaryKey = 'id';
+    protected $timestamp = true;
 
     protected $fillable = [
         'user_id',
@@ -84,8 +87,7 @@ class Invoice extends Model
         'balance_due' => 'decimal:2',
     ];
 
-    protected $table = 'invoices';
-    protected $primaryKey = 'id';
+
 
 
     protected static function booted()
@@ -96,6 +98,7 @@ class Invoice extends Model
             }
         });
     }
+
     // Relationships
     public function user()
     {
@@ -150,5 +153,10 @@ class Invoice extends Model
     public function statusHistories()
     {
         return $this->hasMany(InvoiceStatusHistory::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency');
     }
 }

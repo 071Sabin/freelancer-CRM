@@ -15,8 +15,8 @@ class CurrencySeeder extends Seeder
     public function run(): void
     {
         $currencies = [
-            ['code' => 'NPR', 'symbol' => 'रु', 'name' => 'Nepalese Rupee', 'precision' => 2],
             ['code' => 'USD', 'symbol' => '$', 'name' => 'US Dollar', 'precision' => 2],
+            ['code' => 'NPR', 'symbol' => 'रु', 'name' => 'Nepalese Rupee', 'precision' => 2],
             ['code' => 'EUR', 'symbol' => '€', 'name' => 'Euro', 'precision' => 2],
             ['code' => 'GBP', 'symbol' => '£', 'name' => 'British Pound', 'precision' => 2],
             ['code' => 'JPY', 'symbol' => '¥', 'name' => 'Japanese Yen', 'precision' => 0],

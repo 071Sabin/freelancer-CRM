@@ -21,7 +21,7 @@ class TaskFactory extends Factory
         return [
             'project_id' => Project::factory(),
             'title' => $this->faker->sentence(4),
-            'description' => $this->faker->optional()->paragraph(),
+            'description' => $this->faker->optional()->text(253),
             'is_visible_to_client' => $this->faker->boolean(30),
             // 30% chance true
             'is_completed' => $this->faker->boolean(20),

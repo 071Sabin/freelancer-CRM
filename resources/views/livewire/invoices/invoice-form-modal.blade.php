@@ -25,22 +25,117 @@
                 @endif
             </div>
 
-            <flux:select label="Client" wire:model="client_id" placeholder="Select client">
-                @foreach ($clients as $client)
-                    <flux:select.option value="{{ $client->id }}">
-                        {{ ucwords($client->client_name) }}
-                    </flux:select.option>
-                @endforeach
-            </flux:select>
 
-            <flux:select label="Project" wire:model="project_id" placeholder="Select project">
-                @foreach ($projects as $project)
-                    <flux:select.option value="{{ $project->id }}">
-                        {{ $project->name }}
-                    </flux:select.option>
-                @endforeach
-            </flux:select>
+            {{-- search/select dropdown for projects and clients --}}
+            <div x-data="{ open: false }" class="relative mb-4" @click.outside="open = false">
+                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Client</label>
 
+                <button @click="open = !open" type="button"
+                    class="w-full flex justify-between items-center bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-sm text-neutral-900 dark:text-neutral-100 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-shadow">
+                    <span class="truncate">
+                        @php
+                            // Find the selected client name to display when the dropdown is closed
+                            $selectedClient = $this->searchedClients->firstWhere('id', $client_id);
+                        @endphp
+                        {{ $selectedClient ? ucwords($selectedClient->client_name) : 'Select client...' }}
+                    </span>
+                    <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div x-show="open" x-transition.opacity.duration.200ms
+                    class="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-lg overflow-hidden flex flex-col"
+                    style="display: none;">
+                    <div
+                        class="flex items-center px-3 border-b border-neutral-200 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700/50">
+                        <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" wire:model.live.debounce.300ms="clientSearch"
+                            class="w-full bg-transparent border-none focus:ring-0 text-sm py-2.5 px-2 text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 outline-none"
+                            placeholder="Search..." @keydown.escape.window="open = false">
+                    </div>
+
+                    <ul class="max-h-60 overflow-y-auto py-1">
+                        @forelse ($this->searchedClients as $client)
+                            <li wire:click="$set('client_id', {{ $client->id }}); open = false;"
+                                class="px-3 py-2 text-sm cursor-pointer transition-colors duration-150 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 flex justify-between items-center">
+                                <span>{{ ucwords($client->client_name) }}</span>
+                                @if ($client_id == $client->id)
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                @endif
+                            </li>
+                        @empty
+                            <li class="px-3 py-3 text-sm text-neutral-500 dark:text-neutral-400 text-center">
+                                No clients found.
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+
+
+            <div x-data="{ open: false }" class="relative mb-4" @click.outside="open = false">
+                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">Project</label>
+
+                <button @click="open = !open" type="button"
+                    class="w-full flex justify-between items-center bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-sm text-neutral-900 dark:text-neutral-100 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-shadow">
+                    <span class="truncate">
+                        @php
+                            $selectedProject = $this->searchedProjects->firstWhere('id', $project_id);
+                        @endphp
+                        {{ $selectedProject ? $selectedProject->name : 'Select project...' }}
+                    </span>
+                    <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div x-show="open" x-transition.opacity.duration.200ms
+                    class="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-lg overflow-hidden flex flex-col"
+                    style="display: none;">
+                    <div
+                        class="flex items-center px-3 border-b border-neutral-200 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700/50">
+                        <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" wire:model.live.debounce.300ms="projectSearch"
+                            class="w-full bg-transparent border-none focus:ring-0 text-sm py-2.5 px-2 text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 outline-none"
+                            placeholder="Search..." @keydown.escape.window="open = false">
+                    </div>
+
+                    <ul class="max-h-60 overflow-y-auto py-1">
+                        @forelse ($this->searchedProjects as $project)
+                            <li wire:click="$set('project_id', {{ $project->id }}); open = false;"
+                                class="px-3 py-2 text-sm cursor-pointer transition-colors duration-150 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 flex justify-between items-center">
+                                <span>{{ $project->name }}</span>
+                                @if ($project_id == $project->id)
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                @endif
+                            </li>
+                        @empty
+                            <li class="px-3 py-3 text-sm text-neutral-500 dark:text-neutral-400 text-center">
+                                No projects found.
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+
+            {{-- issue date and due date --}}
             <div class="grid grid-cols-2 gap-4">
                 <flux:input type="date" label="Issue Date" wire:model.live="issue_date" />
                 <div>
@@ -89,7 +184,8 @@
                                         }
                                     @endphp
                                     @if ($logoUrl)
-                                        <img src="{{ $logoUrl }}" class="h-16 mb-4 object-contain" alt="Logo">
+                                        <img src="{{ $logoUrl }}" class="h-16 mb-4 object-contain"
+                                            alt="Logo">
                                     @endif
                                 @endif
                                 <h1 class="text-xl font-bold text-neutral-900">
@@ -111,7 +207,8 @@
                             </div>
 
                             <div class="w-1/2 text-right">
-                                <div class="text-4xl font-light text-neutral-300 uppercase tracking-widest mb-2">Invoice
+                                <div class="text-4xl font-light text-neutral-300 uppercase tracking-widest mb-2">
+                                    Invoice
                                 </div>
                                 <flux:badge size="sm"
                                     :color="$viewingInvoice->invoice_status === 'paid' ? 'green' : 'neutral'"
@@ -297,7 +394,8 @@
 
             <div class="flex justify-center gap-3 mt-6">
                 @if ($viewingInvoice)
-                    <x-primary-button wire:click="downloadPdf({{ $viewingInvoice->id }})" wire:loading.attr="disabled"
+                    <x-primary-button wire:click="downloadPdf({{ $viewingInvoice->id }})"
+                        wire:loading.attr="disabled"
                         class="flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.97]">
 
                         {{-- Spinner --}}

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Invoices\Settings;
 
+use App\Models\Currency;
 use App\Models\InvoiceSetting;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -13,15 +14,15 @@ use Livewire\Attributes\Title;
 #[Layout('layouts.invoices-settings')]
 class General extends Component
 {
-
     public InvoiceSetting $settings;
 
+    public $currencies;
     public ?string $prefix = 'INV';
     public ?int $next_number = 1;
     public ?string $number_format = '{PREFIX}{NUMBER}';
-    public ?string $default_currency = 'USD';
+    public ?string $default_currency;
     public ?string $invoice_language = 'en';
-    public ?string $date_format = 'Y-m-d';
+    // public ?string $date_format = 'Y-m-d';
     public ?string $timezone = 'UTC';
 
     // Ye already sahi the tere
@@ -40,15 +41,16 @@ class General extends Component
         'country' => '',
     ];
 
+
     protected function rules(): array
     {
         return [
             'prefix' => 'required|string|max:10',
             'next_number' => 'required|integer|min:1',
             'number_format' => 'required|string|max:30',
-            'default_currency' => 'required|string|size:3',
+            'default_currency' => 'required|integer',
             'invoice_language' => 'required|string',
-            'date_format' => 'required|string',
+            // 'date_format' => 'required|string',
             'timezone' => 'required|string',
             'company_name' => 'nullable|string|max:150',
             'company_email' => 'nullable|email|max:150',
@@ -66,17 +68,11 @@ class General extends Component
 
     public function mount()
     {
-        $this->settings = InvoiceSetting::firstOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'prefix' => 'INV',
-                'next_number' => 1,
-                'default_currency' => 'USD',
-            ]
-        );
-        
-        $this->number_format = $this->settings->number_format ?? '{PREFIX}-{NUMBER}';
+        $this->currencies = Currency::get()->sortBy('code');
+        $this->settings = InvoiceSetting::where('user_id', auth()->id())->firstOrFail();
+        // dd($this->settings->id);
 
+        $this->number_format = $this->settings->number_format ?? '{PREFIX}{NUMBER}';
         $this->fill($this->settings->only([
             'prefix',
             'next_number',

@@ -28,10 +28,10 @@
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>'
             dataColor="text-emerald-600 dark:text-emerald-500" />
 
-        @php $avg = $clientDetails->count() ? number_format($clientDetails->avg('projects_value') ?? 0,2) : '0.00'; @endphp
+        {{-- @php $avg = $clientDetails->count() ? number_format($clientDetails->avg('projects_value') ?? 0,2) : '0.00'; @endphp
         <x-dashboard-card heading="Avg. Revenue" :value="'$' . $avg" dataOverTime="Per client engagement"
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>'
-            dataColor="text-neutral-400 dark:text-neutral-500" />
+            dataColor="text-neutral-400 dark:text-neutral-500" /> --}}
 
         <x-dashboard-card heading="Acquisition" :value="$thisMonthClients" dataOverTime="Joined this month"
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>'
@@ -75,8 +75,7 @@
 
 
     {{-- View Client Modal --}}
-    <flux:modal name="view-client-modal"
-        class="w-full max-w-xl !p-0 shadow-2xl rounded-2xl">
+    <flux:modal name="view-client-modal" class="w-full max-w-xl !p-0 shadow-2xl rounded-2xl">
 
         <div wire:loading wire:target="view"
             class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">
@@ -258,8 +257,7 @@
     </flux:modal>
 
     {{-- Edit Client Modal --}}
-    <flux:modal name="edit-client-modal"
-        class="w-full max-w-2xl !p-0 shadow-2xl rounded-2xl">
+    <flux:modal name="edit-client-modal" class="w-full max-w-2xl !p-0 shadow-2xl rounded-2xl">
 
         <div wire:loading wire:target="edit"
             class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-2xl">
@@ -331,7 +329,8 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
 
-                                <flux:select wire:model="form.currency_id" label="Currency" class="text-xs md:text-sm">
+                                <flux:select wire:model="form.currency_id" label="Currency"
+                                    class="text-xs md:text-sm">
                                     @foreach ($currencies as $currency)
                                         <flux:select.option value="{{ $currency->id }}" class="text-xs md:text-sm">
                                             {{ $currency->code }} — {{ $currency->symbol }}
@@ -342,7 +341,8 @@
                                 <x-input-field label="Hourly Rate" type="number" step="0.01"
                                     model="form.hourly_rate" />
 
-                                <flux:select wire:model="form.status" label="Status" placeholder="Status..." class="text-xs md:text-sm">
+                                <flux:select wire:model="form.status" label="Status" placeholder="Status..."
+                                    class="text-xs md:text-sm">
                                     <flux:select.option value="active">Active</flux:select.option>
                                     <flux:select.option value="inactive">Inactive</flux:select.option>
                                     <flux:select.option value="lead">Lead</flux:select.option>

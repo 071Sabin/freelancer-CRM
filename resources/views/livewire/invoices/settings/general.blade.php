@@ -68,7 +68,15 @@
                 class="lg:col-span-2 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                    <x-input-field label="Default Currency" model="default_currency" placeholder="USD" />
+                    {{-- <x-input-field label="Default Currency" model="default_currency" placeholder="USD" /> --}}
+
+                    <flux:select wire:model.defer="default_currency" label="Default Currency"
+                        placeholder="Select currency...">
+                        @foreach ($currencies as $c)
+                            <flux:select.option value="{{ $c->id }}">{{ $c->code }} - {{ $c->symbol }}
+                            </flux:select.option>
+                        @endforeach
+                    </flux:select>
 
                     <flux:select wire:model.defer="invoice_language" label="Language" placeholder="Select language...">
                         <flux:select.option value="en">English</flux:select.option>
@@ -78,7 +86,7 @@
                     </flux:select>
 
                     <x-input-field label="Timezone" model="timezone" placeholder="UTC" />
-                    <x-input-field label="Date Format" model="date_format" placeholder="Y-m-d" />
+                    {{-- <x-input-field label="Date Format" model="date_format" placeholder="Y-m-d" /> --}}
                 </div>
             </div>
         </div>

@@ -41,7 +41,6 @@
                         </flux:subheading>
 
                         <div class="flex gap-3">
-                            <x-badges.project-status :project_status="$project->status" />
                             <div class="flex items-center gap-2">
                                 <flux:tooltip content="View as Client">
                                     {{-- Open Client Portal --}}
@@ -109,6 +108,12 @@
                     <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium">Hourly Rate</p>
                     <p class="mt-1 font-semibold text-neutral-900 dark:text-neutral-100 text-xs md:text-base">
                         {{ $project->currency->symbol ?? '$' }}{{ number_format($project->hourly_rate, 2) }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium">status</p>
+                    <p class="mt-1 font-semibold text-neutral-900 dark:text-neutral-100 text-xs md:text-base">
+                    <x-badges.project-status project_status="{{ $project->status }}" />
+                    </p>
                 </div>
             </div>
 
