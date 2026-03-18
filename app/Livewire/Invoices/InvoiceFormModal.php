@@ -69,7 +69,7 @@ class InvoiceFormModal extends Component
     /**
      * Triggers:
      * 1. invoice-actions.blade.php, this file is in invoiceTable.php -> eye view -> download button
-     * 2. above data table-> actions column -> "download" icon
+     * 2.  data table-> actions column -> "download" icon
      */
     #[On('download-invoice')]
     public function downloadPdf($id)
@@ -172,6 +172,7 @@ class InvoiceFormModal extends Component
                     'company_website' => $settings->company_website,
                     'tax_id' => $settings->tax_id,
                     'payment_methods' => $settings->payment_methods,
+                    'bank_details' => $settings->bank_details,
                     'company_address' => $settings->company_address,
                 ];
 

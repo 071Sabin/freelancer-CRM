@@ -321,20 +321,21 @@
                         @endif
                     @endif
 
-                    <div class="text-xl font-bold text-neutral-900">{{ $viewingInvoice->company_snapshot['company_name'] ?? 'Freelancer CRM' }}
+                    <div class="text-xl font-bold text-neutral-900">
+                        {{ $invoice->company_snapshot['company_name'] ?? 'Freelancer CRM' }}
                     </div>
 
                     @if ($settings)
                         <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
-                            {{ $settings->company_email }}<br>
-                            @if ($settings->company_address)
-                                {{ implode(', ', $settings->company_address) }}<br>
+                            {{ $invoice->company_snapshot['company_email'] }}<br>
+                            @if ($invoice->company_snapshot['company_address'])
+                                {{ implode(', ', $invoice->company_snapshot['company_address']) }}<br>
                             @endif
-                            @if ($settings->company_website)
-                                {{ $settings->company_website }}<br>
+                            @if ($invoice->company_snapshot['company_website'])
+                                {{ $invoice->company_snapshot['company_website'] }}<br>
                             @endif
-                            @if ($settings->tax_id)
-                                Tax ID: {{ $settings->tax_id }}
+                            @if ($invoice->company_snapshot['tax_id'])
+                                Tax ID: {{ $invoice->company_snapshot['tax_id'] }}
                             @endif
                         </div>
                     @endif
@@ -404,7 +405,7 @@
                     <th class="py-3 px-4 font-bold text-right w-20">Price</th>
                     <th class="py-3 px-4 font-bold text-right rounded-r w-20">Total</th>
                 </tr>
-            </thead> 
+            </thead>
             <tbody>
                 @foreach ($invoice->items as $item)
                     <tr class="border-b border-neutral-100">
@@ -484,21 +485,30 @@
             <table>
                 <tr>
                     <td class="w-half align-top pr-8">
-                        @if ($settings && ($settings->bank_details || $settings->payment_methods))
-                            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Payment
-                                Details</div>
+                        @php
+                            $bankDetails = data_get($invoice, 'company_snapshot.bank_details', []);
+                            $paymentMethods = data_get($invoice, 'company_snapshot.payment_methods', []);
+                        @endphp
+
+                        @if (!empty($bankDetails) || !empty($paymentMethods))
+                            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">
+                                Payment Details
+                            </div>
+
                             <div class="text-xs text-neutral-600 leading-relaxed">
-                                @if ($settings->bank_details)
-                                    @foreach ($settings->bank_details as $detail)
+
+                                @if (!empty($bankDetails) && is_array($bankDetails))
+                                    @foreach ($bankDetails as $detail)
                                         <div>{{ $detail }}</div>
                                     @endforeach
                                 @endif
 
-                                @if ($settings->payment_methods)
+                                @if (!empty($paymentMethods) && is_array($paymentMethods))
                                     <div class="italic mt-2">
-                                        Accepted: {{ implode(', ', $settings->payment_methods) }}
+                                        Accepted: {{ implode(', ', $paymentMethods) }}
                                     </div>
                                 @endif
+
                             </div>
                         @endif
                     </td>
