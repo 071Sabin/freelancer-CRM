@@ -19,7 +19,7 @@ class ClientsTable extends DataTableComponent
         $this->setPrimaryKey('id')->setDefaultSort('client_name', 'asc');
 
         $this->setPerPageAccepted([10, 25, 50, 100]);
-        $this->setQueryStringDisabled();
+        // $this->setQueryStringDisabled();
 
         $this->setSearchPlaceholder('Search Clients...');
 

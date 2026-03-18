@@ -245,8 +245,8 @@
                                         {{ $viewingInvoice->client->client_name }}</div>
                                     <div class="text-sm text-neutral-600">
                                         {{ $viewingInvoice->client->client_email }}<br>
-                                        @if ($viewingInvoice->client->billing_address)
-                                            {!! nl2br(e($viewingInvoice->client->billing_address)) !!}
+                                        @if ($viewingInvoice->billing_address)
+                                            {!! nl2br(e($viewingInvoice->billing_address)) !!}
                                         @endif
                                     </div>
                                 @else
@@ -288,7 +288,7 @@
                                     <div
                                         class="flex justify-between py-2 text-sm text-neutral-600 border-b border-neutral-100">
                                         <span>Subtotal</span>
-                                        <span>{{ $viewingInvoice->currency }}
+                                        <span>{{ $viewingInvoice->currency->code }}
                                             {{ number_format($viewingInvoice->subtotal, 2) }}</span>
                                     </div>
 
@@ -302,7 +302,7 @@
                                         <div
                                             class="flex justify-between py-2 text-sm text-red-500 border-b border-neutral-100">
                                             <span>Discount</span>
-                                            <span>-{{ $viewingInvoice->currency }}
+                                            <span>-{{ $viewingInvoice->currency->code }}
                                                 {{ number_format($discountTotal, 2) }}</span>
                                         </div>
                                     @endif
@@ -312,7 +312,7 @@
                                             class="flex justify-between py-2 text-sm text-neutral-600 border-b border-neutral-100">
                                             <span>Tax
                                                 ({{ number_format($metadata['tax_rate'] ?? ($viewingInvoice->tax_rate ?? 0), 2) }}%)</span>
-                                            <span>{{ $viewingInvoice->currency }}
+                                            <span>{{ $viewingInvoice->currency->code }}
                                                 {{ number_format($viewingInvoice->tax_total, 2) }}</span>
                                         </div>
                                     @endif
@@ -321,7 +321,7 @@
                                         <div
                                             class="flex justify-between py-2 text-sm text-yellow-600 border-b border-neutral-100">
                                             <span>Late Fee</span>
-                                            <span>+{{ $viewingInvoice->currency }}
+                                            <span>+{{ $viewingInvoice->currency->code }}
                                                 {{ number_format($lateFeeTotal, 2) }}</span>
                                         </div>
                                     @endif
@@ -329,7 +329,7 @@
                                     <div
                                         class="flex justify-between py-3 text-lg font-bold text-neutral-900 border-t border-neutral-900 mt-[-1px]">
                                         <span>Total</span>
-                                        <span>{{ $viewingInvoice->currency }}
+                                        <span>{{ $viewingInvoice->currency->code }}
                                             {{ number_format($viewingInvoice->total, 2) }}</span>
                                     </div>
                                 </div>
@@ -483,9 +483,9 @@
                                     <flux:select.option value="canceled">Canceled</flux:select.option>
                                 </flux:select>
 
-                                <flux:select label="Currency" wire:model="currency">
+                                <flux:select label="Currency" wire:model.live="currency">
                                     @foreach ($currencies as $c)
-                                        <flux:select.option value="{{ $c->code }}">
+                                        <flux:select.option value="{{ $c->id }}">
                                             {{ $c->code }} - {{ $c->symbol }}
                                         </flux:select.option>
                                     @endforeach
@@ -665,7 +665,7 @@
                                     <div
                                         class="flex justify-between text-base font-bold text-neutral-900 dark:text-white pt-2 border-t border-neutral-200 dark:border-neutral-700 mt-2">
                                         <span>Total</span>
-                                        <span>{{ $editingInvoice->currency ?? '$' }}
+                                        <span>{{ $editingInvoice->currency->symbol }}
                                             {{ number_format($total, 2) }}</span>
                                     </div>
                                 </div>

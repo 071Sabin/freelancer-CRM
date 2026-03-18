@@ -33,7 +33,7 @@ class Invoice extends Model
         'viewed_at',
         'canceled_at',
         'voided_at',
-        'currency',
+        'bill_currency_id',
         'base_currency',
         'exchange_rate',
         // 'tax_rate', // Removed as per user request to use metadata/settings
@@ -157,6 +157,6 @@ class Invoice extends Model
 
     public function currency()
     {
-        return $this->belongsTo(Currency::class, 'currency');
+        return $this->belongsTo(Currency::class, 'bill_currency_id');
     }
 }

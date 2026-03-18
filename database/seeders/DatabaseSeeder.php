@@ -35,8 +35,8 @@ class DatabaseSeeder extends Seeder
 
         $client = Client::factory()->create(['user_id' => $user->id]);
         InvoiceSetting::factory()->create(['user_id' => $user->id]);
-        $chunkSize = 5000;
-        $totalProjects = 1000000;
+        $chunkSize = 1;
+        $totalProjects = 2;
 
         for ($i = 0; $i < $totalProjects / $chunkSize; $i++) {
 

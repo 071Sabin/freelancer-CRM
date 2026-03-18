@@ -6,6 +6,7 @@ use App\Livewire\Invoices\InvoiceFormModal;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Invoice;
+use App\Models\InvoiceSetting;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
@@ -21,17 +22,30 @@ class InvoiceFormModalTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_it_creates_draft_invoice_and_auto_generates_invoice_number()
+    public function test_it_creates_draft_invoice_and_generates_number_with_currency()
     {
-        // 1. Arrange: Setup the sterile test environment
+        // 1. Arrange
         $user = User::factory()->create();
-        $client = Client::factory()->create(['user_id' => $user->id]);
-        $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
+        $currency = Currency::first();
 
-        // CRITICAL: We need a currency in the DB for the mount() method!
-        // Currency::factory()->create(['code' => 'USD']);
+        $client = Client::factory()->create([
+            'user_id' => $user->id,
+        ]);
 
-        // 2. Act: Simulate the user filling the form and hitting create
+        $project = Project::factory()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'currency_id' => $currency->id,
+        ]);
+
+        InvoiceSetting::factory()->create([
+            'user_id' => $user->id,
+            'prefix' => 'INV',
+            'next_number' => 1,
+            'default_due_days' => 14,
+        ]);
+
+        // 2. Act
         Livewire::actingAs($user)
             ->test(\App\Livewire\Invoices\InvoiceFormModal::class)
             ->set('client_id', $client->id)
@@ -41,25 +55,25 @@ class InvoiceFormModalTest extends TestCase
             ->set('invoice_status', 'draft')
             ->call('create')
             ->assertHasNoErrors()
-            ->assertDispatched('invoice-saved') // Proves the UI will refresh!
+            ->assertDispatched('invoice-saved')
             ->assertDispatched('refreshDatatable');
 
-        // 3. Assert: Did it actually save perfectly?
+        // 3. Assert DB
         $this->assertDatabaseHas('invoices', [
             'client_id' => $client->id,
             'project_id' => $project->id,
             'invoice_status' => 'draft',
-            'invoice_number' => 'INV-00001', // Proves your settings logic worked!
-            'total' => 0, // Starts at 0
+            'invoice_number' => 'INV-00001',
+            'bill_currency_id' => $currency->id, // 🔥 IMPORTANT ASSERT
+            'total' => 0,
         ]);
 
-        // Proves the setting was incremented for the NEXT invoice
+        // 4. Assert increment
         $this->assertDatabaseHas('invoice_settings', [
             'user_id' => $user->id,
             'next_number' => 2,
         ]);
     }
-
 
     public function test_it_perfectly_calculates_invoice_totals_with_tax_and_discounts()
     {

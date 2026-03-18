@@ -25,7 +25,7 @@ class InvoiceFormModal extends Component
     public $client_id = "";
     public $project_id = "";
     public $invoice_status = 'draft';
-    public $currency = 'USD';
+    public $currency;
     public $issue_date = '';
     public $due_date = '';
     public $due_date_note = '';
@@ -142,6 +142,13 @@ class InvoiceFormModal extends Component
                     ->lockForUpdate()
                     ->first();
 
+                $projectDetails = Project::with('currency','client')->where('client_id', $this->client_id)->first();
+
+                if (!$projectDetails->currency) {
+                    session()->flash('error', 'Project curency missing');
+                }
+                // dd($projectCurrency->currency->id);
+                
                 // 2. Generate invoice number
                 $invoiceNumber = sprintf(
                     '%s-%05d',
@@ -163,7 +170,7 @@ class InvoiceFormModal extends Component
                     'public_token'   => Str::random(64),
                     'issue_date'     => $this->issue_date,
                     'due_date'       => $this->due_date,
-                    'currency'       => $settings->default_currency,
+                    'bill_currency_id' => $projectDetails->currency->id,
                     'subtotal'       => 0,
                     'tax_total'      => 0,
                     'discount_total' => 0,
@@ -177,6 +184,7 @@ class InvoiceFormModal extends Component
                     'terms'          => $settings->default_terms,
                     'payment_terms'  => $settings->default_payment_terms,
                     'due_days'       => $settings->default_due_days,
+                    'billing_address' => $projectDetails->client->billing_address,
                     'metadata'       => [
                         'tax_rate' => $settings->default_tax_rate ?? 0,
                     ],
@@ -207,7 +215,7 @@ class InvoiceFormModal extends Component
 
     public function edit($id)
     {
-        $this->editingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
+        $this->editingInvoice = Invoice::with(['client', 'project', 'items', 'currency'])->findOrFail($id);
         $this->authorize('view', $this->editingInvoice); // Ensure user can edit this invoice
         $this->invoiceItems = $this->editingInvoice->items->map(function ($item) {
             return [
@@ -224,7 +232,7 @@ class InvoiceFormModal extends Component
         $settings = InvoiceSetting::where('user_id', Auth::id())->first();
 
         // Tax Rate (from metadata if exists, else settings)
-        $this->tax_rate = $metadata['tax_rate'] ?? ($settings->default_tax_rate ?? 0);
+        $this->tax_rate = $settings->default_tax_rate ?? 0;
 
         // Discount
         $this->discount_value = $metadata['discount_value'] ?? ($settings->default_discount_rate ?? 0);
@@ -238,8 +246,8 @@ class InvoiceFormModal extends Component
         $this->issue_date = $this->editingInvoice->issue_date ? \Carbon\Carbon::parse($this->editingInvoice->issue_date)->format('Y-m-d') : now()->format('Y-m-d');
 
         $this->invoice_status = $this->editingInvoice->invoice_status;
-        $this->currency = $this->editingInvoice->currency ?? ($settings->default_currency ?? 'USD');
-
+        $this->currency = $this->editingInvoice->currency->id;
+        
         if ($this->editingInvoice->due_date) {
             $this->due_date = \Carbon\Carbon::parse($this->editingInvoice->due_date)->format('Y-m-d');
         } else {
@@ -254,9 +262,9 @@ class InvoiceFormModal extends Component
 
     public function view($id)
     {
-        $this->viewingInvoice = Invoice::with(['client', 'project', 'items'])->findOrFail($id);
+        $this->viewingInvoice = Invoice::with(['client', 'project', 'items','currency'])->findOrFail($id);
         $this->authorize('view', $this->viewingInvoice); // Ensure user can view this invoice
-        // dd($this->authorize('view', $this->viewingInvoice));
+
         $this->modal('view-invoice-modal')->show();
     }
 
@@ -361,7 +369,7 @@ class InvoiceFormModal extends Component
             'issue_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:issue_date',
             'invoice_status' => 'required|in:draft,sent,paid,partially_paid,overdue,void,canceled',
-            'currency' => 'required|string|size:3',
+            'currency' => 'required|integer',
             'invoiceItems.*.description' => 'required|string',
             'invoiceItems.*.quantity' => 'required|numeric|min:0.01',
             'invoiceItems.*.unit_price' => 'required|numeric|min:0',
@@ -387,7 +395,7 @@ class InvoiceFormModal extends Component
             $this->editingInvoice->issue_date = $this->issue_date;
             $this->editingInvoice->due_date = $this->due_date;
             $this->editingInvoice->invoice_status = $this->invoice_status;
-            $this->editingInvoice->currency = $this->currency;
+            $this->editingInvoice->bill_currency_id = $this->currency;
             $this->editingInvoice->subtotal = $this->subtotal;
             $this->editingInvoice->tax_total = $this->tax_total;
             $this->editingInvoice->discount_total = $this->discount_total; // This column usually exists
@@ -432,7 +440,6 @@ class InvoiceFormModal extends Component
         $this->dispatch('invoice-saved');
         $this->dispatch('refreshDatatable');
         return back()->with('success', 'Invoice updated successfully.');
-        
     }
 
     /**
@@ -452,7 +459,7 @@ class InvoiceFormModal extends Component
     {
         $currentUser = Auth::id();
         $this->settings = InvoiceSetting::where('user_id', $currentUser)->first();
-        $this->currencies = Currency::all();
+        $this->currencies = Currency::all()->sortBy('code');
         // $this->clients = Client::where('user_id', $currentUser)->get();
         // $this->projects = Project::where('user_id', $currentUser)->get();
     }
@@ -494,7 +501,7 @@ class InvoiceFormModal extends Component
 
         return $projects;
     }
-    
+
     public function render()
     {
         return view('livewire.invoices.invoice-form-modal');

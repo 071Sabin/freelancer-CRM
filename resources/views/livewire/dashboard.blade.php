@@ -24,7 +24,7 @@
         </x-dashboard-card>
 
         <!-- Revenue -->
-        <x-dashboard-card heading="Total Revenue" value="{{ $default_currency->currency->symbol }} {{ number_format($totalRevenue, 2) }}"
+        <x-dashboard-card heading="Total Revenue" value="${{ number_format($totalRevenue, 2) }}"
             dataOverTime="+12% growth"
             icon='
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

@@ -49,7 +49,7 @@ class InvoiceFactory extends Factory
             'canceled_at' => null,
             'voided_at' => null,
 
-            'currency' => 'USD',
+            'bill_currency_id' => 1,
             'base_currency' => null,
             'exchange_rate' => null,
 

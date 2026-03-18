@@ -20,7 +20,7 @@ class Dashboard extends Component
     public $totalRevenue = 0;
     public $pendingInvoices = 0;
     public $overdueInvoices = 0;
-    public $invoices, $default_currency;
+    public $invoices;
 
     public function mount()
     {
@@ -31,8 +31,6 @@ class Dashboard extends Component
         $this->progressProjects = Project::where(['user_id' => $userId, 'status' => 'in_progress'])->count();
         $this->activeProjects = Project::where(['user_id' => $userId, 'status' => 'active'])->count();
         $this->recentProjects = Project::with('client')->where('user_id', $userId)->latest()->take(3)->get();
-        $this->default_currency= InvoiceSetting::with('currency')->where('user_id', $userId)->first();
-        // dd($this->default_currency->currency->symbol);
 
         // // 1. Total Revenue (Sum of 'Paid' invoices only)
         $this->totalRevenue = Invoice::where('user_id', $userId)

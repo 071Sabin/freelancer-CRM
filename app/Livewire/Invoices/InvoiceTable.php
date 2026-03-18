@@ -33,7 +33,7 @@ class InvoiceTable extends DataTableComponent
     public function query(): Builder
     {
         return Invoice::query()->where(['user_id' => auth()->id()])
-            ->with(['client' => fn($query) => $query->withTrashed(), 'project']);
+            ->with(['client' => fn($query) => $query->withTrashed(), 'project', 'currency']);
     }
 
 
@@ -43,10 +43,11 @@ class InvoiceTable extends DataTableComponent
             // Column::make('ID', 'id')->hideIf(true),
 
             // FIX 1: Add Hidden Columns to ensure data is available in $row
-            Column::make('Client ID', 'client_id')->hideIf(true),
+            // Column::make('Client ID', 'id')->hideIf(false),
+            // Column::make('Client ID', 'uuid'),
             Column::make('Issue Date', 'issue_date')->hideIf(true),
 
-            Column::make('Currency', 'currency')->hideIf(true),
+            Column::make('Currency', 'currency.code')->hideIf(true),
 
             Column::make('Invoice #', 'invoice_number')
                 ->sortable()
@@ -121,8 +122,8 @@ class InvoiceTable extends DataTableComponent
                     $total = (float) $value;
                     $paid = (float) ($row->paid_total ?? 0);
                     $due = (float) ($row->balance_due ?? 0);
-                    $currency = e($row->currency);
-
+                    $currency = $row->{'currency.code'};
+                    
                     // 2. Calculate Percentage for the Bar (Cap at 100%)
                     $percent = $total > 0 ? ($paid / $total) * 100 : 0;
                     $percent = min(100, max(0, $percent)); // Clamp between 0-100

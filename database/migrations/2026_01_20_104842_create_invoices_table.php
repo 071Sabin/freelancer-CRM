@@ -37,8 +37,8 @@ return new class extends Migration
             $table->timestamp('voided_at')->nullable();
 
             // Money (snapshot values)
-            $table->string('currency', 3);
-            $table->string('base_currency', 3)->nullable();
+            $table->integer('bill_currency_id');
+            $table->integer('base_currency')->nullable();
             $table->decimal('exchange_rate', 18, 6)->nullable();
             $table->decimal('subtotal', 12, 2)->default(0);
             $table->decimal('tax_total', 12, 2)->default(0);

@@ -3,7 +3,6 @@
 use App\Livewire\ClientPortal\Portal;
 use App\Livewire\Clients\Clients;
 use App\Livewire\Dashboard;
-use App\Livewire\FreelancerDetails;
 use App\Livewire\Invoices\Settings\Branding;
 use App\Livewire\Invoices\Settings\General;
 use App\Livewire\Invoices\Settings\Payments;
@@ -12,11 +11,9 @@ use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
 
-use App\Livewire\Invoices\Invoice;
 use App\Livewire\Invoices\InvoiceIndex;
 use App\Livewire\Projects\Workspace;
 use App\Livewire\Settings\StripeCallback;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -31,8 +28,6 @@ Route::get('/register', Register::class)->name('register');
 Route::get('/login', Login::class)->name('login');
 Route::get('/p/view/{uuid}', Portal::class)->name('client.portal');
 
-
-// Route::get('/login', Login::class)->name('login');
 // Route::get('/freelancers', FreelancerDetails::class)->name('freelancers');
 
 Route::middleware('auth')->group(function () {
