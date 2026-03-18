@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
                     'project_id' => $project->id
                 ]);
 
-                Invoice::factory()->create([
+                Invoice::factory()->draft()->create([
                     'user_id' => $user->id,
                     'client_id' => $client->id,
                     'project_id' => $project->id

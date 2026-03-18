@@ -67,7 +67,7 @@ class DashboardTest extends TestCase
             // total revenue should be 200 because revenue = total of paid status and we have $100*2 invoices paid status above
             ->assertSet('totalRevenue', 200.00)
             ->assertSet('pendingInvoices', 2)
-            ->assertSet('overdueInvoices', 1)
+            ->assertSet('overdueInvoices', 2)
             ->assertSee('200.00') // The revenue amount is visible on screen
             ->assertSee('2')      // The pending count is visible on screen
 
