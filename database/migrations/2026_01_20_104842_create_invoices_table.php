@@ -62,9 +62,13 @@ return new class extends Migration
 
             // Snapshots / compliance
             $table->json('client_snapshot')->nullable();
+            // freelancer company details
             $table->json('company_snapshot')->nullable();
+            // client billing address
             $table->json('billing_address')->nullable();
+            // client company address
             $table->json('company_address')->nullable();
+            // client shipping address
             $table->json('shipping_address')->nullable();
             $table->json('metadata')->nullable();
 

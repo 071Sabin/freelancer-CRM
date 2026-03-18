@@ -142,19 +142,39 @@ class InvoiceFormModal extends Component
                     ->lockForUpdate()
                     ->first();
 
-                $projectDetails = Project::with('currency','client')->where('client_id', $this->client_id)->first();
+                $client = Client::findOrFail($this->client_id);
+                $billCurrencyId = null;
 
-                if (!$projectDetails->currency) {
-                    session()->flash('error', 'Project curency missing');
+                if ($this->project_id) {
+                    $project = Project::findOrFail($this->project_id);
+                    $billCurrencyId = $project->currency_id; // Project's currency
+                } else {
+                    $billCurrencyId = $client->currency_id; // Client's default currency
                 }
-                // dd($projectCurrency->currency->id);
-                
+
+                if (!$billCurrencyId) {
+                    session()->flash('error', 'Currency is missing for this client/project');
+                    return;
+                }
+
                 // 2. Generate invoice number
                 $invoiceNumber = sprintf(
                     '%s-%05d',
                     $settings->prefix,
                     $settings->next_number
                 );
+
+                // this is freelancer company details as snapshot
+                $companySnapshot = [
+                    'company_name' => $settings->company_name,
+                    'company_email' => $settings->company_email,
+                    'company_phone' => $settings->company_phone,
+                    'company_website' => $settings->company_website,
+                    'tax_id' => $settings->tax_id,
+                    'payment_methods' => $settings->payment_methods,
+                    'company_address' => $settings->company_address,
+                ];
+
 
                 // 3. Create invoice
                 $invoice = Invoice::create([
@@ -170,7 +190,7 @@ class InvoiceFormModal extends Component
                     'public_token'   => Str::random(64),
                     'issue_date'     => $this->issue_date,
                     'due_date'       => $this->due_date,
-                    'bill_currency_id' => $projectDetails->currency->id,
+                    'bill_currency_id' => $billCurrencyId,
                     'subtotal'       => 0,
                     'tax_total'      => 0,
                     'discount_total' => 0,
@@ -184,7 +204,18 @@ class InvoiceFormModal extends Component
                     'terms'          => $settings->default_terms,
                     'payment_terms'  => $settings->default_payment_terms,
                     'due_days'       => $settings->default_due_days,
-                    'billing_address' => $projectDetails->client->billing_address,
+                    'billing_address' => $client->billing_address,
+                    'company_snapshot' => $companySnapshot,
+                    'client_snapshot' => [
+                        'client_name' => $client->client_name,
+                        'client_email' => $client->client_email,
+                        'company_name' => $client->company_name,
+                        'company_email'   => $client->company_email,
+                        'company_phone'   => $client->company_phone,
+                        'company_website' => $client->company_website,
+                    ],
+                    // for keeping it filled, edit it whenever required
+                    'base_currency' => $settings->default_currency_id ?? null,
                     'metadata'       => [
                         'tax_rate' => $settings->default_tax_rate ?? 0,
                     ],
@@ -212,7 +243,7 @@ class InvoiceFormModal extends Component
         }
     }
 
-
+    // after creation of draft invoice, what things to be edited is done here
     public function edit($id)
     {
         $this->editingInvoice = Invoice::with(['client', 'project', 'items', 'currency'])->findOrFail($id);
@@ -232,7 +263,7 @@ class InvoiceFormModal extends Component
         $settings = InvoiceSetting::where('user_id', Auth::id())->first();
 
         // Tax Rate (from metadata if exists, else settings)
-        $this->tax_rate = $settings->default_tax_rate ?? 0;
+        $this->tax_rate = $metadata['tax_rate'] ?? $settings->default_tax_rate ?? 0;
 
         // Discount
         $this->discount_value = $metadata['discount_value'] ?? ($settings->default_discount_rate ?? 0);
@@ -247,7 +278,7 @@ class InvoiceFormModal extends Component
 
         $this->invoice_status = $this->editingInvoice->invoice_status;
         $this->currency = $this->editingInvoice->currency->id;
-        
+
         if ($this->editingInvoice->due_date) {
             $this->due_date = \Carbon\Carbon::parse($this->editingInvoice->due_date)->format('Y-m-d');
         } else {
@@ -262,7 +293,7 @@ class InvoiceFormModal extends Component
 
     public function view($id)
     {
-        $this->viewingInvoice = Invoice::with(['client', 'project', 'items','currency'])->findOrFail($id);
+        $this->viewingInvoice = Invoice::with(['client', 'project', 'items', 'currency'])->findOrFail($id);
         $this->authorize('view', $this->viewingInvoice); // Ensure user can view this invoice
 
         $this->modal('view-invoice-modal')->show();
@@ -439,7 +470,7 @@ class InvoiceFormModal extends Component
         $this->modal('edit-invoice-modal')->close();
         $this->dispatch('invoice-saved');
         $this->dispatch('refreshDatatable');
-        return back()->with('success', 'Invoice updated successfully.');
+        session()->flash('success', 'Invoice updated successfully.');
     }
 
     /**
@@ -454,6 +485,15 @@ class InvoiceFormModal extends Component
         $this->resetErrorBag();
         $this->resetValidation();
     }
+
+    public function updatedProjectId($value)
+    {
+        $project = Project::find($value);
+        $this->currency = $project?->currency
+            ? $project->currency->code . ' - ' . $project->currency->symbol
+            : null;
+    }
+
 
     public function mount()
     {

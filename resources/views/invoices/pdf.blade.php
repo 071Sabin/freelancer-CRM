@@ -321,7 +321,7 @@
                         @endif
                     @endif
 
-                    <div class="text-xl font-bold text-neutral-900">{{ $settings->company_name ?? 'Freelancer CRM' }}
+                    <div class="text-xl font-bold text-neutral-900">{{ $viewingInvoice->company_snapshot['company_name'] ?? 'Freelancer CRM' }}
                     </div>
 
                     @if ($settings)
@@ -384,7 +384,7 @@
                 <div class="text-sm text-neutral-600">
                     {{ $invoice->client->client_email }}<br>
                     @if ($invoice->client->billing_address)
-                        {!! nl2br(e($invoice->client->billing_address)) !!}
+                        {!! nl2br(e($invoice->billing_address)) !!}
                     @endif
                     @if ($invoice->client->tax_id)
                         <br>Tax ID: {{ $invoice->client->tax_id }}
@@ -404,7 +404,7 @@
                     <th class="py-3 px-4 font-bold text-right w-20">Price</th>
                     <th class="py-3 px-4 font-bold text-right rounded-r w-20">Total</th>
                 </tr>
-            </thead>
+            </thead> 
             <tbody>
                 @foreach ($invoice->items as $item)
                     <tr class="border-b border-neutral-100">
@@ -427,13 +427,13 @@
         <!-- Totals -->
         <table class="w-full mb-10">
             <tr>
-                <td class="w-half"></td> <!-- Spacer -->
+                <td class="w-half"></td>
                 <td class="w-half">
                     <table class="w-full">
                         <tr>
                             <td class="py-2 text-neutral-600 border-b border-neutral-100">Subtotal</td>
                             <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">
-                                {{ $invoice->currency }} {{ number_format($invoice->subtotal, 2) }}</td>
+                                {{ $invoice->currency->code }} {{ number_format($invoice->subtotal, 2) }}</td>
                         </tr>
 
                         @php
@@ -446,7 +446,7 @@
                             <tr>
                                 <td class="py-2 text-red-500 border-b border-neutral-100">Discount</td>
                                 <td class="py-2 text-right text-red-500 font-medium border-b border-neutral-100">
-                                    -{{ $invoice->currency }} {{ number_format($discountTotal, 2) }}</td>
+                                    -{{ $invoice->currency->code }} {{ number_format($discountTotal, 2) }}</td>
                             </tr>
                         @endif
 
@@ -455,7 +455,7 @@
                                 <td class="py-2 text-neutral-600 border-b border-neutral-100">Tax
                                     ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)</td>
                                 <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">
-                                    {{ $invoice->currency }} {{ number_format($invoice->tax_total, 2) }}</td>
+                                    {{ $invoice->currency->code }} {{ number_format($invoice->tax_total, 2) }}</td>
                             </tr>
                         @endif
 
@@ -463,7 +463,7 @@
                             <tr>
                                 <td class="py-2 text-yellow-600 border-b border-neutral-100">Late Fee</td>
                                 <td class="py-2 text-right text-yellow-600 font-medium border-b border-neutral-100">
-                                    +{{ $invoice->currency }} {{ number_format($lateFeeTotal, 2) }}</td>
+                                    +{{ $invoice->currency->code }} {{ number_format($lateFeeTotal, 2) }}</td>
                             </tr>
                         @endif
 
@@ -472,7 +472,7 @@
                             </td>
                             <td
                                 class="py-3 text-lg font-bold text-right text-neutral-900 border-t border-neutral-900 mt-1">
-                                {{ $invoice->currency }} {{ number_format($invoice->total, 2) }}</td>
+                                {{ $invoice->currency->code }} {{ number_format($invoice->total, 2) }}</td>
                         </tr>
                     </table>
                 </td>

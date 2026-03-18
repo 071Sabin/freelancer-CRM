@@ -97,7 +97,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-
                 <div x-show="open" x-transition.opacity.duration.200ms
                     class="absolute z-50 mt-1 w-full bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded-lg shadow-lg overflow-hidden flex flex-col"
                     style="display: none;">
@@ -133,6 +132,10 @@
                         @endforelse
                     </ul>
                 </div>
+            </div>
+
+            <div>
+                <p class="text-xs md:text-sm text-neutral-400">Project Currency: {{ $currency }}</p>
             </div>
 
             {{-- issue date and due date --}}
@@ -189,18 +192,18 @@
                                     @endif
                                 @endif
                                 <h1 class="text-xl font-bold text-neutral-900">
-                                    {{ $settings->company_name ?? 'Freelancer CRM' }}</h1>
+                                    {{ $viewingInvoice->company_snapshot['company_name'] ?? 'Freelancer CRM' }}</h1>
                                 @if ($settings)
                                     <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
-                                        {{ $settings->company_email }}<br>
-                                        @if ($settings->company_address)
-                                            {{ implode(', ', $settings->company_address) }}<br>
+                                        {{ $viewingInvoice->company_snapshot['company_email'] }}<br>
+                                        @if ($viewingInvoice->company_snapshot['company_address'])
+                                            {{ implode(', ', $viewingInvoice->company_snapshot['company_address']) }}<br>
                                         @endif
-                                        @if ($settings->company_website)
-                                            {{ $settings->company_website }}<br>
+                                        @if ($viewingInvoice->company_snapshot['company_website'])
+                                            {{ $viewingInvoice->company_snapshot['company_website'] }}<br>
                                         @endif
-                                        @if ($settings->tax_id)
-                                            Tax ID: {{ $settings->tax_id }}
+                                        @if ($viewingInvoice->company_snapshot['tax_id'])
+                                            Tax ID: {{ $viewingInvoice->company_snapshot['tax_id'] }}
                                         @endif
                                     </div>
                                 @endif
@@ -242,7 +245,7 @@
                                 </h3>
                                 @if ($viewingInvoice->client)
                                     <div class="text-lg font-bold text-neutral-900">
-                                        {{ $viewingInvoice->client->client_name }}</div>
+                                        {{ $viewingInvoice->client_snapshot['client_name'] }}</div>
                                     <div class="text-sm text-neutral-600">
                                         {{ $viewingInvoice->client->client_email }}<br>
                                         @if ($viewingInvoice->billing_address)
