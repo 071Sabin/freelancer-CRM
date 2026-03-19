@@ -48,6 +48,7 @@ class Invoice extends Model
         'is_tax_inclusive',
         'notes',
         'terms',
+        'default_footer',
         'payment_terms',
         'due_days',
         'sent_at',

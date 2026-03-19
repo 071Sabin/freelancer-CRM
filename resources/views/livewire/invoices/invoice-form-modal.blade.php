@@ -383,10 +383,11 @@
                         </div>
 
                         {{-- Default Footer --}}
-                        @if ($settings && $settings->default_footer)
+                        @if ($viewingInvoice && $viewingInvoice->default_footer)
                             <div
                                 class="bg-neutral-50 px-10 py-4 border-t border-neutral-200 text-center text-xs text-neutral-400">
-                                {{ $settings->default_footer }}
+                                {{ $viewingInvoice->default_footer }}
+
                             </div>
                         @endif
                     </div>

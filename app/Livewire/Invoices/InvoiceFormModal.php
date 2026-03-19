@@ -502,8 +502,6 @@ class InvoiceFormModal extends Component
         $currentUser = Auth::id();
         $this->settings = InvoiceSetting::where('user_id', $currentUser)->first();
         $this->currencies = Currency::all()->sortBy('code');
-        // $this->clients = Client::where('user_id', $currentUser)->get();
-        // $this->projects = Project::where('user_id', $currentUser)->get();
     }
 
 

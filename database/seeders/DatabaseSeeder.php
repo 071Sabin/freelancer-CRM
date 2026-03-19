@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $client = Client::factory()->create(['user_id' => $user->id]);
-        InvoiceSetting::factory()->create(['user_id' => $user->id]);
+        $inSetting =InvoiceSetting::factory()->create(['user_id' => $user->id]);
         $chunkSize = 1;
         $totalProjects = 2;
 
@@ -56,7 +56,8 @@ class DatabaseSeeder extends Seeder
                 Invoice::factory()->draft()->create([
                     'user_id' => $user->id,
                     'client_id' => $client->id,
-                    'project_id' => $project->id
+                    'project_id' => $project->id,
+                    'default_footer' => $inSetting->default_footer,
                 ]);
             }
 
