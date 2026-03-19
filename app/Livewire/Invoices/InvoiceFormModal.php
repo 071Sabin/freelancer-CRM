@@ -163,7 +163,7 @@ class InvoiceFormModal extends Component
                     $settings->prefix,
                     $settings->next_number
                 );
-
+                
                 // this is freelancer company details as snapshot
                 $companySnapshot = [
                     'company_name' => $settings->company_name,

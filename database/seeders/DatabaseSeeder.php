@@ -58,6 +58,26 @@ class DatabaseSeeder extends Seeder
                     'client_id' => $client->id,
                     'project_id' => $project->id,
                     'default_footer' => $inSetting->default_footer,
+                    'client_snapshot' => [
+                        'client_name' => $client->client_name,
+                        'client_email' => $client->client_email,
+                        'company_name' => $client->company_name,
+                        'company_email'   => $client->company_email,
+                        'company_phone'   => $client->company_phone,
+                        'company_website' => $client->company_website,
+                    ],
+                    'company_snapshot' => [
+                        'company_name' => $inSetting->company_name,
+                        'company_email' => $inSetting->company_email,
+                        'company_phone' => $inSetting->company_phone,
+                        'company_website' => $inSetting->company_website,
+                        'company_address' => $inSetting->company_address,
+                        'tax_id' => $inSetting->tax_id,
+                        'payment_methods' => $inSetting->payment_methods,
+                        'bank_details' => $inSetting->bank_details,
+                    ],
+                    'billing_address' => $client->billing_address,
+                    'company_address' => $client->company_address,
                 ]);
             }
 

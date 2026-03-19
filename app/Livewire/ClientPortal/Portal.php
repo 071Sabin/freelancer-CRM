@@ -2,9 +2,12 @@
 
 namespace App\Livewire\ClientPortal;
 
+use App\Models\Invoice;
 use App\Models\InvoiceSetting;
 use App\Models\Project;
+use App\Services\DodoPaymentService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -14,7 +17,7 @@ class Portal extends Component
     public $project;
     public $progressPercentage = 0;
     public $clientTasks; // Tasks that clients will see whose visibility is set true
-    public $hasPendingInternalTasks=false;
+    public $hasPendingInternalTasks = false;
 
 
     public function downloadInvoice($invoiceId)
@@ -40,6 +43,26 @@ class Portal extends Component
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
         }, 'invoice-' . $invoice->invoice_number . '.pdf');
+    }
+
+    #[Locked]
+    // public $invoice;
+
+    // this function runs on PAY NOW button click in client portal
+    public function payNow(DodoPaymentService $paymentService, $invoiceId)
+    {
+        try {
+            // dd($invoiceId);
+            $invoice = Invoice::findOrFail($invoiceId);
+            // ask URL from service
+            $checkoutUrl = $paymentService->generateCheckoutUrl($invoice);
+
+            // redirect client to dodo payment page
+            return redirect()->away($checkoutUrl);
+        } catch (\Exception $e) {
+            // If link is not created then show error to client page.
+            session()->flash('error', 'Payment gateway issue: ' . $e->getMessage());
+        }
     }
 
     public function mount($uuid)
@@ -69,7 +92,6 @@ class Portal extends Component
 
     public function render()
     {
-
         return view('livewire.client-portal.portal');
     }
 }

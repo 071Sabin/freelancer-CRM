@@ -197,7 +197,7 @@
                                     <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
                                         {{ $viewingInvoice->company_snapshot['company_email'] }}<br>
                                         @if ($viewingInvoice->company_snapshot['company_address'])
-                                            {{ implode(', ', $viewingInvoice->company_snapshot['company_address']) }}<br>
+                                            {{ $viewingInvoice->company_snapshot['company_address'] }}<br>
                                         @endif
                                         @if ($viewingInvoice->company_snapshot['company_website'])
                                             {{ $viewingInvoice->company_snapshot['company_website'] }}<br>
@@ -340,7 +340,7 @@
 
                             {{-- Footer Info formed as columns --}}
                             <div class="grid grid-cols-2 gap-8 pt-6 border-t border-neutral-100">
-                                <div>
+                                {{-- <div>
                                     @if ($settings && ($settings->bank_details || $settings->payment_methods))
                                         <div class="mb-4">
                                             <h4
@@ -360,7 +360,7 @@
                                             @endif
                                         </div>
                                     @endif
-                                </div>
+                                </div> --}}
                                 <div class="text-right">
                                     @if ($viewingInvoice->notes)
                                         <div class="mb-4">

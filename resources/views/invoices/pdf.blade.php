@@ -4,14 +4,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Invoice #{{ $invoice->invoice_number }}</title>
+
     <style>
         /* Base / Reset */
         @page {
             margin: 0;
         }
 
+        * {
+            font-family: DejaVu Sans !important;
+        }
+
         body {
-            font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+            /* font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif; */
+            /* font-family: DejaVu Sans, sans-serif; */
+            /* font-family: 'Noto Sans'; */
             color: #171717;
             font-size: 14px;
             line-height: 1.5;
@@ -296,6 +303,7 @@
             border-bottom-right-radius: 6px;
         }
     </style>
+
 </head>
 
 <body class="bg-white text-neutral-900">
@@ -329,7 +337,7 @@
                         <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
                             {{ $invoice->company_snapshot['company_email'] }}<br>
                             @if ($invoice->company_snapshot['company_address'])
-                                {{ implode(', ', $invoice->company_snapshot['company_address']) }}<br>
+                                {{ $invoice->company_snapshot['company_address'] }}<br>
                             @endif
                             @if ($invoice->company_snapshot['company_website'])
                                 {{ $invoice->company_snapshot['company_website'] }}<br>
@@ -417,9 +425,9 @@
                         </td>
                         <td class="py-3 px-4 text-sm text-right text-neutral-600">{{ $item->quantity }}</td>
                         <td class="py-3 px-4 text-sm text-right text-neutral-600">
-                           {{ $invoice->currency->symbol }} {{ number_format($item->unit_price, 2) }}</td>
+                            {{ number_format($item->unit_price, 2) }}</td>
                         <td class="py-3 px-4 text-sm text-right font-bold text-neutral-900">
-                           {{ $invoice->currency->symbol }} {{ number_format($item->line_total, 2) }}</td>
+                            {{ $invoice->currency->symbol }} {{ number_format($item->line_total, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -432,7 +440,9 @@
                 <td class="w-half">
                     <table class="w-full">
                         {{-- adding space --}}
-                        <tr><td class="py-2"></td></tr> 
+                        <tr>
+                            <td class="py-2"></td>
+                        </tr>
                         <tr>
                             <td class="py-2 text-neutral-600 border-b border-neutral-100">Subtotal</td>
                             <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">

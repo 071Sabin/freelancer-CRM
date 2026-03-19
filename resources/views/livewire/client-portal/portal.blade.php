@@ -1,4 +1,21 @@
 <div class="min-h-screen sm:px-6 text-neutral-900 dark:text-neutral-100">
+    @if (session('success'))
+        <x-notification type="success">{{ session('success') }}</x-notification>
+    @endif
+
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
+    @endif
+
+    @if (request()->query('payment') === 'success')
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            🎉 Payment Successful! Your invoice status will be updated shortly.
+        </div>
+    @endif
 
     <div
         class="w-full sm:max-w-3xl mx-auto p-8 sm:p-10 space-y-8 bg-white dark:bg-neutral-900 shadow-sm border border-neutral-200 dark:border-neutral-800 rounded-2xl">
@@ -250,7 +267,8 @@
                                     <div class="flex items-center justify-between gap-2 mb-1">
 
                                         <span
-                                            class="text-xs sm:text-sm font-medium text-indigo-900 dark:text-indigo-100">Final Review in Progress</span>
+                                            class="text-xs sm:text-sm font-medium text-indigo-900 dark:text-indigo-100">Final
+                                            Review in Progress</span>
 
                                         <span
                                             class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 animate-pulse">
@@ -260,7 +278,8 @@
 
                                     <p
                                         class="text-[11px] sm:text-xs text-indigo-700/80 dark:text-indigo-300/80 leading-relaxed">
-                                            Final touches, testing, and quality checks are being completed before the project is delivered.
+                                        Final touches, testing, and quality checks are being completed before the
+                                        project is delivered.
                                     </p>
                                 </div>
                             </div>
@@ -359,6 +378,13 @@
                                             </svg>
                                         </span>
                                     </x-primary-button>
+
+                                    @if ($invoice->invoice_status === 'draft')
+                                        <button wire:click="payNow({{ $invoice->id }})"
+                                            class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700">
+                                            Pay Now
+                                        </button>
+                                    @endif
 
                                 </div>
 

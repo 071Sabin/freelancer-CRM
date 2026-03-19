@@ -27,6 +27,7 @@ class InvoiceFactory extends Factory
         $issueDate = $this->faker->dateTimeBetween('-1 month', '+1 month');
         $dueDate = Carbon::parse($issueDate)->addDays(14);
         $invoiceSetting = InvoiceSetting::factory()->create();
+        
         return [
             'uuid' => Str::uuid(),
             'user_id' => User::factory(),

@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\InvoiceSetting;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
 /**
  * @extends Factory<InvoiceSetting>
  */
@@ -37,11 +36,12 @@ class InvoiceSettingFactory extends Factory
             ],
             'default_footer' => 'THIS IS SYSTEM GENERATED INVOICE.',
             // Optional fields (set to null by default, or use $this->faker to generate fake data)
-            'company_name' => null,
-            'company_email' => null,
-            'company_phone' => null,
-            'company_website' => null,
-            'tax_id' => null,
+            'company_name' => $this->faker->company(),
+            'company_email' => $this->faker->safeEmail(),
+            'company_phone' => $this->faker->phoneNumber(),
+            'company_website' => $this->faker->url(),
+            'company_address' => $this->faker->address(),
+            'tax_id' => $this->faker->numerify('#########'),
         ];
     }
 }
