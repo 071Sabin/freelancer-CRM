@@ -16,7 +16,7 @@ class ClientTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $seed = true;
+    // protected $seed = true;
 
     public function test_guest_is_redirected_to_login()
     {
@@ -43,6 +43,8 @@ class ClientTest extends TestCase
         Client::factory()->create([
             'user_id' => $hacker->id,
         ]);
+        $currencies = Currency::factory(10)->create();
+
 
         // check if user can view clients page
         $this->actingAs($user)->get(route('clients'))
@@ -85,7 +87,8 @@ class ClientTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $currency = Currency::first();
+        $currency = Currency::factory()->create();
+
 
         Livewire::actingAs($user)->test(Clients::class)
             ->set('form.client_name', 'test')
@@ -117,6 +120,8 @@ class ClientTest extends TestCase
     {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
+        $currency = Currency::factory()->create();
+
         Livewire::actingAs($user)
             ->test(Clients::class)
             ->call('edit', $client->id)
@@ -140,7 +145,7 @@ class ClientTest extends TestCase
     public function test_edit_client_successful()
     {
         $user = User::factory()->create();
-        $currency = Currency::first();
+        $currency = Currency::factory()->create();
 
         $client = Client::factory()->create([
             'user_id' => $user->id,

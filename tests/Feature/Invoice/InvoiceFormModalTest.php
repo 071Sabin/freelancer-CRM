@@ -18,16 +18,18 @@ use Tests\TestCase;
 class InvoiceFormModalTest extends TestCase
 {
     use refreshDatabase;
-    protected $seed = true;
+    // protected $seed = true;
     /**
      * A basic feature test example.
      */
+
+    
     public function test_it_creates_draft_invoice_and_generates_number_with_currency()
     {
         // 1. Arrange
         $user = User::factory()->create();
-        $currency = Currency::first();
-
+        $currency = Currency::factory()->create();
+        
         $client = Client::factory()->create([
             'user_id' => $user->id,
         ]);
@@ -43,6 +45,7 @@ class InvoiceFormModalTest extends TestCase
             'prefix' => 'INV',
             'next_number' => 1,
             'default_due_days' => 14,
+            'company_name' => 'Your Default Company',
         ]);
 
         // 2. Act
@@ -66,6 +69,10 @@ class InvoiceFormModalTest extends TestCase
             'invoice_number' => 'INV-00001',
             'bill_currency_id' => $currency->id, // 🔥 IMPORTANT ASSERT
             'total' => 0,
+            'invoice_number' => 'INV-00001',
+            // Snapshot check
+            'client_snapshot->client_name' => $client->client_name,
+            'company_snapshot->company_name' => 'Your Default Company',
         ]);
 
         // 4. Assert increment
@@ -81,6 +88,7 @@ class InvoiceFormModalTest extends TestCase
         $client = Client::factory()->create(['user_id' => $user->id]);
         $project = Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
         // Currency::factory()->create(['code' => 'USD']);
+        $currency = Currency::factory()->create();
 
         // Create an empty draft invoice to edit
         $invoice = Invoice::factory()->create([
@@ -160,6 +168,8 @@ class InvoiceFormModalTest extends TestCase
     {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
+        $currency = Currency::factory()->create();
+
         $invoice = Invoice::factory()->create([
             'user_id' => $user->id,
             'client_id' => $client->id,

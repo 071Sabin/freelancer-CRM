@@ -42,6 +42,10 @@ class Dashboard extends Component
             ->where('invoice_status', '!=', 'paid')
             ->count();
 
+        // 2. Pending Invoices (Only draft status)
+        // $this->pendingInvoices = Invoice::where('user_id', $userId)
+        //     ->where('invoice_status', 'draft')
+        //     ->count();
 
         // 3. Overdue Invoices (Invoices paid but due date is overdue)
         $this->overdueInvoices = Invoice::where('user_id', $userId)

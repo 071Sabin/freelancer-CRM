@@ -16,62 +16,86 @@ use Tests\TestCase;
 class DashboardTest extends TestCase
 {
     use RefreshDatabase;
-    protected $seed = true;
+    // protected $seed = true;
     /**
      * A basic feature test example.
      */
     public function test_dashboard_displays_correct_invoice_clients_projects_totals_and_counts()
     {
-        // ARRANGE, set the trap
+        // ARRANGE: Set the trap with explicit, non-random data
         $user = User::factory()->create();
-        $currency=Currency::first();
 
-        // creating client to assign invoice to this client
-        $client = Client::factory()->create(['user_id' => $user->id, 'currency_id' => $currency->id]);
+        // Grab or create a currency explicitly to avoid relying on random seeded data
+        $currency = Currency::factory()->create();
 
+        $client = Client::factory()->create([
+            'user_id' => $user->id,
+            'currency_id' => $currency->id
+        ]);
+
+        // -- PROJECTS --
+        // Create exactly what the assertions expect: 1 active, 2 in progress, 1 completed
         Project::factory()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'status' => 'active' // Make sure statuses are explicitly set!
+        ]);
+
+        Project::factory()->count(2)->inProgress()->create([
             'user_id' => $user->id,
             'client_id' => $client->id
         ]);
 
-        Project::factory()->count(2)->inProgress()->create(['user_id' => $user->id, 'client_id' => $client->id]);
-        Project::factory()->completed()->create(['user_id' => $user->id, 'client_id' => $client->id]);
+        Project::factory()->completed()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id
+        ]);
 
-        // creating 2 paid invoices $200 in revenue
+        // -- INVOICES --
+        // 1. Two Paid Invoices ($200 Revenue)
         Invoice::factory()->count(2)->paid()->create([
             'user_id' => $user->id,
             'client_id' => $client->id,
-            'total' => 100.00,       // <-- You must explicitly give it money!
-            'paid_total' => 100.00,  // (Depending on how your Dashboard calculates revenue)
+            'total' => 100.00,
+            'paid_total' => 100.00,
         ]);
-        // creating 1 overdue invoice
-        Invoice::factory()->overdue()->create(['user_id' => $user->id, 'client_id' => $client->id]);
 
-        // creating 1 draft invoice
-        Invoice::factory()->draft()->create(['user_id' => $user->id, 'client_id' => $client->id]);
+        // 2. Two Overdue Invoices
+        // FIXED: Count changed to 2 to match assertion, and due_date hardcoded to the past
+        Invoice::factory()->count(2)->overdue()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'due_date' => now()->subDays(5), // Stop Faker from making this random!
+            'total' => 50.00, // Explicit totals so they don't bloat revenue
+            'paid_total' => 0.00,
+        ]);
 
-        // ACT load the dashboard, acting like loggedin user
+        // 3. Two Pending/Draft Invoices
+        // FIXED: Count changed to 2, and due_date hardcoded to the future
+        Invoice::factory()->count(2)->draft()->create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'due_date' => now()->addDays(5),
+            'total' => 50.00,
+            'paid_total' => 0.00,
+        ]);
+
+        // ACT: Load the dashboard
         $component = Livewire::actingAs($user)->test(Dashboard::class);
 
-        // ASSERT the component is loaded, and maths are correct
+        // ASSERT
         $component->assertStatus(200)
-            // assertSet says the variables inside the mount calculated has to be this exact number
-            // we created 1 client above, so the variable should return 1
             ->assertSet('totalClients', 1)
             ->assertSet('progressProjects', 2)
             ->assertSet('activeProjects', 1)
             ->assertSet('recentProjects', function ($projects) {
-                return $projects->count() === 3; // Checks that exactly 3 projects are in the list
+                return $projects->count() === 3;
             })
-
-            // total revenue should be 200 because revenue = total of paid status and we have $100*2 invoices paid status above
             ->assertSet('totalRevenue', 200.00)
-            ->assertSet('pendingInvoices', 2)
-            ->assertSet('overdueInvoices', 2)
-            ->assertSee('200.00') // The revenue amount is visible on screen
-            ->assertSee('2')      // The pending count is visible on screen
-
-            // 3. Prove the specific UI text/cards are rendered
+            ->assertSet('pendingInvoices', 4) // if any invoice is not marked as paid then that's pending invoice, according to dashboard.php livewire
+            ->assertSet('overdueInvoices', 2) // Now matches the 2 overdue invoices created
+            ->assertSee('200.00')
+            ->assertSee('2')
             ->assertSee('Total Revenue')
             ->assertSee('Pending Invoices');
     }

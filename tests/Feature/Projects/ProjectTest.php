@@ -18,7 +18,7 @@ class ProjectTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $seed = true;
+    // protected $seed = true;
 
     public function test_authenticated_user_can_see_project_page(): void
     {
@@ -49,7 +49,8 @@ class ProjectTest extends TestCase
     {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
-        $currency = Currency::first();
+        $currency = Currency::factory()->create();
+
         Livewire::actingAs($user)->test(ProjectFormModal::class)
             ->set('project_form.name', 'testproject')
             ->set('project_form.description', 'testprojectdescription')
@@ -91,7 +92,8 @@ class ProjectTest extends TestCase
 
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
-        $currency = Currency::first();
+        $currency = Currency::factory()->create();
+
         $project = Project::factory()->create([
             'user_id' => $user->id,
             'client_id' => $client->id,
@@ -129,7 +131,8 @@ class ProjectTest extends TestCase
     {
         $user = User::factory()->create();
         $client = Client::factory()->create(['user_id' => $user->id]);
-        $currency = Currency::first();
+        $currency = Currency::factory()->create();
+
         $project = Project::factory()->create([
             'user_id' => $user->id,
             'client_id' => $client->id,
