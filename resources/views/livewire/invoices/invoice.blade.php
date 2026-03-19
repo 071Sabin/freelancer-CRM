@@ -69,5 +69,4 @@
     --}}
     <livewire:invoices.invoice-form-modal />
 
-
 </div>

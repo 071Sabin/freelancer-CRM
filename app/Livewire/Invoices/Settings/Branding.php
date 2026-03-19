@@ -22,14 +22,20 @@ class Branding extends Component
 
     public InvoiceSetting $settings;
     public $logo;
+    public $default_footer='';
 
     public function mount()
     {
         $this->settings = InvoiceSetting::where('user_id', Auth::id())->firstOrFail();
+        $this->fill($this->settings->only(['logo_path', 'default_footer']));
     }
 
     public function save()
     {
+        // dd($this->default_footer);
+        $data = [
+            'default_footer' => $this->default_footer,
+        ];
         if ($this->logo) {
 
             // delete old logo if exists
@@ -40,11 +46,10 @@ class Branding extends Component
             // store new logo
             $path = $this->logo->store('invoice-logos');
 
-            // update db
-            $this->settings->update([
-                'logo_path' => $path,
-            ]);
+            $data['logo_path'] = $path;
         }
+
+        $this->settings->update($data);
 
         session()->flash(
             'success',

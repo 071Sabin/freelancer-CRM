@@ -1,6 +1,6 @@
 <div class="space-y-10 pb-10">
 
-    
+
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
@@ -90,6 +90,7 @@
                         Tip: Your logo will be used on invoices and client emails. Use a transparent PNG if possible.
                     </div>
 
+                    {{-- MODAL SHOWS BRAND LOGO BIGGER --}}
                     <flux:modal name="show-brand-logo"
                         class="min-w-[20rem] md:w-[32rem] p-0 overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl">
 
@@ -164,6 +165,32 @@
 
                 </div>
             </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12 mt-12">
+
+            <div class="md:col-span-1">
+                <flux:heading size="lg" class="mb-2">Invoice Footer</flux:heading>
+                <div class="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    This footer will appear at the bottom of your invoices. You can include notes,
+                    payment terms, or thank you messages.
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <div class="max-w-2xl space-y-6">
+
+                    <flux:textarea label="Default Footer" wire:model="default_footer" rows="5"
+                        placeholder="e.g. Thank you for your business. Payment is due within 7 days." variant="filled"
+                        class="text-zinc-800 dark:text-zinc-200" />
+
+                    <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                        Tip: Keep it short and professional. This will be printed at bottom of every invoice.
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
         <div class="mt-16 pt-6 flex justify-end border-t border-zinc-100 dark:border-zinc-800">

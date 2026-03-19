@@ -53,6 +53,7 @@ return new class extends Migration
             // Optional text
             $table->text('notes')->nullable();
             $table->text('terms')->nullable();
+            $table->text('default_footer')->nullable();
             $table->string('payment_terms')->nullable();
             $table->unsignedInteger('due_days')->nullable();
 

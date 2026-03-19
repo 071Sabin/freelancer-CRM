@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Client;
 use App\Models\Invoice;
+use App\Models\InvoiceSetting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,7 +26,7 @@ class InvoiceFactory extends Factory
     {
         $issueDate = $this->faker->dateTimeBetween('-1 month', '+1 month');
         $dueDate = Carbon::parse($issueDate)->addDays(14);
-
+        $invoiceSetting = InvoiceSetting::factory()->create();
         return [
             'uuid' => Str::uuid(),
             'user_id' => User::factory(),
@@ -68,6 +69,7 @@ class InvoiceFactory extends Factory
             'terms' => 'Net 14',
             'payment_terms' => 'Please pay within 14 days.',
             'due_days' => 14,
+            'default_footer' => $invoiceSetting->default_footer,
 
             'sent_at' => null,
             'paid_at' => null,

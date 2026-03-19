@@ -220,6 +220,7 @@ class InvoiceFormModal extends Component
                     'metadata'       => [
                         'tax_rate' => $settings->default_tax_rate ?? 0,
                     ],
+                    'default_footer' => $settings->default_footer,
                 ]);
 
                 // 4. Increment number

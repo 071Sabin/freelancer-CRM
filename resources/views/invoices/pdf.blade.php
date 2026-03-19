@@ -321,7 +321,7 @@
                         @endif
                     @endif
 
-                    <div class="text-xl font-bold text-neutral-900">
+                    <div class="text-xl font-bold text-neutral-900 uppercase">
                         {{ $invoice->company_snapshot['company_name'] ?? 'Freelancer CRM' }}
                     </div>
 
@@ -402,7 +402,7 @@
                 <tr class="bg-neutral-900 text-white text-xs uppercase tracking-wide">
                     <th class="py-3 px-4 font-bold rounded-l">Description</th>
                     <th class="py-3 px-4 font-bold text-right w-15">Qty</th>
-                    <th class="py-3 px-4 font-bold text-right w-20">Price</th>
+                    <th class="py-3 px-4 font-bold text-right w-20">Unit Price</th>
                     <th class="py-3 px-4 font-bold text-right rounded-r w-20">Total</th>
                 </tr>
             </thead>
@@ -417,20 +417,22 @@
                         </td>
                         <td class="py-3 px-4 text-sm text-right text-neutral-600">{{ $item->quantity }}</td>
                         <td class="py-3 px-4 text-sm text-right text-neutral-600">
-                            {{ number_format($item->unit_price, 2) }}</td>
+                           {{ $invoice->currency->symbol }} {{ number_format($item->unit_price, 2) }}</td>
                         <td class="py-3 px-4 text-sm text-right font-bold text-neutral-900">
-                            {{ number_format($item->line_total, 2) }}</td>
+                           {{ $invoice->currency->symbol }} {{ number_format($item->line_total, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
         <!-- Totals -->
-        <table class="w-full mb-10">
+        <table class="w-full border-t border-neutral-800">
             <tr>
                 <td class="w-half"></td>
                 <td class="w-half">
                     <table class="w-full">
+                        {{-- adding space --}}
+                        <tr><td class="py-2"></td></tr> 
                         <tr>
                             <td class="py-2 text-neutral-600 border-b border-neutral-100">Subtotal</td>
                             <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">
@@ -454,22 +456,25 @@
                         @if ($invoice->tax_total > 0)
                             <tr>
                                 <td class="py-2 text-neutral-600 border-b border-neutral-100">Tax
-                                    ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)</td>
+                                    ({{ number_format($metadata['tax_rate'] ?? ($invoice->tax_rate ?? 0), 2) }}%)
+                                </td>
                                 <td class="py-2 text-right text-neutral-900 font-medium border-b border-neutral-100">
-                                    {{ $invoice->currency->code }} {{ number_format($invoice->tax_total, 2) }}</td>
+                                    {{ $invoice->currency->code }} {{ number_format($invoice->tax_total, 2) }}
+                                </td>
                             </tr>
                         @endif
 
                         @if ($lateFeeTotal > 0)
                             <tr>
-                                <td class="py-2 text-yellow-600 border-b border-neutral-100">Late Fee</td>
+                                <td class="py-2 text-yellow-600">Late Fee</td>
                                 <td class="py-2 text-right text-yellow-600 font-medium border-b border-neutral-100">
                                     +{{ $invoice->currency->code }} {{ number_format($lateFeeTotal, 2) }}</td>
                             </tr>
                         @endif
 
                         <tr>
-                            <td class="py-3 text-lg font-bold text-neutral-900 border-t border-neutral-900 mt-1">Total
+                            <td class="py-3 text-lg font-bold text-neutral-900 border border-t border-neutral-700 mt-1">
+                                Total
                             </td>
                             <td
                                 class="py-3 text-lg font-bold text-right text-neutral-900 border-t border-neutral-900 mt-1">
@@ -533,9 +538,9 @@
             </table>
         </div>
 
-        @if ($settings && $settings->default_footer)
+        @if ($invoice && $invoice->default_footer)
             <div class="mt-12 text-center text-xs text-neutral-400">
-                {{ $settings->default_footer }}
+                {{ $invoice->default_footer }}
             </div>
         @endif
 

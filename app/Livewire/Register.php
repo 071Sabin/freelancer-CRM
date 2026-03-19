@@ -60,6 +60,7 @@ class Register extends Component
                 'postal_code' => '',
                 'country' => ''
             ],
+            'default_footer' => 'THIS IS SYSTEM GENERATED INVOICE.',
         ]);
 
         // session()->flash('success', $this->name . ", you're registered successfully!");
