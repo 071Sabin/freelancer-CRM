@@ -23,14 +23,15 @@ class DodoPaymentService
         // dd($invoice->uuid);
         $dodoProductId = 'pdt_0NaqQxanGnYcfkqs3hDHt';
         // dd($amountInCents);
-        
+
         // sending request to DODO payment
         $response = Http::withToken(env('DODO_PAYMENTS_API_KEY'))
             ->post(env('DODO_BASE_URL') . '/checkouts', [
                 'product_cart' => [
                     [
                         'product_id' => $dodoProductId,
-                        'quantity' => $amountInCents,
+                        'quantity' => 1,
+                        'amount' => $amountInCents,
                     ]
                 ],
 
