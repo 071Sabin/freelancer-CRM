@@ -1,8 +1,6 @@
 <!-- settings root -->
 <div id="settings-root" class="space-y-6">
 
-    <x-main-heading title="Settings" subtitle="Manage account, security, appearance and integrations" />
-
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
@@ -14,6 +12,11 @@
     @if (session('error'))
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
+
+
+    <x-main-heading title="Settings" subtitle="Manage account, security, appearance and integrations" />
+
+
 
     <x-error></x-error>
 
@@ -482,9 +485,10 @@
             <livewire:integrations.integrations />
 
 
-            <flux:button wire:click="connectStripe" class="bg-[#635BFF] hover:bg-[#4B45C6] text-white">
+            <button wire:click="connectStripe"
+                class="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
                 Connect with Stripe
-            </flux:button>
+            </button>
             <!-- API Keys -->
             <section id="panel-api" role="tabpanel"
                 class="tab-panel hidden bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">

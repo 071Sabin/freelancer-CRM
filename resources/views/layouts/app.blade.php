@@ -102,7 +102,8 @@
                             class="px-5 py-2 rounded-lg bg-slate-900 dark:bg-indigo-600 text-white font-semibold">
                             Get Started
                         </a>
-
+                        <flux:button x-data x-on:click="$flux.dark = ! $flux.dark" icon="moon" variant="subtle"
+                            aria-label="Toggle dark mode" />
                     </div>
 
                     {{-- Mobile Button --}}
@@ -124,7 +125,8 @@
                         Get Started
                     </a>
                 </div>
-
+                <flux:button x-data x-on:click="$flux.dark = ! $flux.dark" icon="moon" variant="subtle"
+                    aria-label="Toggle dark mode" />
             </div>
 
         </nav>

@@ -42,7 +42,7 @@
                     <div class="flex items-center gap-2 sm:gap-3 shrink-0">
 
                         <span class="text-sm font-semibold text-neutral-800 dark:text-neutral-100 whitespace-nowrap">
-                            {{ $invoice->currency }} {{ number_format($invoice->total, 2) }}
+                            {{ $invoice->currency->symbol }} {{ number_format($invoice->total, 2) }}
                         </span>
 
                         {{-- MOBILE MENU --}}

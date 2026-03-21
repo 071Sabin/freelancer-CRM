@@ -18,7 +18,7 @@
     @endif
 
     <div
-        class="w-full sm:max-w-3xl mx-auto p-8 sm:p-10 space-y-8 bg-white dark:bg-neutral-900 shadow-sm border border-neutral-200 dark:border-neutral-800 rounded-2xl">
+        class="w-full sm:max-w-3xl mx-auto p-8 sm:p-10 space-y-8 bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-800 rounded-2xl">
 
         <h2 class="text-xs font-bold tracking-widest uppercase text-neutral-400 dark:text-neutral-500">
             Client Secure Project Portal
@@ -137,25 +137,25 @@
         <div class="space-y-2.5 w-full">
             {{-- Header: Label & Metric --}}
             <div class="flex items-end justify-between">
-                <h2 class="text-[11px] font-bold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
+                <h2 class="text-[11px] font-bold tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
                     Project Progress
                 </h2>
                 <div class="flex items-baseline gap-[2px]">
                     <span
-                        class="text-lg font-bold tracking-tight text-zinc-900 dark:text-white tabular-nums leading-none">
+                        class="text-lg font-bold tracking-tight text-neutral-900 dark:text-white tabular-nums leading-none">
                         {{ $progressPercentage }}
                     </span>
-                    <span class="text-xs font-semibold text-zinc-400 dark:text-zinc-500">%</span>
+                    <span class="text-xs font-semibold text-neutral-400 dark:text-neutral-500">%</span>
                 </div>
             </div>
 
             {{-- Progress Track & Fill --}}
-            <div class="relative w-full h-1.5 md:h-2.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800/60 ring-1 ring-inset ring-zinc-200/50 dark:ring-zinc-700/50 shadow-inner"
+            <div class="relative w-full h-1.5 md:h-2.5 overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-900/60 ring-1 ring-inset ring-neutral-200/50 dark:ring-neutral-700/50 shadow-inner"
                 role="progressbar" aria-valuenow="{{ $progressPercentage }}" aria-valuemin="0" aria-valuemax="100"
                 aria-label="Project completion status">
 
                 {{-- Progress Indicator with Edge Lighting --}}
-                <div class="absolute top-0 bottom-0 left-0 h-full rounded-full bg-zinc-900 dark:bg-zinc-100 transition-[width] duration-1000 ease-out flex justify-end overflow-hidden"
+                <div class="absolute top-0 bottom-0 left-0 h-full bg-neutral-900 dark:bg-neutral-100 transition-[width] duration-1000 ease-out flex justify-end overflow-hidden"
                     style="width: {{ $progressPercentage }}%">
                     {{-- Leading Edge Highlight (Premium detail) --}}
                     <div class="w-12 h-full bg-gradient-to-r from-transparent to-white/20 dark:to-black/10"></div>
@@ -174,10 +174,10 @@
                             class="absolute inline-flex w-full h-full rounded-full opacity-75 bg-blue-500 animate-ping"></span>
                         <span class="relative inline-flex size-1.5 rounded-full bg-blue-600 dark:bg-blue-500"></span>
                     </span>
-                    <span class="text-zinc-500 dark:text-zinc-400">Executing planned milestones</span>
+                    <span class="text-neutral-500 dark:text-neutral-400">Executing planned milestones</span>
                 @else
-                    <flux:icon.clock class="size-3.5 text-zinc-400" />
-                    <span class="text-zinc-500 dark:text-zinc-400">Waiting to start</span>
+                    <flux:icon.clock class="size-3.5 text-neutral-400" />
+                    <span class="text-neutral-500 dark:text-neutral-400">Waiting to start</span>
                 @endif
             </div>
         </div>
@@ -190,7 +190,7 @@
 
                 {{-- Header --}}
                 <h2
-                    class="mb-4 sm:mb-5 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-zinc-500 dark:text-zinc-400">
+                    class="mb-4 sm:mb-5 text-[10px] sm:text-xs font-bold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
                     Project Journey
                 </h2>
 
@@ -198,7 +198,7 @@
 
                     {{-- Vertical Path --}}
                     <div
-                        class="absolute left-3 sm:left-4 top-0 bottom-0 w-px bg-gradient-to-b from-zinc-200 via-zinc-300 to-transparent dark:from-zinc-800 dark:via-zinc-700">
+                        class="absolute left-3 sm:left-4 top-0 bottom-0 w-px bg-gradient-to-b from-neutral-200 via-neutral-300 to-transparent dark:from-neutral-800 dark:via-neutral-700">
                     </div>
 
                     <div class="space-y-3 sm:space-y-4">
@@ -224,10 +224,10 @@
 
                                 {{-- Card --}}
                                 <div
-                                    class="flex-1 min-w-0 rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 transition-colors {{ $task->is_completed ? 'bg-zinc-50 dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800' : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600' }}">
+                                    class="flex-1 min-w-0 rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 transition-colors {{ $task->is_completed ? 'bg-neutral-50 dark:bg-neutral-900/40 border-neutral-200 dark:border-neutral-800' : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600' }}">
                                     <div class="flex items-center justify-between gap-2">
                                         <span
-                                            class="truncate text-xs sm:text-sm font-medium {{ $task->is_completed ? 'text-zinc-400 line-through' : 'text-zinc-800 dark:text-zinc-100' }}"
+                                            class="truncate text-xs sm:text-sm font-medium {{ $task->is_completed ? 'text-neutral-400 line-through' : 'text-neutral-800 dark:text-neutral-100' }}"
                                             title="{{ $task->title }}">
                                             {{ Str::limit($task->title, 30) }}
                                         </span>
@@ -299,7 +299,7 @@
                 </h2>
 
                 <div
-                    class="p-6 rounded-xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-100 dark:border-neutral-700/50">
+                    class="p-6 rounded-xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-100 dark:border-neutral-700/50">
                     <p class="text-xs md:text-sm text-neutral-600 dark:text-neutral-300">
                         {{ $project->description }}
                     </p>
@@ -319,8 +319,7 @@
 
                     @foreach ($project->invoices as $invoice)
                         <div
-                            class="p-3 sm:p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors">
-
+                            class="p-3 sm:p-4 rounded-lg border border-neutral-200 dark:border-neutral-600 bg-white dark:bg-neutral-900/50 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors">
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
                                 {{-- Invoice Info --}}
@@ -330,69 +329,79 @@
                                         class="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate">
                                         Invoice #{{ $invoice->invoice_number }}
                                     </p>
-
                                     <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-                                        Due {{ \Carbon\Carbon::parse($invoice->due_date)->format('M d, Y') }}
+                                        <strong>Due</strong>
+                                        {{ \Carbon\Carbon::parse($invoice->due_date)->format('M d, Y') }}
                                     </p>
-
                                 </div>
 
                                 {{-- Actions --}}
-                                <div class="flex items-center justify-between w-full flex-wrap">
+                                <div class="flex flex-col md:flex-row justify-between w-full flex-wrap">
 
                                     {{-- Status --}}
-                                    <x-badges.invoice-status :invoice_status="$invoice->invoice_status" :due_date="$invoice->due_date" />
+                                    <div class="flex justify-between flex-row md:flex-col">
+                                        <x-badges.invoice-status :invoice_status="$invoice->invoice_status" :due_date="$invoice->due_date" />
+                                        <p class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mt-0.5">
+                                            {{ $invoice->currency->symbol }}{{ $invoice->total }}
+                                        </p>
+                                    </div>
 
+                                    <div class="flex gap-3 justify-between">
+                                        {{-- Button --}}
+                                        <button wire:click="downloadInvoice({{ $invoice->id }})"
+                                            wire:loading.attr="disabled"
+                                            class="bg-black text-white px-4 rounded-md text-xs font-semibold w-full md:w-fit my-1 shadow hover:bg-gray-800 dark:bg-white dark:text-black">
 
-                                    {{-- Button --}}
-                                    <x-primary-button wire:click="downloadInvoice({{ $invoice->id }})"
-                                        wire:loading.attr="disabled"
-                                        class="text-xs px-3 sm:px-4 py-1.5 flex items-center gap-2 whitespace-nowrap">
-
-                                        <svg wire:loading wire:target="downloadInvoice({{ $invoice->id }})"
-                                            class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24">
-
-                                            <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                stroke="currentColor" stroke-width="4"></circle>
-
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
-
-                                        </svg>
-
-                                        <span wire:loading.remove wire:target="downloadInvoice({{ $invoice->id }})">
-                                            PDF
-                                        </span>
-
-                                        <span wire:loading wire:target="downloadInvoice({{ $invoice->id }})">
-                                            <svg class="animate-spin h-4 w-4 text-current"
+                                            <svg wire:loading wire:target="downloadInvoice({{ $invoice->id }})"
+                                                class="animate-spin h-3 w-3 text-white"
                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                 viewBox="0 0 24 24">
+
                                                 <circle class="opacity-25" cx="12" cy="12" r="10"
                                                     stroke="currentColor" stroke-width="4"></circle>
+
                                                 <path class="opacity-75" fill="currentColor"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                                 </path>
+
                                             </svg>
-                                        </span>
-                                    </x-primary-button>
 
-                                    @if ($invoice->invoice_status === 'draft')
-                                        <button wire:click="payNow({{ $invoice->id }})"
-                                            class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700">
-                                            Pay Now
+                                            <span wire:loading.remove
+                                                wire:target="downloadInvoice({{ $invoice->id }})">
+                                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                                            </span>
                                         </button>
-                                    @endif
 
+
+                                        @if ($invoice->invoice_status === 'draft')
+                                            <button wire:click="payNow({{ $invoice->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="bg-indigo-600 text-white px-4 md:py-2 rounded-md text-xs font-semibold w-full md:w-fit my-1 shadow hover:bg-indigo-700">
+
+                                                <svg wire:loading wire:target="payNow({{ $invoice->id }})"
+                                                    class="animate-spin h-3 w-3 text-white"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24">
+
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                        stroke="currentColor" stroke-width="4"></circle>
+
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                    </path>
+
+                                                </svg>
+
+                                                <span wire:loading.remove wire:target="payNow({{ $invoice->id }})">
+                                                    <i class="bi bi-stripe"></i> Pay Now
+                                                </span>
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
-
                             </div>
-
                         </div>
                     @endforeach
-
                 </div>
             @else
                 <div

@@ -1,5 +1,17 @@
 <div class="w-full">
 
+    @if (session('success'))
+        <x-notification type="success">{{ session('success') }}</x-notification>
+    @endif
+
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
+    @endif
+
     <x-main-heading title="Dashboard 👋" subtitle="Overview of your clients, projects, invoices, and insights." />
 
 

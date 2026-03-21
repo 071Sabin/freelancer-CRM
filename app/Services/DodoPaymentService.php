@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Invoice;
+use App\Models\Plan;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -16,40 +17,71 @@ class DodoPaymentService
         //
     }
 
-    public function generateCheckoutUrl(Invoice $invoice)
+    /**
+     * Generates a checkout link for platform subscriptions.
+     */
+    public function createSubscriptionLink($user, Plan $plan, bool $isYearly)
     {
-        // amount always goes in cents (e.g., $50 = 5000)
-        $amountInCents = (int) ($invoice->total * 100);
-        // dd($invoice->uuid);
-        $dodoProductId = 'pdt_0NaqQxanGnYcfkqs3hDHt';
-        // dd($amountInCents);
+        // 1. Get the correct Dodo Product ID straight from the Database
+        // $dodoProductId = $isYearly ? $plan->dodo_price_id_yearly : $plan->dodo_price_id_monthly;
+        $dodoProductId = trim($isYearly ? $plan->dodo_price_id_yearly : $plan->dodo_price_id_monthly);
 
-        // sending request to DODO payment
-        $response = Http::withToken(env('DODO_PAYMENTS_API_KEY'))
-            ->post(env('DODO_BASE_URL') . '/checkouts', [
-                'product_cart' => [
-                    [
-                        'product_id' => $dodoProductId,
-                        'quantity' => 1,
-                        'amount' => $amountInCents,
-                    ]
-                ],
-
-                // this will return in webhooks to understand and know which invoice is paid and which invoice number
-                'metadata' => [
-                    'invoice_id' => (string) $invoice->id,
-                    'invoice_number' => $invoice->invoice_number
-                ],
-                'return_url' => url('/p/view/' . $invoice->project->uuid . '?payment=success'),
-            ]);
-
-        if ($response->successful()) {
-            // new endpoints URL can be 'data.checkout_url' or 'checkout_url'
-            return $response->json('checkout_url') ?? $response->json('data.checkout_url');
+        if (!$dodoProductId) {
+            throw new \Exception("Invalid Dodo Product ID in database for this plan.");
         }
 
-        // if something goes wrong then check logs for the error message
-        Log::error('Dodo Payment Link Failed: ' . $response->body());
-        throw new \Exception('Unable to generate payment link at the moment.');
+        // 2. Prepare the payload for Dodo API
+        $payload = [
+            'payment_link' => true,
+            'customer' => [
+                'email' => $user->email,
+                'name'  => $user->name,
+            ],
+            'billing' => [
+                'street'  => 'N/A',
+                'city'    => 'N/A',
+                'state'   => 'N/A',
+                'country' => 'US',
+                'zipcode' => '00000'
+            ],
+
+            // 🔥 THE FIX: Removed product_cart and changed 'plan_id' to 'product_id'
+            'subscription' => [
+                'product_id' => $dodoProductId,
+                'quantity'   => 1,
+            ],
+            'product_id' => $dodoProductId,
+            'quantity'   => 1,
+
+
+            'return_url' => route('dashboard'),
+
+            // Metadata remains same, it's correct
+            'metadata' => [
+                'user_id'         => (string) $user->id,
+                'plan_id'         => (string) $plan->id,
+                'billing_cycle'   => $isYearly ? 'yearly' : 'monthly',
+                'payment_purpose' => 'platform_subscription'
+            ]
+        ];
+
+
+        // 3. Make the API Call to Dodo
+        $response = Http::withToken(env('DODO_PAYMENTS_API_KEY'))
+            ->post(env('DODO_BASE_URL') . '/subscriptions', $payload);
+
+
+        if ($response->successful()) {
+            // dd([
+            //     'STATUS' => 'API Call Successful!',
+            //     'DODO_RESPONSE' => $response->json()
+            // ]);
+            return $response->json('payment_link');
+        }
+
+        Log::error('Dodo Subscription Setup Failed: ' . $response->body());
+        throw new \Exception('Could not generate the subscription checkout link.');
     }
+
+    
 }

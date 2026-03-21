@@ -61,13 +61,17 @@ class Settings extends Component
 
     public function connectStripe()
     {
-        $clientId = env('STRIPE_CLIENT_ID');
-        $redirectUri = route('stripe.callback');
+        // Get the Client ID from our config
+        $clientId = config('services.stripe.client_id');
 
-        $url = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id={$clientId}&scope=read_write&redirect_uri={$redirectUri}";
+        // Where Stripe should send them back (must match the URL in your dashboard exactly)
+        $redirectUri = urlencode(url('/stripe/callback'));
 
-        // Livewire me external URL par bhejane ka tarika:
-        return redirect()->away($url);
+        // Build the official Stripe Connect URL
+        $stripeUrl = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id={$clientId}&scope=read_write&redirect_uri={$redirectUri}";
+
+        // Redirect the user to Stripe
+        return redirect()->away($stripeUrl);
     }
 
     

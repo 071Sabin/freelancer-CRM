@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->string('stripe_account_id')->nullable();
             $table->string('profile_pic')->nullable();
             $table->string('password');
+            $table->string('subscription_plan')->default('free'); // free, starter, pro, agency
+            $table->string('subscription_status')->default('inactive'); // inactive, active, past_due
             $table->rememberToken(); // optional but recommended for auth
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();

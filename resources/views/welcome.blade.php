@@ -13,23 +13,6 @@
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
-            <div
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 mb-8 hover:border-emerald-500/50 transition-colors cursor-pointer group">
-                <span class="flex h-2 w-2 relative">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span
-                    class="text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                    New: Native WhatsApp API Integration
-                </span>
-                <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </div>
-
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
                 Pivot from Freelancer <br class="hidden md:block" />
                 to <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-emerald-500">Enterprise
@@ -43,7 +26,7 @@
             </p>
 
             <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#"
+                <a href="{{ route('pricing') }}"
                     class="inline-flex justify-center items-center px-8 py-4 text-base font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all transform hover:-translate-y-1">
                     Start Free Trial
                     <svg class="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Subscription;
 
 class User extends Authenticatable
 {
@@ -45,6 +46,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class)->where('status', 'active');
+    }
+
+    // Shortcut to check if user has a specific plan
+    public function isPro()
+    {
+        return $this->subscription && $this->subscription->plan->slug === 'pro';
     }
 
     public function integration()
