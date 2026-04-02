@@ -1,5 +1,16 @@
 <div class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-black px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
+    @if (session('success'))
+        <x-notification type="success">{{ session('success') }}</x-notification>
+    @endif
 
+    @if (session('warning'))
+        <x-notification type="warning">{{ session('warning') }}</x-notification>
+    @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
+    @endif
+    
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
         <div
             class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[80px]">

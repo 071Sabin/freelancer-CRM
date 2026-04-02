@@ -5,11 +5,14 @@ namespace Database\Seeders;
 use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\InvoiceSetting;
+use App\Models\Plan;
 use App\Models\Project;
+use App\Models\Subscription;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -32,6 +35,31 @@ class DatabaseSeeder extends Seeder
             'name' => 'sabin',
             'email' => 'sabin@gmail.com',
             'password' => bcrypt('sabin123'),
+        ]);
+
+        // get a plan (or create default one if needed)
+        $plan = Plan::first(); // or Plan::inRandomOrder()->first();
+
+        $startDate = Carbon::now();
+        $billingCycle = 'monthly';
+
+        $endDate = $billingCycle === 'monthly'
+            ? (clone $startDate)->addMonth()
+            : (clone $startDate)->addYear();
+
+        Subscription::create([
+            'user_id' => $user->id,
+            'plan_id' => $plan->id,
+
+            'dodo_subscription_id' => 'sub_' . Str::random(10),
+            'dodo_customer_id' => 'cust_' . Str::random(10),
+
+            'billing_cycle' => $billingCycle,
+            'status' => 'active',
+            'trial_ends_at' => now()->addDays(14),
+
+            'current_period_start' => $startDate,
+            'current_period_end' => $endDate,
         ]);
 
         $client = Client::factory()->create(['user_id' => $user->id]);

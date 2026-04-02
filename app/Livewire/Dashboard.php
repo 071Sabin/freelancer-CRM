@@ -26,6 +26,7 @@ class Dashboard extends Component
     {
         $userId = auth()->id();
 
+        // dd(Auth::user()->subscription->trial_ends_at);
         // Existing Stats
         $this->totalClients = Client::where('user_id', $userId)->count();
         $this->progressProjects = Project::where(['user_id' => $userId, 'status' => 'in_progress'])->count();

@@ -20,11 +20,12 @@ return new class extends Migration
             $table->string('dodo_subscription_id')->unique()->nullable();
             $table->string('dodo_customer_id')->nullable();
 
-            $table->enum('billing_cycle', ['monthly', 'yearly']);
+            $table->enum('billing_cycle', ['monthly', 'yearly'])->nullable();
             $table->enum('status', ['active', 'cancelled', 'past_due', 'expired'])->default('active');
 
             $table->timestamp('current_period_start')->nullable();
             $table->timestamp('current_period_end')->nullable(); // Expiry Date
+            $table->timestamp('trial_ends_at')->nullable(); // Expiry Date
 
             $table->timestamps();
         });

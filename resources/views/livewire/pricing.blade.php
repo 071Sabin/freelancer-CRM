@@ -87,7 +87,7 @@
                     <span class="text-sm font-semibold leading-6 text-neutral-500 dark:text-neutral-400">/month</span>
                 </p>
                 <button wire:click="subscribeToPlan('starter')"
-                    class="mt-6 block cursor-pointer rounded-xl px-3 w-full py-3 text-center text-sm font-semibold leading-6 text-indigo-600 dark:text-indigo-400 ring-1 ring-inset ring-indigo-200 dark:ring-indigo-500/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:ring-indigo-300 dark:hover:ring-indigo-400 transition-all duration-200">Start
+                    class="mt-6 block cursor-pointer rounded-xl px-3 w-full py-3 text-center text-sm font-semibold leading-6 text-indigo-600 dark:text-indigo-400 ring-1 ring-inset ring-indigo-200 dark:ring-indigo-500/30 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:ring-indigo-300 dark:hover:ring-indigo-400 transition-all duration-200">
                     Start Free Trial
                 </button>
 

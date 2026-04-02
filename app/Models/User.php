@@ -45,12 +45,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'trial_ends_at' => 'datetime',
         ];
     }
 
     public function subscription()
     {
         return $this->hasOne(Subscription::class)->where('status', 'active');
+    }
+
+    public function isOnTrial()
+    {
+        return $this->subscription
+            && $this->subscription->trial_ends_at
+            && now()->lt($this->subscription->trial_ends_at);
     }
 
     // Shortcut to check if user has a specific plan

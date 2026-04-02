@@ -17,6 +17,7 @@ class Subscription extends Model
         'status',
         'current_period_start',
         'current_period_end',
+        'trial_ends_at',
     ];
 
     /**
@@ -27,5 +28,6 @@ class Subscription extends Model
     protected $casts = [
         'current_period_start' => 'datetime',
         'current_period_end'   => 'datetime',
+        'trial_ends_at'        => 'datetime',
     ];
 }

@@ -44,7 +44,6 @@
 </head>
 
 <body class="bg-white dark:bg-neutral-900">
-
     {{-- Navigation --}}
     @guest('web')
         <nav x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = window.pageYOffset > 20" class="fixed top-0 w-full z-50"
@@ -135,60 +134,120 @@
             {{ $slot }}
         </div>
 
-        <footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <footer class="relative mt-20 border-t border-zinc-200 bg-white pt-16 pb-8 dark:border-zinc-800 dark:bg-zinc-950">
+            <div
+                class="absolute inset-x-0 -top-px -z-10 h-px w-full bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent">
+            </div>
 
-            <div class="max-w-7xl mx-auto px-6 py-12">
-
-                <div class="grid md:grid-cols-4 gap-10 text-sm">
-
-                    <div class="space-y-4">
-                        <div class="font-semibold text-slate-900 dark:text-white">
-                            ClientPivot
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+                <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-2.5">
+                            <div
+                                class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                                <span class="text-white font-bold text-lg leading-none">C</span>
+                            </div>
+                            <span
+                                class="text-xl font-bold tracking-tight text-zinc-900 dark:text-white font-pricing">ClientPivot</span>
                         </div>
-                        <p class="text-slate-500 dark:text-slate-400">
-                            Intelligent client management for modern freelancers.
+                        <p class="max-w-xs text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                            Intelligent client management for modern freelancers. Scale your business, not your overhead.
                         </p>
-                    </div>
-
-                    <div>
-                        <p class="font-semibold mb-4 text-slate-900 dark:text-white">Product</p>
-                        <div class="space-y-3 text-slate-500 dark:text-slate-400">
-                            <a href="#">Features</a>
-                            <a href="{{ route('pricing') }}">Pricing</a>
+                        <div class="flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            Systems Operational
                         </div>
                     </div>
 
-                    <div>
-                        <p class="font-semibold mb-4 text-slate-900 dark:text-white">Resources</p>
-                        <div class="space-y-3 text-slate-500 dark:text-slate-400">
-                            <a href="#">Documentation</a>
-                            <a href="#">Support</a>
+                    <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+                        <div class="md:grid md:grid-cols-2 md:gap-8">
+                            <div>
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                                    Product</h3>
+                                <ul role="list" class="mt-6 space-y-4">
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Features</a>
+                                    </li>
+                                    <li><a href="{{ route('pricing') }}"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Pricing</a>
+                                    </li>
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Changelog</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-10 md:mt-0">
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                                    Resources</h3>
+                                <ul role="list" class="mt-6 space-y-4">
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Documentation</a>
+                                    </li>
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Support</a>
+                                    </li>
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">API
+                                            Reference</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="md:grid md:grid-cols-2 md:gap-8">
+                            <div>
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                                    Legal</h3>
+                                <ul role="list" class="mt-6 space-y-4">
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Privacy
+                                            Policy</a></li>
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Terms
+                                            of Service</a></li>
+                                </ul>
+                            </div>
+                            <div class="mt-10 md:mt-0">
+                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
+                                    Social</h3>
+                                <ul role="list" class="mt-6 space-y-4">
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">X
+                                            (Twitter)</a></li>
+                                    <li><a href="#"
+                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">LinkedIn</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-
-                    <div>
-                        <p class="font-semibold mb-4 text-slate-900 dark:text-white">Legal</p>
-                        <div class="space-y-3 text-slate-500 dark:text-slate-400">
-                            <a href="#">Privacy</a>
-                            <a href="#">Terms</a>
-                        </div>
-                    </div>
-
                 </div>
 
                 <div
-                    class="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-500">
-                    © 2026 ClientPivot. All rights reserved.
+                    class="mt-16 border-t border-zinc-100 pt-8 dark:border-zinc-800/60 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <p class="text-xs text-zinc-400 dark:text-zinc-500">
+                        &copy; 2026 ClientPivot. Built for those who build.
+                    </p>
+
+                    <div class="flex items-center gap-6">
+                        <span
+                            class="text-[10px] font-bold text-zinc-300 dark:text-zinc-700 uppercase tracking-widest">Global
+                            Node: Ashburn, VA</span>
+                    </div>
                 </div>
-
             </div>
-
         </footer>
     @endguest
 
     @auth('web')
+        @php
+            $user = auth()->user();
+            $isPro = $user->subscription && $user->subscription->status === 'active';
+        @endphp
         <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
-            <flux:sidebar sticky collapsible="mobile"
+            <flux:sidebar sticky collapsible
                 class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700 text-neutral-800 dark:text-neutral-200">
                 <flux:sidebar.header>
                     <flux:sidebar.brand href="{{ route('dashboard') }}"
@@ -222,12 +281,102 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document" href="#" wire:navigate
                         :current="request()->routeIs('proposals')">Proposals</flux:sidebar.item>
+
+                    {{-- <flux:sidebar.item>
+                        @if (auth()->user()->subscription && auth()->user()->subscription->status === 'active')
+                            <span class="bg-green-100 text-green-800 w-full px-3 rounded-l py-2">Pro Member</span>
+                        @else
+                            <button wire:click="upgrade">Upgrade Now</button>
+                        @endif
+                    </flux:sidebar.item> --}}
                     {{-- <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
                         <flux:sidebar.item href="#">Marketing site</flux:sidebar.item>
                         <flux:sidebar.item href="#">Android app</flux:sidebar.item>
                         <flux:sidebar.item href="#">Brand guidelines</flux:sidebar.item>
                     </flux:sidebar.group> --}}
                 </flux:sidebar.nav>
+
+
+                @if (auth()->user()->isOnTrial())
+                    {{-- <button wire:click="upgrade">Upgrade Now</button> --}}
+                    <div x-data x-show="!$store.sidebar?.collapsed" x-transition.opacity.duration.200ms
+                        class="hidden lg:block">
+                        <div class="group relative overflow-hidden rounded-2xl p-[1px] transition-all duration-300">
+
+                            <!-- Outer gradient border -->
+                            <div
+                                class="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 opacity-70 blur-[6px] group-hover:opacity-100 transition">
+                            </div>
+
+                            <!-- Main card -->
+                            <div class="relative rounded-2xl bg-white/80 p-3 backdrop-blur-xl dark:bg-[#0f1115]/90">
+
+                                <!-- Inner light -->
+                                <div
+                                    class="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 via-transparent to-transparent opacity-40 dark:from-white/5">
+                                </div>
+
+                                <div class="relative space-y-3">
+
+                                    <!-- TOP -->
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+
+                                            <!-- Icon -->
+                                            <div
+                                                class="relative flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/10 text-purple-500">
+
+                                                <!-- glow -->
+                                                <div
+                                                    class="absolute inset-0 rounded-lg bg-purple-400/20 blur-md opacity-60">
+                                                </div>
+
+                                                <svg class="relative h-3.5 w-3.5" fill="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                                </svg>
+                                            </div>
+
+                                            <!-- Text -->
+                                            <span
+                                                class="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-200">
+                                                Upgrade to Pro
+                                            </span>
+                                        </div>
+
+                                        <!-- Settings -->
+                                        <button
+                                            class="rounded-md p-1 text-slate-400 transition hover:bg-black/5 hover:text-slate-700 dark:hover:bg-white/10 dark:hover:text-white">
+                                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor"
+                                                stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0..." />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <!-- VALUE TEXT -->
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                        Unlock premium features, faster performance, and priority access.
+                                    </p>
+
+                                    <!-- CTA -->
+                                    <button
+                                        class="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-300 hover:shadow-lg">
+
+                                        <span class="relative z-10">Upgrade Now</span>
+
+                                        <!-- shine animation -->
+                                        <div
+                                            class="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-[100%]">
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <flux:sidebar.spacer />
                 <flux:sidebar.nav>
                     <flux:sidebar.item icon="cog-6-tooth" href="{{ route('settings') }}" wire:navigate
@@ -235,16 +384,29 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="information-circle" href="#" wire:navigate
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
-                    <div class="">
-                        <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
-                            <flux:radio value="light" icon="sun" />
-                            <flux:radio value="dark" icon="moon" />
-                            <flux:radio value="system" icon="computer-desktop" />
-                        </flux:radio.group>
-                    </div>
+                    <flux:dropdown x-data align="end">
+                        <flux:button variant="subtle" square class="group" aria-label="Preferred color scheme">
+                            <flux:icon.sun x-show="$flux.appearance === 'light'" variant="mini"
+                                class="text-zinc-500 dark:text-white" />
+                            <flux:icon.moon x-show="$flux.appearance === 'dark'" variant="mini"
+                                class="text-zinc-500 dark:text-white" />
+                            <flux:icon.moon x-show="$flux.appearance === 'system' && $flux.dark" variant="mini" />
+                            <flux:icon.sun x-show="$flux.appearance === 'system' && ! $flux.dark" variant="mini" />
+                        </flux:button>
+
+                        <flux:menu>
+                            <flux:menu.item icon="sun" x-on:click="$flux.appearance = 'light'">Light</flux:menu.item>
+                            <flux:menu.item icon="moon" x-on:click="$flux.appearance = 'dark'">Dark</flux:menu.item>
+                            <flux:menu.item icon="computer-desktop" x-on:click="$flux.appearance = 'system'">System
+                            </flux:menu.item>
+                        </flux:menu>
+
+                    </flux:dropdown>
                 </flux:sidebar.nav>
                 <flux:dropdown position="top" align="start" class="max-lg:hidden">
+
                     <flux:sidebar.profile
+                        class="{{ $isPro ? 'ring-2 ring-purple-500/70 bg-purple-100/50 dark:bg-purple-500/20 ring-offset-2 ring-offset-white dark:ring-offset-[#0f1115] shadow-[0_0_12px_rgba(168,85,247,0.45)]' : '' }}"
                         :avatar="Auth::guard('web')->user()->profile_pic ? asset('uploads/' . Auth::guard('web')->user()->profile_pic) : null"
                         name="{{ Str::title(Auth::guard('web')->user()->name) }}" />
                     <flux:menu
@@ -254,6 +416,7 @@
                             class="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/50">
                             <p class="text-sm font-semibold text-neutral-900 dark:text-white truncate">
                                 {{ Str::title(Auth::guard('web')->user()->name) }}
+
                             </p>
                             <p class="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5 font-medium">
                                 {{ Auth::guard('web')->user()->email }}

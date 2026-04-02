@@ -45,7 +45,7 @@ class Pricing extends Component
     public function subscribeToPlan($planSlug, DodoPaymentService $dodoService)
     {
         if (!auth()->check()) {
-            return redirect()->route('login')->with('error', 'Please login to subscribe.');
+            return redirect()->route('register')->with('error', 'Please register or login to subscribe to a plan.');
         }
 
         try {

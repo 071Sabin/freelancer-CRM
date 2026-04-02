@@ -70,7 +70,6 @@ class DodoPaymentService
         $response = Http::withToken(env('DODO_PAYMENTS_API_KEY'))
             ->post(env('DODO_BASE_URL') . '/subscriptions', $payload);
 
-
         if ($response->successful()) {
             // dd([
             //     'STATUS' => 'API Call Successful!',

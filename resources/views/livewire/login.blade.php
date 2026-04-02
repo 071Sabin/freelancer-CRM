@@ -1,4 +1,5 @@
-<div class="py-14 flex items-center justify-center bg-slate-50 dark:bg-black px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
+<div
+    class="py-14 flex items-center justify-center bg-slate-50 dark:bg-black px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
@@ -6,6 +7,18 @@
     @if (session('warning'))
         <x-notification type="warning">{{ session('warning') }}</x-notification>
     @endif
+
+    @if (session('error'))
+        <x-notification type="error">{{ session('error') }}</x-notification>
+    @endif
+
+
+    @error('loginError')
+        <div class="alert alert-danger mt-2">
+            {{ $message }}
+        </div>
+    @enderror
+
 
     @if (session('error'))
         <x-notification type="error">{{ session('error') }}</x-notification>
@@ -64,15 +77,47 @@
             @endif
         </div>
 
+
+        <div x-data="{
+            expiry: @entangle('lockoutUntil'),
+            remaining: 0,
+            init() {
+                this.remaining = Math.max(0, this.expiry - Math.floor(Date.now() / 1000));
+                setInterval(() => {
+                    this.remaining = Math.max(0, this.expiry - Math.floor(Date.now() / 1000));
+                }, 1000);
+            }
+        }" x-show="remaining > 0" x-transition:enter=""
+            x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+            class="my-2 justify-center flex items-center gap-2 rounded-lg border border-amber-200/60 bg-amber-50/50 px-3 py-2 text-xs font-medium text-amber-800 shadow-sm backdrop-blur-sm dark:border-amber-500/20 dark:bg-amber-500/5 dark:text-amber-400">
+            <svg class="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-500" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+
+            <div class="flex items-center gap-1.5">
+                <span>Security lockout active.</span>
+                <span class="flex items-center gap-1 opacity-80">
+                    Retry in
+                    <span
+                        class="inline-flex min-w-[2ch] justify-center font-bold tabular-nums text-amber-700 dark:text-amber-300"
+                        x-text="remaining"></span>
+                    s
+                </span>
+            </div>
+        </div>
         <form wire:submit="useAuthentication" class="space-y-6">
             @csrf
 
             {{-- Email Input --}}
             <div class="space-y-1">
-                <label class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Email Address</label>
+                <label class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Email
+                    Address</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                         </svg>
@@ -96,7 +141,8 @@
             {{-- Password Input --}}
             <div class="space-y-1">
                 <div class="flex items-center justify-between">
-                    <label class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
+                    <label
+                        class="block text-xs lg:text-sm font-medium text-slate-700 dark:text-slate-300">Password</label>
                     <a href="#"
                         class="text-xs lg:text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors">
                         Forgot password?
@@ -104,7 +150,8 @@
                 </div>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 lg:h-5 lg:w-5 text-slate-400" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>

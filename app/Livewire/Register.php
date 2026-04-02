@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\admins;
 use App\Models\InvoiceSetting;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -61,6 +62,13 @@ class Register extends Component
                 'country' => ''
             ],
             'default_footer' => 'THIS IS SYSTEM GENERATED INVOICE.',
+        ]);
+
+        Subscription::create([
+            'user_id' => $a->id,
+            'plan_id' => 1,
+            'status' => 'active',
+            'trial_ends_at' => now()->addDays(14),
         ]);
 
         // session()->flash('success', $this->name . ", you're registered successfully!");
