@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Clients;
 
-
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Client;
@@ -192,3 +191,4 @@ class ClientsTable extends DataTableComponent
         HTML;
     }
 }
+

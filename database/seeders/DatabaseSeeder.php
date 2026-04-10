@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('sabin123'),
         ]);
 
+        // $user = User::factory()->create();
+
         // get a plan (or create default one if needed)
         $plan = Plan::first(); // or Plan::inRandomOrder()->first();
 
@@ -64,8 +66,8 @@ class DatabaseSeeder extends Seeder
 
         $client = Client::factory()->create(['user_id' => $user->id]);
         $inSetting =InvoiceSetting::factory()->create(['user_id' => $user->id]);
-        $chunkSize = 1;
-        $totalProjects = 2;
+        $chunkSize = 1000;
+        $totalProjects = 230000;
 
         for ($i = 0; $i < $totalProjects / $chunkSize; $i++) {
 

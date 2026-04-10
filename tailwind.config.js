@@ -6,6 +6,9 @@ export default {
         "./app/**/*.php",
         "./vendor/livewire/**/*.blade.php",
         "./vendor/rappasoft/**/*.blade.php",
+        "./app/Filament/**/*.php",
+        "./resources/views/filament/**/*.blade.php",
+        "./vendor/filament/**/*.blade.php",
     ],
     safelist: [
         "translate-x-0",

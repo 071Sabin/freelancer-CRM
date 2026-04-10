@@ -29,8 +29,9 @@
         })();
     </script>
     @livewireStyles
+    @filamentStyles
     @fluxAppearance
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- @vite('resources/css/app.css') --}}
 
@@ -547,11 +548,12 @@
         </flux:modal>
     @endauth
 
-
+    {{-- <livewire:projects-table /> --}}
 
     @livewireScripts
+    @filamentScripts
     @fluxScripts
-    
+
     <script>
         window.addEventListener('scroll-to-error', () => {
             const firstError = document.querySelector('.text-red-600'); // Or whatever your error class is
@@ -563,7 +565,7 @@
             }
         });
     </script>
-    
+
 </body>
 
 </html>
