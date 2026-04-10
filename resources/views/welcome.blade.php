@@ -1,6 +1,5 @@
 @component('layouts.app')
-    <section
-        class="relative overflow-hidden py-10 bg-white dark:bg-slate-900 transition-colors duration-300">
+    <section class="relative overflow-hidden py-10 bg-white dark:bg-slate-900 transition-colors duration-300">
 
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
             <div

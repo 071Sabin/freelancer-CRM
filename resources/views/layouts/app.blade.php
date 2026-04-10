@@ -18,7 +18,6 @@
 
     <meta property="og:title" content="Client Pivot - Intelligent Client Management for Freelancers">
 
-
     <script>
         (function() {
             const stored = localStorage.getItem('theme');
@@ -31,8 +30,9 @@
     </script>
     @livewireStyles
     @fluxAppearance
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @vite('resources/css/app.css')
+    {{-- @vite('resources/css/app.css') --}}
 
     <style>
         html {
@@ -551,6 +551,7 @@
 
     @livewireScripts
     @fluxScripts
+    
     <script>
         window.addEventListener('scroll-to-error', () => {
             const firstError = document.querySelector('.text-red-600'); // Or whatever your error class is
@@ -562,6 +563,7 @@
             }
         });
     </script>
+    
 </body>
 
 </html>

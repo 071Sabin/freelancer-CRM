@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities; */
 
+
 @import "tailwindcss";
 @import "../../vendor/livewire/flux/dist/flux.css"; /* 👈 ADD THIS */
 @plugin "@tailwindcss/forms";
