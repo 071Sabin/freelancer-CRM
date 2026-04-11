@@ -20,9 +20,6 @@
     @enderror
 
 
-    @if (session('error'))
-        <x-notification type="error">{{ session('error') }}</x-notification>
-    @endif
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
         <div
             class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[80px]">
@@ -48,6 +45,12 @@
             </h2>
             <p class="mt-2 text-xs lg:text-sm text-slate-500 dark:text-slate-400">
                 Sign in to manage your freelance empire
+                <br>
+                Total Clients: {{ $totalClients }}
+                <br>
+                Total Projects: {{ $totalProjects }}
+                <br>
+                Total Invoices: {{ $totalInvoices }}
             </p>
         </div>
 

@@ -9,6 +9,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use App\Livewire\Forms\ClientForm;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 #[Title('Client Pivot | Clients')]
 class Clients extends Component
@@ -16,7 +17,7 @@ class Clients extends Component
     public ClientForm $form; // Inject the magic Form Object
 
     // Keep your display properties
-    public $currencies, $clientDetails, $clientCount, $thisMonthClients;
+    public $currencies, $activeClients, $clientCount, $thisMonthClients;
     public array $viewingClient = [];
 
     protected $listeners = [
@@ -85,9 +86,13 @@ class Clients extends Component
     {
         $userId = auth()->id();
 
-        $this->clientCount = Client::where('user_id', $userId)->count();
-        $this->clientDetails = Client::with('currency')->where('user_id', $userId)->get();
         $this->currencies = Currency::orderBy('code', 'asc')->get();
+        $userKey = Auth::user()->id;
+        // $this->clientCount = Client::where('user_id', $userId)->count();
+        $this->clientCount = Cache::remember("{$userKey}_client_count", 600, function () use ($userId) {
+            return Client::where('user_id', $userId)->count();
+        });
+        $this->activeClients = Client::where('user_id', $userId)->where('status', 'active')->count();
         $this->thisMonthClients = Client::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->where('user_id', $userId)

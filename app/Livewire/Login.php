@@ -2,6 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Client;
+use App\Models\Invoice;
+use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
@@ -14,6 +17,7 @@ class Login extends Component
 {
 
     public $email, $password;
+    public $totalClients, $totalProjects, $totalInvoices;
     // public function useAuthentication()
     // {
     //     $credentials = $this->validate([
@@ -61,6 +65,9 @@ class Login extends Component
  
     public function mount()
     {
+        $this->totalClients = Client::count();
+        $this->totalProjects = Project::count();
+        $this->totalInvoices = Invoice::count();
         if (Auth::guard('freelancers')->check()) {
             return redirect()->route('dashboard'); // works from mount
         }
