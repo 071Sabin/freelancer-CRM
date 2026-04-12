@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Dashboard;
 
 use App\Models\admins;
 use App\Models\Client;
@@ -17,11 +17,7 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
-    public $admins, $totalClients, $progressProjects, $activeProjects, $recentProjects;
-    public $totalRevenue = 0;
-    public $pendingInvoices = 0;
-    public $overdueInvoices = 0;
-    public $invoices;
+    public $recentProjects=null;
 
     public function mount()
     {
@@ -56,44 +52,12 @@ class Dashboard extends Component
         //     ->count();
 
 
-        set_time_limit(120);
-        $cacheTime = 3600; // Cache for 1 hour (in seconds)
+        // set_time_limit(120);
+        $cacheTime = 300;
         $userKey = "dashboard_stats_user_{$userId}";
 
-        // 1. Cache the Project & Client Counts
-        $this->totalClients = Cache::remember("{$userKey}_total_clients", $cacheTime, function () use ($userId) {
-            return Client::where('user_id', $userId)->count();
-        });
-
-        $projectStats = Cache::remember("{$userKey}_project_counts", $cacheTime, function () use ($userId) {
-            return Project::where('user_id', $userId)
-                ->selectRaw("
-            SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) as in_progress,
-            SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active
-        ")
-                ->first();
-        });
-
-        $this->progressProjects = $projectStats->in_progress ?? 0;
-        $this->activeProjects   = $projectStats->active ?? 0;
-
-        // 2. Cache the Invoice Totals (Revenue, Pending, Overdue)
-        $invoiceStats = Cache::remember("{$userKey}_invoice_stats", $cacheTime, function () use ($userId) {
-            return Invoice::where('user_id', $userId)
-                ->selectRaw("
-            SUM(CASE WHEN invoice_status = 'paid' THEN paid_total ELSE 0 END) as revenue,
-            COUNT(CASE WHEN invoice_status != 'paid' THEN 1 END) as pending,
-            COUNT(CASE WHEN invoice_status != 'paid' AND due_date < ? THEN 1 END) as overdue
-        ", [now()->toDateString()])
-                ->first();
-        });
-
-        $this->totalRevenue    = $invoiceStats->revenue ?? 0;
-        $this->pendingInvoices = $invoiceStats->pending ?? 0;
-        $this->overdueInvoices = $invoiceStats->overdue ?? 0;
-
         // 3. Recent Projects (Usually cached for a shorter time, e.g., 5 mins)
-        $this->recentProjects = Cache::remember("{$userKey}_recent_projects", 300, function () use ($userId) {
+        $this->recentProjects = Cache::remember("{$userKey}_recent_projects", $cacheTime, function () use ($userId) {
             return Project::with('client:id,client_name')
                 ->where('user_id', $userId)
                 ->latest()
@@ -104,7 +68,7 @@ class Dashboard extends Component
     
     public function render()
     {
-        return view('livewire.dashboard');
+        return view('livewire.dashboard.dashboard');
     }
 
     public function logout()

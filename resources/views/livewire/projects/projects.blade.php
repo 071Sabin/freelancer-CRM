@@ -18,15 +18,15 @@
     {{-- PROJECT CARDS --}}
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
-        <x-dashboard-card heading="Total Lifecycle" :value="number_format($projectCount)" dataOverTime="All-time volume"
+        <livewire:components.stats-card heading="Total Lifecycle" :value="$projectCount" dataOverTime="All-time volume" lazy
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3"/></svg>'
             dataColor="text-neutral-400 dark:text-neutral-500" />
 
-        <x-dashboard-card heading="In Progress" :value="number_format($progressProjects)" dataOverTime="Ongoing"
+        <livewire:components.stats-card heading="In Progress" :value="$progressProjects" dataOverTime="Ongoing" lazy
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>'
             dataColor="text-emerald-600 dark:text-emerald-500" />
 
-        <x-dashboard-card heading="New Growth" :value="number_format($thisMonthProjects)" dataOverTime="This month"
+        <livewire:components.stats-card heading="New Growth" :value="$thisMonthProjects" dataOverTime="This month" lazy
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>'
             dataColor="text-violet-600 dark:text-violet-400" />
 
@@ -50,7 +50,7 @@
 
 
     @if ($projectCount > 0)
-        <livewire:projects.projects-table lazy />
+        {{-- <livewire:projects.projects-table lazy /> --}}
 
     @else
         <x-empty-state title="No Projects Yet" subtitle="Create your first project to start managing work.">

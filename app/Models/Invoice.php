@@ -89,7 +89,15 @@ class Invoice extends Model
     ];
 
 
+    public function scopeTotalInvoices($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
 
+    public function scopePending($query)
+    {
+        return $query->where('invoice_status', '!=', 'paid');
+    }
 
     protected static function booted()
     {

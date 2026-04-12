@@ -2,7 +2,6 @@
 
 use App\Livewire\ClientPortal\Portal;
 use App\Livewire\Clients\Clients;
-use App\Livewire\Dashboard;
 use App\Livewire\Invoices\Settings\Branding;
 use App\Livewire\Invoices\Settings\General;
 use App\Livewire\Invoices\Settings\Payments;
@@ -11,7 +10,7 @@ use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
 use App\Livewire\Settings;
 use App\Http\Controllers\DodoWebhookController;
-
+use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Invoices\InvoiceIndex;
 use App\Livewire\Pricing;
 use App\Livewire\Projects\Workspace;

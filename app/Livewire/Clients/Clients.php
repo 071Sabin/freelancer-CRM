@@ -17,7 +17,7 @@ class Clients extends Component
     public ClientForm $form; // Inject the magic Form Object
 
     // Keep your display properties
-    public $currencies, $activeClients, $clientCount, $thisMonthClients;
+    public $currencies, $clientCount;
     public array $viewingClient = [];
 
     protected $listeners = [
@@ -84,19 +84,16 @@ class Clients extends Component
 
     public function mount()
     {
-        $userId = auth()->id();
-
-        $this->currencies = Currency::orderBy('code', 'asc')->get();
         $userKey = Auth::user()->id;
-        // $this->clientCount = Client::where('user_id', $userId)->count();
-        $this->clientCount = Cache::remember("{$userKey}_client_count", 600, function () use ($userId) {
-            return Client::where('user_id', $userId)->count();
+        $cacheTime = 600;
+
+        $this->currencies = Cache::remember('currencies_all', 3600, function () {
+            return Currency::orderBy('code', 'asc')->get();
         });
-        $this->activeClients = Client::where('user_id', $userId)->where('status', 'active')->count();
-        $this->thisMonthClients = Client::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->where('user_id', $userId)
-            ->count();
+
+        $this->clientCount = Cache::remember("{$userKey}_client_count", $cacheTime, function () use ($userKey) {
+            return Client::where('user_id', $userKey)->count();
+        });
     }
 
     public function render()

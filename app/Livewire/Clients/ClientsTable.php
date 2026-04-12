@@ -15,11 +15,13 @@ class ClientsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id')->setDefaultSort('client_name', 'asc');
+        $this->setPrimaryKey('id');
+        
 
         $this->setPerPageAccepted([10, 25, 50, 100]);
         // $this->setQueryStringDisabled();
 
+        // $this->setPaginationMethod('simple');
         $this->setSearchPlaceholder('Search Clients...');
 
         $this->setSearchFieldAttributes([
@@ -56,8 +58,6 @@ class ClientsTable extends DataTableComponent
             
             Column::make('client Email', 'client_email')->hideIf(true),
             Column::make('Company', 'company_name')
-                ->sortable()
-                ->searchable()
                 ->format(function ($value, $row) {
                 $displayValue = $value ? e($value) : '—';
                     return '
@@ -112,8 +112,7 @@ class ClientsTable extends DataTableComponent
                 })->html(),
             // Column::make("Private notes", "private_notes")
             //     ->sortable(),
-            Column::make("Created at", "created_at")->format(fn($value) => $value?->diffForHumans())
-                ->sortable(),
+            Column::make("Created at", "created_at")->format(fn($value) => $value?->diffForHumans()),
             // Column::make("Updated at", "updated_at")
             //     ->sortable(),
             Column::make('Actions', 'id')
@@ -179,16 +178,101 @@ class ClientsTable extends DataTableComponent
     public function placeholder()
     {
         return <<<'HTML'
-        <div class="w-full min-w-full h-64 flex flex-col items-center justify-center transition-all duration-200">
-            <svg class="animate-spin h-6 w-6 text-neutral-400 dark:text-neutral-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span class="text-sm font-medium text-neutral-500 dark:text-neutral-400 tracking-wide">
-                Loading clients...
-            </span>
+    <div class="w-full min-w-full animate-pulse">
+
+        <!-- Top Controls -->
+        <div class="flex items-center justify-between p-4">
+            <div class="flex gap-3 w-full max-w-md">
+                <div class="h-10 w-full bg-neutral-200 dark:bg-neutral-700 rounded-lg"></div>
+                <div class="h-10 w-28 bg-neutral-200 dark:bg-neutral-700 rounded-lg"></div>
+            </div>
+
+            <div class="flex gap-3">
+                <div class="h-10 w-24 bg-neutral-200 dark:bg-neutral-700 rounded-lg"></div>
+                <div class="h-10 w-16 bg-neutral-200 dark:bg-neutral-700 rounded-lg"></div>
+            </div>
         </div>
-        HTML;
+
+        <!-- Table Header -->
+        <div class="px-4 py-3 border-t border-b border-neutral-200 dark:border-neutral-700">
+            <div class="grid grid-cols-12 gap-4">
+                <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded col-span-2"></div>
+                <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded col-span-4"></div>
+                <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded col-span-2"></div>
+                <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded col-span-2"></div>
+                <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded col-span-1"></div>
+                <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded col-span-1"></div>
+            </div>
+        </div>
+
+        <!-- Rows -->
+        <div class="divide-y divide-neutral-200 dark:divide-neutral-700">
+
+            <!-- Row -->
+            <div class="px-4 py-4 grid grid-cols-12 gap-4 items-center">
+                
+                <!-- Invoice # -->
+                <div class="h-4 w-24 bg-neutral-200 dark:bg-neutral-700 rounded col-span-2"></div>
+
+                <!-- Project + Client -->
+                <div class="col-span-4 space-y-2">
+                    <div class="h-4 w-3/4 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-3 w-1/3 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+
+                <!-- Status -->
+                <div class="col-span-2">
+                    <div class="h-6 w-16 bg-neutral-200 dark:bg-neutral-700 rounded-full"></div>
+                </div>
+
+                <!-- Due Date -->
+                <div class="col-span-2 space-y-2">
+                    <div class="h-4 w-24 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-3 w-20 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+
+                <!-- Payment Progress -->
+                <div class="col-span-1 space-y-2">
+                    <div class="h-3 w-12 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-2 w-full bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-span-1 flex gap-2 justify-end">
+                    <div class="h-5 w-5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-5 w-5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-5 w-5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+            </div>
+
+            <!-- Duplicate rows (x4 for realism) -->
+            <div class="px-4 py-4 grid grid-cols-12 gap-4 items-center">
+                <div class="h-4 w-20 bg-neutral-200 dark:bg-neutral-700 rounded col-span-2"></div>
+                <div class="col-span-4 space-y-2">
+                    <div class="h-4 w-2/3 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-3 w-1/4 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+                <div class="col-span-2">
+                    <div class="h-6 w-14 bg-neutral-200 dark:bg-neutral-700 rounded-full"></div>
+                </div>
+                <div class="col-span-2 space-y-2">
+                    <div class="h-4 w-20 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-3 w-16 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+                <div class="col-span-1 space-y-2">
+                    <div class="h-3 w-10 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-2 w-full bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+                <div class="col-span-1 flex gap-2 justify-end">
+                    <div class="h-5 w-5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-5 w-5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                    <div class="h-5 w-5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    HTML;
     }
 }
 

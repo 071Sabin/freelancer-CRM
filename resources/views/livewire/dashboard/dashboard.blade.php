@@ -12,54 +12,42 @@
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
-    {{-- @if (auth()->user()->subscription && auth()->user()->subscription->status === 'active')
-        <span class="badge bg-success">Pro Member</span>
-    @else
-        <button wire:click="upgrade">Upgrade Now</button>
-    @endif --}}
-
     <x-main-heading title="Dashboard 👋" subtitle="Overview of your clients, projects, invoices, and insights." />
 
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
-        <x-dashboard-card heading="Total Clients" value="{{ number_format($totalClients) }}"
-            dataOverTime="+3 new this month"
+        {{-- this will call the single component running the queries based on the type filter using match, check the component php file for more info --}}
+        <livewire:dashboard.dashboard-stats-card heading="Total Clients" type="total_clients" lazy
             icon='
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-                </svg>'>
-        </x-dashboard-card>
+                </svg>'/>
 
         <!-- Projects -->
-        <x-dashboard-card heading="Active Projects" value="{{ number_format($activeProjects) }}"
-            dataOverTime="{{ $progressProjects }} in progress"
+        <livewire:dashboard.dashboard-stats-card heading="Active Projects" type="active_projects" lazy
             icon='
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
             </svg>'
-            dataColor="text-blue-500 dark:text-blue-400">
-        </x-dashboard-card>
-
-        <!-- Revenue -->
-        <x-dashboard-card heading="Total Revenue" value="${{ number_format($totalRevenue, 2) }}" 
-            dataOverTime="+12% growth"
-            icon='
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>'>
-        </x-dashboard-card>
-
-        <!-- Invoices -->
-        <x-dashboard-card heading="Pending Invoices" value="{{ number_format($pendingInvoices) }}" 
-            dataOverTime="{{ number_format($overdueInvoices) }} overdue"
+            dataColor="text-blue-500 dark:text-blue-400"/>
+        
+            <!-- Invoices -->
+        <livewire:dashboard.dashboard-stats-card heading="Total Invoices" type="total_invoices" lazy
             icon='
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                 </svg>'
-            dataColor="text-red-600 dark:text-red-500">
-        </x-dashboard-card>
+            dataColor="text-red-600 dark:text-red-500"/>
+        
+            <!-- Revenue -->
+        <livewire:dashboard.dashboard-stats-card heading="Total Revenue" type="total_revenue" lazy
+            icon='
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>'
+            dataColor="text-red-600 dark:text-red-500"/>
 
     </div>
 

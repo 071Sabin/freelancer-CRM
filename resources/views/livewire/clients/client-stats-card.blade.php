@@ -1,11 +1,3 @@
-@props([
-    'heading' => '',
-    'value' => '',
-    'dataOverTime' => '',
-    'icon' => null,
-    'dataColor' => 'text-green-600',
-])
-
 <div
     class="relative bg-white dark:bg-neutral-800 border border-neutral-200/70 dark:border-neutral-700 rounded-xl px-5 py-4 shadow-sm hover:shadow-md transition-shadow duration-200 dark:hover:shadow-neutral-700/70">
 
@@ -22,31 +14,25 @@
 
     <!-- Value -->
     <div class="mt-2">
-        <p class="font-semibold tracking-tight text-2xl text-neutral-900 dark:text-neutral-100">
-
-            <span wire:loading.delay class="animate-pulse text-neutral-300">
-                Loading...
-            </span>
-
-            <span wire:loading.remove>
-                {{ $value }}
-            </span>
-
-        </p>
+        @if (is_null($value))
+            <!-- Skeleton -->
+            <div class="h-6 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
+        @else
+            <p class="font-semibold tracking-tight text-2xl text-neutral-900 dark:text-neutral-100">
+                {{ number_format($value) }}
+                {{-- {{ $value }} --}}
+            </p>
+        @endif
     </div>
 
-    <!-- Delta / Meta -->
+    <!-- Meta -->
     <div class="mt-1">
-        <p class="text-xs {{ $dataColor }}">
-
-            <span wire:loading.delay class="animate-pulse text-neutral-300">
-                Loading...
-            </span>
-
-            <span wire:loading.remove>
+        @if (is_null($dataOverTime))
+            <div class="h-3 w-20 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
+        @else
+            <p class="text-xs {{ $dataColor }}">
                 {{ $dataOverTime }}
-            </span>
-
-        </p>
+            </p>
+        @endif
     </div>
 </div>
