@@ -14,25 +14,25 @@
 
     <!-- Value -->
     <div class="mt-2">
-        @if (is_null($value))
-            <!-- Skeleton -->
-            <div class="h-6 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
-        @else
+        <!-- Skeleton (only if slow) -->
+        <div wire:loading.delay class="h-6 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
+
+        <!-- Value -->
+        <div wire:loading.remove>
             <p class="font-semibold tracking-tight text-2xl text-neutral-900 dark:text-neutral-100">
-                {{ number_format($value) }}
-                {{-- {{ $value }} --}}
+                {{ number_format($value ?? 0) }}
             </p>
-        @endif
+        </div>
     </div>
 
     <!-- Meta -->
     <div class="mt-1">
-        @if (is_null($dataOverTime))
-            <div class="h-3 w-20 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
-        @else
+        <div wire:loading.delay class="h-3 w-20 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
+
+        <div wire:loading.remove>
             <p class="text-xs {{ $dataColor }}">
                 {{ $dataOverTime }}
             </p>
-        @endif
+        </div>
     </div>
 </div>

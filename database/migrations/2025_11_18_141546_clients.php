@@ -28,18 +28,7 @@ return new class extends Migration {
             $table->softDeletes();
 
             // 1. Ownership + Status (Perfect for Dashboard Counts)
-            $table->index(['user_id', 'status'], 'idx_user_status');
-
-            // 2. Ownership + Recency (Perfect for "Recent Clients" lists)
-            $table->index(['user_id', 'created_at'], 'idx_user_created_at');
-
-            // 3. Email Search (If you search for clients by email in Rappasoft)
-            $table->index('client_email');
-
-            // 4. SoftDeletes (If you use softDeletes, Laravel always adds 
-            // "WHERE deleted_at IS NULL". Indexing this speeds up every query.)
-            $table->index('deleted_at');
-
+            $table->index(['user_id', 'deleted_at'], 'idx_clients_user_deleted');
         });
     }
 

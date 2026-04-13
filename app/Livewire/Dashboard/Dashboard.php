@@ -20,9 +20,7 @@ class Dashboard extends Component
     public $recentProjects=null;
 
     public function mount()
-    {
-        $userId = Auth::user()->id;
-        
+    {        
         // dd(Auth::user()->subscription->trial_ends_at);
         // Existing Stats
         // $this->totalClients = Client::where('user_id', $userId)->count();
@@ -53,6 +51,12 @@ class Dashboard extends Component
 
 
         // set_time_limit(120);
+
+    }
+    
+    public function render()
+    {
+        $userId = Auth::user()->id;
         $cacheTime = 3600;
         $userKey = "dashboard_stats_user_{$userId}";
         // dd(Cache::get("{$userKey}_recent_projects"));
@@ -66,10 +70,6 @@ class Dashboard extends Component
                 ->take(3)
                 ->get();
         });
-    }
-    
-    public function render()
-    {
         return view('livewire.dashboard.dashboard');
     }
 
