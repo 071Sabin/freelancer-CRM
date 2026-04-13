@@ -21,8 +21,8 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $userId = auth()->id();
-
+        $userId = Auth::user()->id;
+        
         // dd(Auth::user()->subscription->trial_ends_at);
         // Existing Stats
         // $this->totalClients = Client::where('user_id', $userId)->count();
@@ -53,12 +53,14 @@ class Dashboard extends Component
 
 
         // set_time_limit(120);
-        $cacheTime = 300;
+        $cacheTime = 3600;
         $userKey = "dashboard_stats_user_{$userId}";
+        // dd(Cache::get("{$userKey}_recent_projects"));
 
         // 3. Recent Projects (Usually cached for a shorter time, e.g., 5 mins)
         $this->recentProjects = Cache::remember("{$userKey}_recent_projects", $cacheTime, function () use ($userId) {
-            return Project::with('client:id,client_name')
+            return Project::query()
+                ->with('client:id,client_name')
                 ->where('user_id', $userId)
                 ->latest()
                 ->take(3)

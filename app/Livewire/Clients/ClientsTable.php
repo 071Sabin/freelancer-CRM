@@ -16,12 +16,12 @@ class ClientsTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
-        
 
-        $this->setPerPageAccepted([10, 25, 50, 100]);
+        $this->setPerPageAccepted([10, 25, 50]);
         // $this->setQueryStringDisabled();
 
         // $this->setPaginationMethod('simple');
+
         $this->setSearchPlaceholder('Search Clients...');
 
         $this->setSearchFieldAttributes([
@@ -37,13 +37,12 @@ class ClientsTable extends DataTableComponent
             ->where('clients.user_id', auth()->id());
     }
 
-
     public function columns(): array
     {
         return [
-            Column::make("Id", "id")->hideIf(true),
             Column::make("Client name", "client_name")
-                ->sortable()->searchable()->format(function($value, $row){
+                ->sortable()
+                ->searchable()->format(function($value, $row){
                 return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
@@ -73,7 +72,9 @@ class ClientsTable extends DataTableComponent
             })->html(),
             Column::make("Company Email", "company_email")
                 ->hideIf(true),
-            Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row){
+            Column::make('Hourly rate', 'hourly_rate')
+            ->sortable()
+            ->format(function ($value, $row){
                 return strtoupper($row->currency->code ?? 'USD').' '.e(strtoupper($value));
             }),
 
