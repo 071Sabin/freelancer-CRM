@@ -55,7 +55,7 @@ class ClientsTable extends DataTableComponent
                         </div>';
             })->html(),
             
-            Column::make('client Email', 'client_email')->hideIf(true),
+            Column::make('client Email', 'client_email')->searchable()->hideIf(true),
             Column::make('Company', 'company_name')
                 ->format(function ($value, $row) {
                 $displayValue = $value ? e($value) : '—';

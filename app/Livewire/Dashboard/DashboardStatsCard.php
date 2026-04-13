@@ -28,7 +28,6 @@ class DashboardStatsCard extends Component
 
     public function render()
     {
-
         $userId = Auth::user()->id;
         $cacheTime = 3600;
 
@@ -46,7 +45,7 @@ class DashboardStatsCard extends Component
                 'value' => Cache::remember("user_{$userId}_rev", $cacheTime, fn() => Invoice::where(['user_id' => $userId, 'invoice_status' => 'paid'])->sum('paid_total')),
                 'meta'  => "+12% growth"
             ],
-            'total_invoices' => Cache::remember("user_{$userId}_total_invoices_data", 3600, function () use ($userId) {
+            'total_invoices' => Cache::remember("user_{$userId}_total_invoices_data", $cacheTime, function () use ($userId) {
                 return [
                     'value' => Invoice::totalInvoices($userId)->count(),
                     'meta'  => Invoice::where('user_id', $userId)->pending()->count() . " pending"

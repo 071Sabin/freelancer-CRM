@@ -13,26 +13,15 @@
     </div>
 
     <!-- Value -->
-    <div class="mt-2">
-        @if (is_null($value))
-            <!-- Skeleton -->
-            <div class="h-6 w-24 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
-        @else
-            <p class="font-semibold tracking-tight text-2xl text-neutral-900 dark:text-neutral-100">
-                {{ number_format($value) }}
-                {{-- {{ $value }} --}}
-            </p>
-        @endif
-    </div>
+<div class="mt-2">
+    <p class="font-semibold tracking-tight text-2xl text-neutral-900 dark:text-neutral-100">
+        {{ number_format($value) }}
+    </p>
+</div>
 
-    <!-- Meta -->
-    <div class="mt-1">
-        @if (is_null($dataOverTime))
-            <div class="h-3 w-20 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse"></div>
-        @else
-            <p class="text-xs {{ $dataColor }}">
-                {{ $dataOverTime }}
-            </p>
-        @endif
-    </div>
+<div class="mt-1">
+    <p class="text-xs {{ $dataColor }}">
+        {{ $dataOverTime }}
+    </p>
+</div>
 </div>

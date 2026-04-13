@@ -25,6 +25,8 @@ class ClientStatsCard extends Component
         $userId = Auth::id();
         $cacheTime = 600;
 
+        // dd(Client::where('user_id', $userId)->count());
+
         $this->value = match ($this->type) {
             'total' => Cache::remember("{$userId}_client_count", $cacheTime, function () use ($userId) {
                 return Client::where('user_id', $userId)->count();
