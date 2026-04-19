@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\Project;
 use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -129,7 +130,8 @@ class ProjectFormModal extends Component
         $this->currencies = Currency::all();
     }
 
-    public function getClientsProperty()
+    #[Computed]
+    public function clients()
     {
         $search = trim($this->search);
 
@@ -137,35 +139,20 @@ class ProjectFormModal extends Component
             return collect();
         }
 
-        $booleanSearch = $this->toBooleanSearch($search);
-
-        if ($booleanSearch === '') {
-            return collect();
-        }
+        $prefixSearch = $this->toPrefixSearch($search);
 
         return Client::query()
             ->select(['id', 'client_name'])
             ->where('user_id', Auth::id())
-            ->whereRaw(
-                'MATCH(client_name, client_email, company_name) AGAINST(? IN BOOLEAN MODE)',
-                [$booleanSearch]
-            )
-            ->orderByRaw(
-                'MATCH(client_name, client_email, company_name) AGAINST(? IN BOOLEAN MODE) DESC',
-                [$booleanSearch]
-            )
+            ->where('client_name', 'like', $prefixSearch . '%')
+            ->orderBy('id')
             ->limit(self::CLIENT_SEARCH_LIMIT)
             ->get();
     }
 
-    private function toBooleanSearch(string $search): string
+    private function toPrefixSearch(string $search): string
     {
-        $search = preg_replace('/[^\pL\pN]+/u', ' ', $search) ?? '';
-
-        return collect(preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY))
-            ->filter()
-            ->map(fn (string $term) => '+' . $term . '*')
-            ->implode(' ');
+        return addcslashes($search, '\%_');
     }
 
     public function render()

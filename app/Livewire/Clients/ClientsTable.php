@@ -22,7 +22,7 @@ class ClientsTable extends DataTableComponent
         $this->setSearchDebounce(700);
         // $this->setQueryStringDisabled();
 
-        $this->setPaginationMethod('simple');
+        // $this->setPaginationMethod('simple');
         // $this->setSearchStatus(false);
 
         $this->setSearchPlaceholder('Search Clients...');

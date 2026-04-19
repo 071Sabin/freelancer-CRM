@@ -20,7 +20,7 @@ class ProjectsTable extends DataTableComponent
     {
         $this->setPrimaryKey('id')->setDefaultSort('created_at', 'desc');
         $this->setPerPageAccepted([10, 25, 50]);
-        $this->setPaginationMethod('simple');
+        // $this->setPaginationMethod('simple');
         $this->setSearchDebounce(700);
         $this->setSearchPlaceholder('Search Projects...');
 

@@ -73,52 +73,53 @@
                                 placeholder="Enter project name" required type="text" />
                         </div>
 
+                        {{-- client searching and select option --}}
                         <div x-data="{ open: false }" class="relative" @click.outside="open = false">
                             @php
                                 $clientSearch = trim($search);
                                 $clientOptions = strlen($clientSearch) >= 3 ? $this->clients : collect();
                             @endphp
 
-                            <label class="block mb-4 text-sm font-medium text-zinc-800 dark:text-white">
+                            <label class="block mb-4 text-sm font-medium text-neutral-800 dark:text-white">
                                 Client <span class="text-red-500">*</span>
                             </label>
 
                             <button type="button" x-on:click="open = ! open"
-                                class="flex items-center justify-between w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-left text-sm text-zinc-900 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-zinc-600 dark:bg-neutral-700 dark:text-white">
+                                class="flex items-center justify-between w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left text-sm text-neutral-900 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white">
                                 <span class="truncate">
                                     {{ $selectedClientName ? ucwords($selectedClientName) : 'Select client...' }}
                                 </span>
-                                <flux:icon.chevron-down class="size-4 shrink-0 text-zinc-400" />
+                                <flux:icon.chevron-down class="size-4 shrink-0 text-neutral-400" />
                             </button>
 
                             <div x-show="open" x-transition.opacity.duration.150ms
-                                class="absolute z-50 mt-1 flex w-full flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-600 dark:bg-zinc-800"
+                                class="absolute z-50 mt-1 flex w-full flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-lg dark:border-neutral-600 dark:bg-neutral-800"
                                 style="display: none;">
                                 <div
-                                    class="flex items-center border-b border-zinc-200 bg-zinc-50 px-3 dark:border-zinc-700 dark:bg-neutral-700">
-                                    <flux:icon.magnifying-glass class="size-4 shrink-0 text-zinc-400" />
-                                    <input type="text" wire:model.live.debounce.500ms="search"
+                                    class="flex items-center border-b border-neutral-200 bg-neutral-50 px-3 dark:border-neutral-700 dark:bg-neutral-700">
+                                    <flux:icon.magnifying-glass class="size-4 shrink-0 text-neutral-400" />
+                                    <input type="text" wire:model.live.debounce.300ms="search"
                                         placeholder="Search clients..."
                                         x-on:keydown.escape.window="open = false"
-                                        class="w-full border-0 bg-transparent px-2 py-2.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:ring-0 dark:text-white dark:placeholder:text-zinc-500" />
+                                        class="w-full border-0 bg-transparent px-2 py-2.5 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 focus:ring-0 dark:text-white dark:placeholder:text-neutral-500" />
                                 </div>
 
                                 <ul class="max-h-56 overflow-y-auto py-1">
                                     @if (strlen($clientSearch) < 3)
-                                        <li class="px-3 py-3 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                                        <li class="px-3 py-3 text-center text-sm text-neutral-500 dark:text-neutral-400">
                                             Type at least 3 characters to search.
                                         </li>
                                     @else
                                         @forelse ($clientOptions as $client)
                                             <li wire:click="selectClient({{ $client->id }})" x-on:click="open = false"
-                                                class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-700">
+                                                class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
                                                 <span class="truncate">{{ ucwords($client->client_name) }}</span>
                                                 @if ($project_form->client_id == $client->id)
                                                     <flux:icon.check class="size-4 shrink-0 text-blue-500" />
                                                 @endif
                                             </li>
                                         @empty
-                                            <li class="px-3 py-3 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                                            <li class="px-3 py-3 text-center text-sm text-neutral-500 dark:text-neutral-400">
                                                 No clients found.
                                             </li>
                                         @endforelse
@@ -172,7 +173,7 @@
                     </div>
 
                     <div
-                        class="mt-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg border border-zinc-200 dark:border-zinc-700">
+                        class="mt-4 p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg border border-neutral-200 dark:border-neutral-700">
                         <flux:checkbox wire:model="notify_client"
                             label="Send update notification to client via WhatsApp"
                             description="If unchecked, the project will be saved silently." class="cursor-pointer" />

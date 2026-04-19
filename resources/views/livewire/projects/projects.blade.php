@@ -46,7 +46,7 @@
 
 
     {{-- ADD & EDIT PROJECT FORM COMPONENT --}}
-    <livewire:projects.project-form-modal lazy />
+    <livewire:projects.project-form-modal />
     <livewire:projects.projects-table lazy />
 
     {{-- @if ($projectCount > 0)
