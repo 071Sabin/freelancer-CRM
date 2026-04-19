@@ -7,16 +7,11 @@ use App\Models\Invoice;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class DashboardStatsCard extends Component
 {
-    public $totalClients = 0, $progressProjects = null, $activeProjects = null;
-    public $totalRevenue = 0;
-    public $pendingInvoices = 0;
-    public $overdueInvoices = 0;
-    public $invoices;
-
     public $heading, $type;
     public $icon, $value, $dataOverTime, $dataColor;
 
@@ -26,15 +21,14 @@ class DashboardStatsCard extends Component
     }
 
 
-    public function render()
-    {
+    public function mount(){
         $userId = Auth::user()->id;
         $cacheTime = 3600;
 
         // This is where the card "decides" who it is
         $stats = match ($this->type) {
             'total_clients' => [
-                'value' => Cache::remember("user_{$userId}_clients", $cacheTime, fn() => Client::where('user_id', $userId)->count()),
+                'value' => Cache::remember("{$userId}_client_count", $cacheTime, fn() => Client::where('user_id', $userId)->count()),
                 'meta'  => "+3 new this month"
             ],
             'active_projects' => [
@@ -46,16 +40,19 @@ class DashboardStatsCard extends Component
                 'meta'  => "+12% growth"
             ],
             'total_invoices' => Cache::remember("user_{$userId}_total_invoices_data", $cacheTime, function () use ($userId) {
+                // Explicitly run raw counts to avoid scope overhead
                 return [
-                    'value' => Invoice::totalInvoices($userId)->count(),
-                    'meta'  => Invoice::where('user_id', $userId)->pending()->count() . " pending"
+                    'value' => (int) Invoice::where('user_id', $userId)->count(),
+                    'meta'  => (int) Invoice::where('user_id', $userId)->pending()->count() . " pending"
                 ];
             }),
             default => ['value' => 0, 'meta' => '']
         };
         $this->value = $stats['value'] ?? 0;
         $this->dataOverTime = $stats['meta'] ?? '';
-        
+    }
+    public function render()
+    {   
         return view('livewire.dashboard.dashboard-stats-card');
     }
 }

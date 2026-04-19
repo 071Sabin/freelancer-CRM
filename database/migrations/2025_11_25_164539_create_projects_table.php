@@ -31,6 +31,23 @@ return new class extends Migration
             // Useful meta
             $table->timestamps();
             $table->softDeletes(); // optional but recommended for CRUD safety
+
+            // 1. The "Main DataTable" Index
+            // Covers: "Show all my projects, sort by newest"
+            $table->index(['user_id', 'deleted_at', 'created_at'], 'idx_proj_user_del_created');
+
+            // 2. The "Client Detail Page" Index
+            // Covers: "Show all projects for Client X"
+            $table->index(['user_id', 'client_id', 'deleted_at'], 'idx_proj_user_client_del');
+
+            // 3. The "Dashboard KPI" Index
+            // Covers: "Show my active projects" OR "Show my active projects ending soon"
+            // MySQL can use the first 3 parts of this for status, or all 4 for deadline tracking.
+            $table->index(['user_id', 'status', 'deadline', 'deleted_at'], 'idx_proj_user_status_deadline');
+
+            // 4. The "Lightning Search" Index
+            // Replaces standard LIKE '%search%' for instant text matching
+            $table->fullText(['name', 'description'], 'idx_proj_fulltext_name_desc');
         });
     }
 

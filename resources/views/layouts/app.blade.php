@@ -29,7 +29,7 @@
         })();
     </script>
     @livewireStyles
-    @filamentStyles
+    {{-- @filamentStyles --}}
     @fluxAppearance
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -551,7 +551,7 @@
     {{-- <livewire:projects-table /> --}}
 
     @livewireScripts
-    @filamentScripts
+    {{-- @filamentScripts --}}
     @fluxScripts
 
     <script>

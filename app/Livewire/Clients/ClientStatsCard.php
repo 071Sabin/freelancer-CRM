@@ -5,6 +5,7 @@ namespace App\Livewire\Clients;
 use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class ClientStatsCard extends Component
@@ -20,7 +21,8 @@ class ClientStatsCard extends Component
         return view('components.skeleton-cards');
     }
 
-    public function render()
+    #[Computed]
+    public function mount()
     {
         $userId = Auth::id();
         $cacheTime = 600;
@@ -45,7 +47,10 @@ class ClientStatsCard extends Component
 
             default => 0,
         };
+    }
 
+    public function render()
+    {
         return view('livewire.clients.client-stats-card');
     }
 }

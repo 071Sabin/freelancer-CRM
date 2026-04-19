@@ -7,6 +7,7 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class ClientsTable extends DataTableComponent
@@ -18,9 +19,11 @@ class ClientsTable extends DataTableComponent
         $this->setPrimaryKey('id');
 
         $this->setPerPageAccepted([10, 25, 50]);
+        $this->setSearchDebounce(700);
         // $this->setQueryStringDisabled();
 
-        // $this->setPaginationMethod('simple');
+        $this->setPaginationMethod('simple');
+        // $this->setSearchStatus(false);
 
         $this->setSearchPlaceholder('Search Clients...');
 
@@ -30,19 +33,29 @@ class ClientsTable extends DataTableComponent
         ]);
     }
 
+    
     public function builder(): Builder
     {
-        return Client::query()
-            ->with('currency')
-            ->where('clients.user_id', auth()->id());
+        $query = Client::query()->where('user_id', auth()->id());
+
+        if ($this->hasSearch()) {
+            $search = $this->getSearch();
+            // Wrap the term in quotes so emails like sabin@test.com don't break the SQL
+            $query->whereRaw(
+                "MATCH(client_name, client_email, company_name) AGAINST(? IN BOOLEAN MODE)",
+                ['"' . $search . '*"']
+            );
+        }
+
+        return $query;
     }
 
+   
     public function columns(): array
     {
         return [
             Column::make("Client name", "client_name")
-                ->sortable()
-                ->searchable()->format(function($value, $row){
+                ->sortable()->format(function($value, $row){
                 return '
                         <div class="flex flex-col leading-tight">
                             <span class="font-medium text-stone-800 dark:text-neutral-100">
@@ -55,7 +68,7 @@ class ClientsTable extends DataTableComponent
                         </div>';
             })->html(),
             
-            Column::make('client Email', 'client_email')->searchable()->hideIf(true),
+            Column::make('client Email', 'client_email')->hideIf(true),
             Column::make('Company', 'company_name')
                 ->format(function ($value, $row) {
                 $displayValue = $value ? e($value) : '—';
@@ -152,12 +165,12 @@ class ClientsTable extends DataTableComponent
         ];
     }
 
-    public function bulkActions(): array
-    {
-        return [
-            'deleteSelected' => 'Delete Selected',
-        ];
-    }
+    // public function bulkActions(): array
+    // {
+    //     return [
+    //         'deleteSelected' => 'Delete Selected',
+    //     ];
+    // }
     
     public function deleteSelected(): void
     {

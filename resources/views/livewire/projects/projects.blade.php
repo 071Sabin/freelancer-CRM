@@ -18,40 +18,39 @@
     {{-- PROJECT CARDS --}}
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
 
-        <livewire:components.stats-card heading="Total Lifecycle" :value="$projectCount" dataOverTime="All-time volume" lazy
+        <livewire:projects.projects-stats-card heading="Total Lifecycle" type="project_count" 
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3"/></svg>'
             dataColor="text-neutral-400 dark:text-neutral-500" />
 
-        <livewire:components.stats-card heading="In Progress" :value="$progressProjects" dataOverTime="Ongoing" lazy
+        <livewire:projects.projects-stats-card heading="In Progress" type="progress_projects" 
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>'
             dataColor="text-emerald-600 dark:text-emerald-500" />
 
-        <livewire:components.stats-card heading="New Growth" :value="$thisMonthProjects" dataOverTime="This month" lazy
+        <livewire:projects.projects-stats-card heading="New Growth" type="this_month_projects" 
             icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>'
             dataColor="text-violet-600 dark:text-violet-400" />
-
     </div>
 
     {{-- ADD PROJECT BUTTON --}}
     <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
-            <x-primary-button class="flex gap-1" wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
-                    <path fill-rule="evenodd"
-                        d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V10.5Z"
-                        clip-rule="evenodd" />
-                </svg>
-                add project
-            </x-primary-button>
+        <x-primary-button class="flex gap-1"
+            wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                <path fill-rule="evenodd"
+                    d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a.75.75 0 0 1-.53-.22L11.47 3.66A2.25 2.25 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Zm-6.75-10.5a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V10.5Z"
+                    clip-rule="evenodd" />
+            </svg>
+            add project
+        </x-primary-button>
     </div>
 
 
     {{-- ADD & EDIT PROJECT FORM COMPONENT --}}
-    <livewire:projects.project-form-modal />
+    <livewire:projects.project-form-modal lazy />
+    <livewire:projects.projects-table lazy />
 
-
-    @if ($projectCount > 0)
-        {{-- <livewire:projects.projects-table lazy /> --}}
-
+    {{-- @if ($projectCount > 0)
+        
     @else
         <x-empty-state title="No Projects Yet" subtitle="Create your first project to start managing work.">
             <x-slot:icon>
@@ -62,11 +61,11 @@
                 </svg>
             </x-slot:icon>
         </x-empty-state>
-    @endif
+    @endif --}}
 
 
     {{-- DELETE ONE PROJECT, IT'S FOR EACH ROW MODAL --}}
-    <flux:modal name="delete-project-modal" class="min-w-[22rem]">
+    <flux:modal name="delete-project-modal" class="min-w-[22rem]" lazy>
         <form wire:submit="delete" class="flex flex-col gap-4 sm:gap-5">
             <div class="flex items-start gap-3 sm:gap-4">
                 <div

@@ -16,7 +16,7 @@ class Projects extends Component
 {
     public ProjectForm $project_form;
 
-    public $clients, $allProjects, $projectCount, $progressProjects, $thisMonthProjects, $currencies;
+    public $clients, $allProjects;
     public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
 
     // these are dispatched from the ProjectsTable
@@ -53,17 +53,6 @@ class Projects extends Component
 
     public function mount()
     {
-        $currentUser = auth()->id();
-
-        $this->projectCount = Project::where('projects.user_id', $currentUser)->count();
-        $this->progressProjects = Project::where(['projects.user_id' => $currentUser, 'status' => 'in_progress'])->count();
-        $this->clients = Client::where('clients.user_id', $currentUser)->orderBy('client_name', 'asc')->get();
-        $this->currencies = Currency::orderBy('code', 'asc')->get();
-        // $this->allProjects = Project::all();
-        $this->thisMonthProjects = Project::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->where('projects.user_id', $currentUser)
-            ->count();
     }
 
     public function render()

@@ -18,9 +18,10 @@ class ProjectsTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id');
-        $this->setPerPageAccepted([10, 25, 50, 100]);
-        
+        $this->setPrimaryKey('id')->setDefaultSort('created_at', 'desc');
+        $this->setPerPageAccepted([10, 25, 50]);
+        $this->setPaginationMethod('simple');
+
         $this->setSearchPlaceholder('Search Projects...');
 
         $this->setSearchFieldAttributes([
@@ -31,98 +32,107 @@ class ProjectsTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        // return Project::query()->where('projects.user_id', auth()->id());
-        return Project::query()
-            ->with(['client', 'currency']) // Fetch relationships instantly
-            ->select('projects.*')         // Prevent ID column collisions
+        $query = Project::query()
+            // Only select what we need to save RAM (Ignore descriptions here)
+            ->select(
+                'projects.uuid',
+                'projects.id',
+                'projects.user_id',
+                'projects.client_id',
+                'projects.currency_id',
+                'projects.name',
+                'projects.status',
+                'projects.value',
+                'projects.hourly_rate',
+                'projects.deadline',
+                'projects.created_at'
+            )
+            ->with(['client:id,client_name', 'currency:id,code,symbol'])
             ->where('projects.user_id', auth()->id());
+
+        // ⚡ OVERRIDE THE SEARCH TO USE YOUR FULL-TEXT INDEX
+        if ($this->hasSearch()) {
+            $search = $this->getSearch();
+            $query->whereRaw(
+                "MATCH(name, description) AGAINST(? IN BOOLEAN MODE)",
+                ['"' . $search . '*"']
+            );
+        }
+
+        return $query;
     }
 
 
     public function columns(): array
     {
         return [
-            Column::make('Project Currency', 'currency_id')->hideIf(true),
+            // Cleaned up the hidden columns. We don't need them to access the data.
             Column::make('Id', 'id')->hideIf(true),
-            Column::make('created at', 'created_at')->hideIf(true),
 
-            // 👇 CRITICAL: ensures $row->client works reliably
-            Column::make('Client ID', 'client_id')->hideIf(true),
-            Column::make('Client Name', 'client.client_name')->hideIf(true),
-
+            // ⚡ REMOVED ->searchable() to kill the slow LIKE query
             Column::make('Project', 'name')
                 ->sortable()
-                ->searchable()
                 ->format(function ($value, $row) {
                     $projectName = $value ? ucwords($value) : 'Untitled Project';
+                    // Because of the 'with', this relationship is instantly available
                     $clientName = $row->client ? ucwords($row->client->client_name) : 'Unassigned';
 
                     $icon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3 shrink-0 text-neutral-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>';
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>';
 
                     return '
-                    <div class="flex flex-col justify-center min-w-[150px]">
-                        <span class="font-medium text-sm text-neutral-900 dark:text-neutral-100 truncate max-w-[200px]" title="' . e($projectName) . '">
-                            ' . e($projectName) . '
+                <div class="flex flex-col justify-center min-w-[150px]">
+                    <span class="font-medium text-sm text-neutral-900 dark:text-neutral-100 truncate max-w-[200px]" title="' . e($projectName) . '">
+                        ' . e($projectName) . '
+                    </span>
+                    <div class="flex items-center gap-1 mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                        ' . $icon . '
+                        <span class="truncate max-w-[180px]" title="' . e($clientName) . '">
+                            ' . e($clientName) . '
                         </span>
-                        <div class="flex items-center gap-1 mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                            ' . $icon . '
-                            <span class="truncate max-w-[180px]" title="' . e($clientName) . '">
-                                ' . e($clientName) . '
-                            </span>
-                        </div>
-                    </div>';
+                    </div>
+                </div>';
                 })
                 ->html(),
 
-            // 👇 UPGRADE: Formatted Money Column
             Column::make('Value', 'value')
-                ->sortable()
                 ->format(function ($value, $row) {
-                    return '<span class="font-mono text-neutral-700 dark:text-neutral-300 tabular-nums">' . ($row->currency->code ?? 'USD') . ' ' . number_format((float)$value, 2) . '
-                            </span>';
+                    return '<span class="font-mono text-neutral-700 dark:text-neutral-300 tabular-nums">' . ($row->currency->code ?? 'USD') . ' ' . number_format((float)$value, 2) . '</span>';
                 })
                 ->html(),
 
-            Column::make('Currency', 'currency_id')->hideIf(true),
-
-            Column::make('Hourly rate', 'hourly_rate')->sortable()->format(function ($value, $row) {
+            Column::make('Hourly rate', 'hourly_rate')->format(function ($value, $row) {
                 return strtoupper($row->currency->symbol ?? '$') . ' ' . e(strtoupper($value));
             }),
 
-            // 👇 UPGRADE: Modern "Ring" Badges (Cleaner than borders)
             Column::make('Status', 'status')
-                ->sortable()
                 ->format(
                     fn($value, $row) => view('components.badges.project-status', [
                         'project_status' => $value,
-                    ])
-                ),
+                    ])->render() // 👈 Added ->render()
+                )
+                ->html(), // 👈 Added ->html() to prevent escaping
 
-            // 👇 UPGRADE: Precise Date with Relative time on secondary line
             Column::make('Deadline', 'deadline')
                 ->sortable()
                 ->format(function ($value, $row) {
                     if (!$value) return '<span class="text-neutral-400">No Deadline</span>';
 
-                    // Check if the deadline has passed (is in the past)
                     $isOverdue = Carbon::parse($value)->isPast();
-                    // $isOverdue = $value->isPast();
 
-                    // Define the color: Red for overdue, Neutral for upcoming
                     $dateColorClass = $isOverdue
                         ? 'text-red-600 dark:text-red-400 font-bold'
                         : 'text-neutral-900 dark:text-neutral-200 font-medium';
 
                     return '
-        <div class="flex flex-col">
-            <div class="flex items-center gap-1.5">
-                ' . ($isOverdue ? '<span class="flex h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse"></span>' : '') . '
-                <span class="' . $dateColorClass . '">' . Carbon::parse($value)->format('M d, Y') . '</span>
-            </div>
-            <span class="text-xs text-neutral-400">Issued: ' . $row->created_at->format('M d, Y') . '</span>
-        </div>';
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-1.5">
+                        ' . ($isOverdue ? '<span class="flex h-1.5 w-1.5 rounded-full bg-red-600 animate-pulse"></span>' : '') . '
+                        <span class="' . $dateColorClass . '">' . Carbon::parse($value)->format('M d, Y') . '</span>
+                    </div>
+                    <span class="text-xs text-neutral-400">Issued: ' . $row->created_at->format('M d, Y') . '</span>
+                </div>';
                 })
                 ->html(),
 
@@ -131,7 +141,6 @@ class ProjectsTable extends DataTableComponent
                 ->html(),
         ];
     }
-
     public function filters(): array
     {
         return [
@@ -153,29 +162,29 @@ class ProjectsTable extends DataTableComponent
         ];
     }
 
-    public function bulkActions(): array
-    {
-        return [
-            'deleteSelected' => 'Delete Selected',
-        ];
-    }
+    // public function bulkActions(): array
+    // {
+    //     return [
+    //         'deleteSelected' => 'Delete Selected',
+    //     ];
+    // }
 
-    public function deleteSelected(): void
-    {
-        $ids = $this->getSelected();
+    // public function deleteSelected(): void
+    // {
+    //     $ids = $this->getSelected();
 
-        if (empty($ids)) {
-            return;
-        }
+    //     if (empty($ids)) {
+    //         return;
+    //     }
 
-        DB::transaction(function () use ($ids) {
-            // ::whereIn('id', $ids)->delete();
-        Project::where('projects.user_id', auth()->id())->whereIn('id', $ids)->delete();
-        });
+    //     DB::transaction(function () use ($ids) {
+    //         // ::whereIn('id', $ids)->delete();
+    //     Project::where('projects.user_id', auth()->id())->whereIn('id', $ids)->delete();
+    //     });
 
-        // Clear selection after delete
-        $this->clearSelected();
-    }
+    //     // Clear selection after delete
+    //     $this->clearSelected();
+    // }
 
 
     public function placeholder()
