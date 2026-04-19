@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use App\Livewire\Forms\ClientForm;
+use App\Models\AggregateStat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -85,15 +86,12 @@ class Clients extends Component
     public function mount()
     {
         $userKey = Auth::user()->id;
-        $cacheTime = 600;
 
-        $this->currencies = Cache::remember('currencies_all', 3600, function () {
-            return Currency::orderBy('code', 'asc')->get();
-        });
-
-        $this->clientCount = Cache::remember("{$userKey}_client_count", $cacheTime, function () use ($userKey) {
-            return Client::where('user_id', $userKey)->count();
-        });
+        $this->currencies =  Currency::orderBy('code', 'asc')->get();
+        
+        $this->clientCount = AggregateStat::where('user_id', $userKey)
+            ->where('key', 'total_clients')
+            ->value('value') ?? 0;
     }
 
     public function render()

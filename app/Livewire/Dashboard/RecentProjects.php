@@ -24,7 +24,7 @@ class RecentProjects extends Component
             return Project::query()
                 ->with('client:id,client_name')
                 ->where('user_id', $userId)
-                ->latest()
+                ->latest('created_at')
                 ->take(3)
                 ->get();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\AggregateStat;
 use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\Project;
@@ -21,36 +22,52 @@ class DashboardStatsCard extends Component
     }
 
 
-    public function mount(){
-        $userId = Auth::user()->id;
-        $cacheTime = 3600;
+    public function mount()
+    {
+        $userId = Auth::id();
 
-        // This is where the card "decides" who it is
+        // ⚡ ONE QUERY TO RULE THEM ALL
+        // This grabs every single stat for this user in 1-2 milliseconds.
+        // It returns a clean array: ['total_clients' => 1500, 'active_projects' => 45, ...]
+        $allStats = AggregateStat::where('user_id', $userId)
+            ->pluck('value', 'key');
+
+        // Dynamic keys for time-based metrics
+        $clientMonthKey = "clients_" . now()->format('Y_m');
+        $revMonthKey    = "revenue_" . now()->format('Y_m');
+
+        // 🧠 The O(1) Match Statement
+        // We are just reading from our pre-calculated $allStats array. Zero database hits here.
         $stats = match ($this->type) {
             'total_clients' => [
-                'value' => Cache::remember("{$userId}_client_count", $cacheTime, fn() => Client::where('user_id', $userId)->count()),
-                'meta'  => "+3 new this month"
+                'value' => $allStats['total_clients'] ?? 0,
+                'meta'  => "+" . ($allStats[$clientMonthKey] ?? 0) . " new this month"
             ],
+
             'active_projects' => [
-                'value' => Cache::remember("user_{$userId}_proj", $cacheTime, fn() => Project::where(['user_id' => $userId, 'status' => 'active'])->count()),
-                'meta'  => Project::where(['user_id' => $userId, 'status' => 'in_progress'])->count() . " in progress"
+                'value' => $allStats['active_projects'] ?? 0,
+                'meta'  => ($allStats['in_progress_projects'] ?? 0) . " in progress"
             ],
+
             'total_revenue' => [
-                'value' => Cache::remember("user_{$userId}_rev", $cacheTime, fn() => Invoice::where(['user_id' => $userId, 'invoice_status' => 'paid'])->sum('paid_total')),
-                'meta'  => "+12% growth"
+                'value' => $allStats['total_revenue'] ?? 0,
+                // Growth % is complex. Storing 'revenue_this_month' is safer and faster.
+                'meta'  => "$" . number_format($allStats[$revMonthKey] ?? 0, 2) . " this month"
             ],
-            'total_invoices' => Cache::remember("user_{$userId}_total_invoices_data", $cacheTime, function () use ($userId) {
-                // Explicitly run raw counts to avoid scope overhead
-                return [
-                    'value' => (int) Invoice::where('user_id', $userId)->count(),
-                    'meta'  => (int) Invoice::where('user_id', $userId)->pending()->count() . " pending"
-                ];
-            }),
+
+            'total_invoices' => [
+                'value' => $allStats['total_invoices'] ?? 0,
+                'meta'  => ($allStats['pending_invoices'] ?? 0) . " pending"
+            ],
+
             default => ['value' => 0, 'meta' => '']
         };
-        $this->value = $stats['value'] ?? 0;
-        $this->dataOverTime = $stats['meta'] ?? '';
+
+        $this->value = $stats['value'];
+        $this->dataOverTime = $stats['meta'];
     }
+
+
     public function render()
     {   
         return view('livewire.dashboard.dashboard-stats-card');

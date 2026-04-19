@@ -45,12 +45,6 @@
             </h2>
             <p class="mt-2 text-xs lg:text-sm text-slate-500 dark:text-slate-400">
                 Sign in to manage your freelance empire
-                <br>
-                Total Clients: {{ $totalClients }}
-                <br>
-                Total Projects: {{ $totalProjects }}
-                <br>
-                Total Invoices: {{ $totalInvoices }}
             </p>
         </div>
 

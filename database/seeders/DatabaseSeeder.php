@@ -123,6 +123,7 @@ class DatabaseSeeder extends Seeder
         DB::connection()->disableQueryLog();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
+        DB::table('aggregate_stats')->truncate(); // Wipe the stats table too
         DB::table('clients')->truncate();
         DB::table('projects')->truncate();
         DB::table('tasks')->truncate();
@@ -139,13 +140,22 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        $now = now()->toDateTimeString();
         $total = 1000000;
         $chunkSize = 2000;
-
-        // Pre-set snapshots to avoid repeating logic in loop
         $emptyJson = json_encode([]);
-        $this->command->info("Seeding 1M records: Blazing Fast Mode...");
+
+        // 🧠 PRO-TIP: Pre-calculate random pools outside the loop so PHP doesn't choke
+        $clientStatuses = ['active', 'active', 'inactive']; // 66% chance of active
+        $projectStatuses = ['active', 'in_progress', 'completed', 'cancelled'];
+        $invoiceStatuses = ['draft', 'sent', 'paid', 'paid', 'overdue'];
+
+        $datePool = [];
+        for ($d = 0; $d < 300; $d++) {
+            // Generate 300 random dates from the last 12 months
+            $datePool[] = Carbon::now()->subDays(rand(1, 365))->toDateTimeString();
+        }
+
+        $this->command->info("Seeding 1M records with Randomized Data...");
 
         for ($i = 0; $i < ($total / $chunkSize); $i++) {
             $clientsBatch = [];
@@ -158,7 +168,12 @@ class DatabaseSeeder extends Seeder
             for ($j = 0; $j < $chunkSize; $j++) {
                 $cId = $startId + $j;
 
-                // 1. Client Array
+                // Pick random elements from our pools
+                $randomDate = $datePool[array_rand($datePool)];
+                $cStatus = $clientStatuses[array_rand($clientStatuses)];
+                $pStatus = $projectStatuses[array_rand($projectStatuses)];
+                $iStatus = $invoiceStatuses[array_rand($invoiceStatuses)];
+
                 $clientsBatch[] = [
                     'id' => $cId,
                     'user_id' => $userId,
@@ -168,38 +183,35 @@ class DatabaseSeeder extends Seeder
                     'billing_address' => "Address $cId",
                     'hourly_rate' => '50.00',
                     'currency_id' => 1,
-                    'status' => 'active',
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'status' => $cStatus,
+                    'created_at' => $randomDate,
+                    'updated_at' => $randomDate,
                 ];
 
-                // 2. Project Array
                 $projectsBatch[] = [
                     'id' => $cId,
                     'uuid' => (string) Str::uuid(),
                     'user_id' => $userId,
                     'client_id' => $cId,
                     'name' => "Project $cId",
-                    'status' => 'active',
-                    'value' => 100.00,
+                    'status' => $pStatus,
+                    'value' => rand(100, 5000), // Randomize money
                     'currency_id' => 1,
                     'hourly_rate' => 50.00,
-                    'deadline' => Carbon::now()->addDays(30),
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'deadline' => Carbon::parse($randomDate)->addDays(rand(10, 60)),
+                    'created_at' => $randomDate,
+                    'updated_at' => $randomDate,
                 ];
 
-                // 3. Task Array
                 $tasksBatch[] = [
                     'project_id' => $cId,
                     'title' => "Task for $cId",
-                    'is_completed' => false,
+                    'is_completed' => rand(0, 1),
                     'position' => 0,
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'created_at' => $randomDate,
+                    'updated_at' => $randomDate,
                 ];
 
-                // 4. Invoice Array (Handling all unique constraints)
                 $invoicesBatch[] = [
                     'uuid' => (string) Str::uuid(),
                     'user_id' => $userId,
@@ -207,24 +219,23 @@ class DatabaseSeeder extends Seeder
                     'project_id' => $cId,
                     'invoice_number' => "INV-" . str_pad($cId, 8, '0', STR_PAD_LEFT),
                     'type' => 'invoice',
-                    'invoice_status' => 'draft',
-                    'public_token' => Str::random(40) . $cId, // Guaranteed unique 64-char string
-                    'issue_date' => $now,
-                    'due_date' => Carbon::now()->addDays(14),
+                    'invoice_status' => $iStatus,
+                    'public_token' => Str::random(40) . $cId,
+                    'issue_date' => $randomDate,
+                    'due_date' => Carbon::parse($randomDate)->addDays(14),
                     'bill_currency_id' => 1,
                     'subtotal' => 100.00,
                     'total' => 100.00,
-                    'balance_due' => 100.00,
+                    'balance_due' => ($iStatus === 'paid') ? 0 : 100.00,
                     'client_snapshot' => $emptyJson,
                     'company_snapshot' => $emptyJson,
                     'billing_address' => $emptyJson,
                     'company_address' => $emptyJson,
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'created_at' => $randomDate,
+                    'updated_at' => $randomDate,
                 ];
             }
 
-            // High-speed Bulk Inserts
             DB::table('clients')->insert($clientsBatch);
             DB::table('projects')->insert($projectsBatch);
             DB::table('tasks')->insert($tasksBatch);
@@ -233,12 +244,78 @@ class DatabaseSeeder extends Seeder
             if ($i % 25 === 0) {
                 $this->command->comment("Seeded " . ($i * $chunkSize + $chunkSize) . " / 1,000,000");
             }
-
-            // Wipe memory for next chunk
-            unset($clientsBatch, $projectsBatch, $tasksBatch, $invoicesBatch);
         }
 
+        // ⚡ THE ARCHITECT BACKFILL: Calculate all stats instantly via SQL
+        $this->command->info("Recalculating Aggregate Stats...");
+        $this->runStatsBackfill();
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        $this->command->info("1 Million Records Seeded in record time!");
+        $this->command->info("1 Million Records & Stats Seeded!");
+    }
+
+    private function runStatsBackfill()
+    {
+        // 1. Total Clients & Active Clients
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'total_clients', COUNT(*), NOW(), NOW() FROM clients GROUP BY user_id
+        ");
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'active_clients', COUNT(*), NOW(), NOW() FROM clients WHERE status = 'active' GROUP BY user_id
+        ");
+
+        // 2. Clients grouped by Month (e.g., clients_2025_08)
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, CONCAT('clients_', DATE_FORMAT(created_at, '%Y_%m')), COUNT(*), NOW(), NOW()
+            FROM clients 
+            GROUP BY user_id, CONCAT('clients_', DATE_FORMAT(created_at, '%Y_%m'))
+        ");
+
+        // 3. Projects Status
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'active_projects', COUNT(*), NOW(), NOW() FROM projects WHERE status = 'active' GROUP BY user_id
+        ");
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'in_progress_projects', COUNT(*), NOW(), NOW() FROM projects WHERE status = 'in_progress' GROUP BY user_id
+        ");
+
+        // 1. Total Projects
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'total_projects', COUNT(*), NOW(), NOW() FROM projects GROUP BY user_id
+        ");
+
+        // 2. Completed Projects
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'completed_projects', COUNT(*), NOW(), NOW() FROM projects WHERE status = 'completed' GROUP BY user_id
+        ");
+
+        // 3. Time-Series Projects (projects_2026_04)
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, CONCAT('projects_', DATE_FORMAT(created_at, '%Y_%m')), COUNT(*), NOW(), NOW()
+            FROM projects 
+            GROUP BY user_id, CONCAT('projects_', DATE_FORMAT(created_at, '%Y_%m'))
+        ");
+
+        // 4. Invoices & Revenue
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'total_invoices', COUNT(*), NOW(), NOW() FROM invoices GROUP BY user_id
+        ");
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'pending_invoices', COUNT(*), NOW(), NOW() FROM invoices WHERE invoice_status IN ('draft', 'sent') GROUP BY user_id
+        ");
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'total_revenue', COALESCE(SUM(total), 0), NOW(), NOW() FROM invoices WHERE invoice_status = 'paid' GROUP BY user_id
+        ");
     }
 }

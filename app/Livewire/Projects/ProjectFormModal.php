@@ -7,14 +7,19 @@ use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Project;
 use App\Services\WhatsAppService;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ProjectFormModal extends Component
 {
-    public $notify_client;
-    public ProjectForm $project_form;
+    private const CLIENT_SEARCH_MIN_LENGTH = 3;
+    private const CLIENT_SEARCH_LIMIT = 10;
 
+    public $notify_client, $currencies;
+    public ProjectForm $project_form;
+    public $search = '';
+    public $selectedClientName = '';
     /**
      * Triggers:
      * 1. projects/workspace.blade.php -> triggers to open the edit modal
@@ -28,6 +33,7 @@ class ProjectFormModal extends Component
             $project = Project::with('client', 'currency')->findOrFail($id);
             $this->authorize('update', $project);
             $this->project_form->setProject($project);
+            $this->selectedClientName = $project->client?->client_name ?? '';
         } else {
             // CREATE MODE - clearing the old data in form
             $this->project_form->reset();
@@ -69,8 +75,24 @@ class ProjectFormModal extends Component
     public function resetForm()
     {
         $this->project_form->reset();
+        $this->search = '';
+        $this->selectedClientName = '';
         $this->resetErrorBag();
         $this->resetValidation();
+    }
+
+    public function selectClient($clientId)
+    {
+        $client = Client::query()
+            ->select(['id', 'client_name', 'currency_id', 'hourly_rate'])
+            ->where('user_id', Auth::id())
+            ->findOrFail($clientId);
+
+        $this->project_form->client_id = $client->id;
+        $this->project_form->currency_id = $client->currency_id;
+        $this->project_form->hourly_rate = $client->hourly_rate;
+        $this->selectedClientName = $client->client_name;
+        $this->search = '';
     }
 
     /**
@@ -102,11 +124,52 @@ class ProjectFormModal extends Component
         }
     }
 
+    public function mount()
+    {
+        $this->currencies = Currency::all();
+    }
+
+    public function getClientsProperty()
+    {
+        $search = trim($this->search);
+
+        if (strlen($search) < self::CLIENT_SEARCH_MIN_LENGTH) {
+            return collect();
+        }
+
+        $booleanSearch = $this->toBooleanSearch($search);
+
+        if ($booleanSearch === '') {
+            return collect();
+        }
+
+        return Client::query()
+            ->select(['id', 'client_name'])
+            ->where('user_id', Auth::id())
+            ->whereRaw(
+                'MATCH(client_name, client_email, company_name) AGAINST(? IN BOOLEAN MODE)',
+                [$booleanSearch]
+            )
+            ->orderByRaw(
+                'MATCH(client_name, client_email, company_name) AGAINST(? IN BOOLEAN MODE) DESC',
+                [$booleanSearch]
+            )
+            ->limit(self::CLIENT_SEARCH_LIMIT)
+            ->get();
+    }
+
+    private function toBooleanSearch(string $search): string
+    {
+        $search = preg_replace('/[^\pL\pN]+/u', ' ', $search) ?? '';
+
+        return collect(preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY))
+            ->filter()
+            ->map(fn (string $term) => '+' . $term . '*')
+            ->implode(' ');
+    }
+
     public function render()
     {
-        return view('livewire.projects.project-form-modal', [
-            'clients' => Client::all(),
-            'currencies' => Currency::all(),
-        ]);
+        return view('livewire.projects.project-form-modal');
     }
 }

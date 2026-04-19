@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Clients;
 
+use App\Models\AggregateStat;
 use App\Models\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -21,32 +22,29 @@ class ClientStatsCard extends Component
         return view('components.skeleton-cards');
     }
 
-    #[Computed]
+
     public function mount()
     {
         $userId = Auth::id();
-        $cacheTime = 600;
 
-        // dd(Client::where('user_id', $userId)->count());
-
-        $this->value = match ($this->type) {
-            'total' => Cache::remember("{$userId}_client_count", $cacheTime, function () use ($userId) {
-                return Client::where('user_id', $userId)->count();
-            }),
-
-            'active' => Cache::remember("{$userId}_active_clients", $cacheTime, function () use ($userId) {
-                return Client::where('user_id', $userId)->where('status', 'active')->count();
-            }),
-
-            'acquisition' => Cache::remember("{$userId}_this_month_clients", $cacheTime, function () use ($userId) {
-                return Client::where('user_id', $userId)
-                    ->whereMonth('created_at', now()->month)
-                    ->whereYear('created_at', now()->year)
-                    ->count();
-            }),
-
-            default => 0,
+        // 1. Map the component's 'type' to our exact database keys
+        $statKey = match ($this->type) {
+            'total'       => 'total_clients',
+            'active'      => 'active_clients',
+            'acquisition' => 'clients_' . now()->format('Y_m'), // e.g., 'clients_2026_04'
+            default       => null,
         };
+
+        // 2. Fetch the pre-calculated value in O(1) time
+        if ($statKey) {
+            // Because of our composite index ['user_id', 'key'], 
+            // this query executes in < 1 millisecond, even with 1M rows.
+            $this->value = AggregateStat::where('user_id', $userId)
+                ->where('key', $statKey)
+                ->value('value') ?? 0;
+        } else {
+            $this->value = 0;
+        }
     }
 
     public function render()

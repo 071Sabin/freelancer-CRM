@@ -47,7 +47,7 @@ return new class extends Migration
 
             // 4. The "Lightning Search" Index
             // Replaces standard LIKE '%search%' for instant text matching
-            $table->fullText(['name', 'description'], 'idx_proj_fulltext_name_desc');
+            $table->fullText('name', 'idx_proj_fulltext_name_desc');
         });
     }
 

@@ -31,7 +31,7 @@
 
         <div wire:loading.remove>
             <p class="text-xs {{ $dataColor }}">
-                {{ $dataOverTime }}
+                {!! $dataOverTime !!}
             </p>
         </div>
     </div>

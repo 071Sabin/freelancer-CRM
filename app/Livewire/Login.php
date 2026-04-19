@@ -65,9 +65,6 @@ class Login extends Component
  
     public function mount()
     {
-        $this->totalClients = Client::count();
-        $this->totalProjects = Project::count();
-        $this->totalInvoices = Invoice::count();
         if (Auth::guard('freelancers')->check()) {
             return redirect()->route('dashboard'); // works from mount
         }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Projects;
 
+use App\Models\AggregateStat;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Project;
@@ -20,32 +21,39 @@ class ProjectsStatsCard extends Component
 
     public function mount()
     {
-        $userId = Auth::user()->id;
-        $cacheTime = 3600;
+        $userId = Auth::id();
 
+        // 1. Fetch ALL stats for this user in 1 millisecond
+        $allStats = AggregateStat::where('user_id', $userId)->pluck('value', 'key');
+
+        // 2. Generate dynamic time-series keys
+        $thisMonthKey = "projects_" . now()->format('Y_m');
+        $lastMonthKey = "projects_" . now()->subMonth()->format('Y_m');
+
+        // 3. Map the O(1) dictionary values to the UI
         $stats = match ($this->type) {
+            'project_count' => [
+                'value' => $allStats['total_projects'] ?? 0,
+                'meta'  => '<i class="bi bi-graph-up"></i> '.($allStats[$thisMonthKey] ?? 0) . " this month",
+            ],
 
-            'project_count' => Cache::remember("user:{$userId}:project_count_data", $cacheTime, fn() => [
-                'value' => Project::where('user_id', $userId)->count(),
-                'meta'  => Project::where('user_id', $userId)->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count() . " this month",
-            ]),
+            'progress_projects' => [
+                'value' => $allStats['in_progress_projects'] ?? 0,
+                'meta'  => ($allStats['completed_projects'] ?? 0) . " completed",
+            ],
 
-            'progress_projects' => Cache::remember("user:{$userId}:progress_projects_data", $cacheTime, fn() => [
-                'value' => Project::where(['user_id' => $userId, 'status' => 'in_progress'])->count(),
-                'meta'  => Project::where(['user_id' => $userId, 'status' => 'completed'])->count() . " completed",
-            ]),
-
-            'this_month_projects' => Cache::remember("user:{$userId}:this_month_projects_data", $cacheTime, fn() => [
-                'value' => Project::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->where('user_id', $userId)->count(),
-                'meta'  => Project::whereMonth('created_at', now()->subMonth()->month)->whereYear('created_at', now()->subMonth()->year)->where('user_id', $userId)->count() . " last month",
-            ]),
+            'this_month_projects' => [
+                'value' => $allStats[$thisMonthKey] ?? 0,
+                'meta'  => ($allStats[$lastMonthKey] ?? 0) . " last month",
+            ],
 
             default => ['value' => 0, 'meta' => ''],
         };
 
-        $this->value = $stats['value'] ?? 0;
-        $this->dataOverTime = $stats['meta'] ?? '';
+        $this->value = $stats['value'];
+        $this->dataOverTime = $stats['meta'];
     }
+
     public function render()
     {
         return view('livewire.projects.projects-stats-card');

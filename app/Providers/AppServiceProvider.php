@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Client;
+use App\Models\Project;
+use App\Observers\ClientObserver;
+use App\Observers\ProjectObserver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
@@ -16,7 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+        Client::observe(ClientObserver::class);
+        Project::observe(ProjectObserver::class);
     }
     /**
      * Register any application services.

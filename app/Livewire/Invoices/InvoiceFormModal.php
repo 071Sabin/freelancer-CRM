@@ -510,7 +510,7 @@ class InvoiceFormModal extends Component
     {
         $query = Client::where('user_id', Auth::id())
             ->when($this->clientSearch, function ($query) {
-                $query->where('client_name', 'like', '%' . $this->clientSearch . '%');
+                $query->where('client_name', 'like' . $this->clientSearch . '%');
             });
 
         $clients = $query->limit(15)->get();
@@ -529,7 +529,7 @@ class InvoiceFormModal extends Component
     {
         $query = Project::where('user_id', Auth::id())
             ->when($this->projectSearch, function ($query) {
-                $query->where('name', 'like', '%' . $this->projectSearch . '%');
+                $query->where('name', 'like' . $this->projectSearch . '%');
             });
 
         $projects = $query->limit(8)->get();
