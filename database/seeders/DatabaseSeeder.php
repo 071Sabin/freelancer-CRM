@@ -119,6 +119,12 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
+
+            $this->call([
+                CurrencySeeder::class,
+                PlanSeeder::class,
+            ]);
+
         // 1. Performance environment setup
         DB::connection()->disableQueryLog();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
