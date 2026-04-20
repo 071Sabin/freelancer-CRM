@@ -65,8 +65,8 @@
 
 
             <flux:separator vertical />
-
-            <x-primary-button class="gap-2"
+            
+            <x-primary-button class="gap-2" type="button"
                 wire:click="$dispatchTo('projects.project-form-modal','send-whatsapp-to-client',{ id: {{ $project->id }} })"
                 wire:loading.attr="disabled">
 

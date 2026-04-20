@@ -3,7 +3,9 @@
 namespace App\Livewire\Projects;
 
 use App\Livewire\Forms\ProjectForm;
+use App\Models\AggregateStat;
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 
@@ -13,7 +15,7 @@ class Projects extends Component
 {
     public ProjectForm $project_form;
 
-    public $clients, $allProjects;
+    public $clients, $allProjects, $projectCount;
     public $currency_id, $hourly_rate, $project_to_delete, $deleteProjectName, $deleteClientName;
 
     // these are dispatched from the ProjectsTable
@@ -50,7 +52,12 @@ class Projects extends Component
 
     public function mount()
     {
+        $userId = Auth::id();
 
+        $allStats = AggregateStat::where('user_id', $userId)
+            ->pluck('value', 'key');
+
+        $this->projectCount = (int) ($allStats['total_projects'] ?? 0);
     }
 
     public function render()

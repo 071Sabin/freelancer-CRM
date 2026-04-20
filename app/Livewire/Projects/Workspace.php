@@ -33,10 +33,7 @@ class Workspace extends Component
             ->firstOrFail();
         $this->authorize('view', $this->project);
 
-        $currentUser = auth()->id();
-        // dd($this->invoices);
-        // $this->currencies = Currency::orderBy('code', 'asc')->get();
-        // $this->clients = Client::where('clients.user_id', $currentUser)->orderBy('client_name', 'asc')->get();
+        // $currentUser = auth()->id();
     }
 
     public function render()

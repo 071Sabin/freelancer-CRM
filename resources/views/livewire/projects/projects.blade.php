@@ -47,10 +47,10 @@
 
     {{-- ADD & EDIT PROJECT FORM COMPONENT --}}
     <livewire:projects.project-form-modal />
-    <livewire:projects.projects-table lazy />
+    
 
-    {{-- @if ($projectCount > 0)
-        
+    @if ($projectCount > 0)
+        <livewire:projects.projects-table lazy />
     @else
         <x-empty-state title="No Projects Yet" subtitle="Create your first project to start managing work.">
             <x-slot:icon>
@@ -61,7 +61,7 @@
                 </svg>
             </x-slot:icon>
         </x-empty-state>
-    @endif --}}
+    @endif
 
 
     {{-- DELETE ONE PROJECT, IT'S FOR EACH ROW MODAL --}}

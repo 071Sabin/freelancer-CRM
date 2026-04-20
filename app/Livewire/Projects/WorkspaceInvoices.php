@@ -13,14 +13,14 @@ class WorkspaceInvoices extends Component
 
     public function mount()
     {
-        $this->invoices = Invoice::where('project_id', $this->project->id)->take(10)->get();
+        $this->invoices = Invoice::where('project_id', $this->project->id)->get();
     }
 
     // triggers from: invoiceFormModal after creating invoice and before the add items modal opens.
     #[On('invoice-saved')]
     public function refreshInvoiceList()
     {
-        $this->invoices = Invoice::where('project_id', $this->project->id)->take(10)->get();
+        $this->invoices = Invoice::where('project_id', $this->project->id)->get();
     }
     public function render()
     {

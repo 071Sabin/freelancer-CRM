@@ -110,10 +110,10 @@ class ProjectFormModal extends Component
         if ($project) {
             $this->authorize('update', $project);
             $waResponse = app(WhatsAppService::class)->sendProjectPortal($project);
-
+            
             if ($waResponse['skipped'] ?? false) {
                 session()->flash('success', '(' . $waResponse['message'] . ')');
-                dd(session()->all());
+                // dd(session()->all());
             } elseif ($waResponse['success']) {
                 $statusMsg = $waResponse['simulated']
                     ? $waResponse['message']
