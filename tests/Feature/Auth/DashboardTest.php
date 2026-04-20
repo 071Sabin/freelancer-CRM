@@ -2,7 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Livewire\Dashboard;
+use App\Livewire\Dashboard\Dashboard;
+use App\Models\AggregateStat;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Invoice;
@@ -80,23 +81,33 @@ class DashboardTest extends TestCase
             'paid_total' => 0.00,
         ]);
 
+        $this->assertAggregateStat($user->id, 'total_clients', 1);
+        $this->assertAggregateStat($user->id, 'active_projects', 1);
+        $this->assertAggregateStat($user->id, 'in_progress_projects', 2);
+        $this->assertAggregateStat($user->id, 'completed_projects', 1);
+        $this->assertAggregateStat($user->id, 'total_invoices', 6);
+        $this->assertAggregateStat($user->id, 'paid_invoices', 2);
+        $this->assertAggregateStat($user->id, 'pending_invoices', 4);
+        $this->assertAggregateStat($user->id, 'overdue_invoices', 2);
+        $this->assertAggregateStat($user->id, 'total_revenue', 200.00);
+
         // ACT: Load the dashboard
         $component = Livewire::actingAs($user)->test(Dashboard::class);
 
-        // ASSERT
         $component->assertStatus(200)
-            ->assertSet('totalClients', 1)
-            ->assertSet('progressProjects', 2)
-            ->assertSet('activeProjects', 1)
-            ->assertSet('recentProjects', function ($projects) {
-                return $projects->count() === 3;
-            })
-            ->assertSet('totalRevenue', 200.00)
-            ->assertSet('pendingInvoices', 4) // if any invoice is not marked as paid then that's pending invoice, according to dashboard.php livewire
-            ->assertSet('overdueInvoices', 2) // Now matches the 2 overdue invoices created
             ->assertSee('200.00')
+            ->assertSee('4 pending')
             ->assertSee('2')
             ->assertSee('Total Revenue')
-            ->assertSee('Pending Invoices');
+            ->assertSee('Total Invoices');
+    }
+
+    private function assertAggregateStat(int $userId, string $key, float $expected): void
+    {
+        $actual = AggregateStat::where('user_id', $userId)
+            ->where('key', $key)
+            ->value('value');
+
+        $this->assertEquals($expected, (float) $actual, "Failed asserting aggregate stat [{$key}].");
     }
 }

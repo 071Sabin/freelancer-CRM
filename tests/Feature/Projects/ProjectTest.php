@@ -4,6 +4,7 @@ namespace Tests\Feature\Projects;
 
 use App\Livewire\Projects\ProjectFormModal;
 use App\Livewire\Projects\Projects;
+use App\Models\AggregateStat;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Project;
@@ -26,14 +27,29 @@ class ProjectTest extends TestCase
         $client = Client::factory()->create(['user_id' => $user->id]);
         Project::factory()->create(['user_id' => $user->id, 'client_id' => $client->id]);
         Project::factory()->count(2)->inProgress()->create(['user_id' => $user->id, 'client_id' => $client->id, 'created_at' => now()]);
+        $otherUser = User::factory()->create();
+        $otherClient = Client::factory()->create(['user_id' => $otherUser->id]);
+        Project::factory()->create(['user_id' => $otherUser->id, 'client_id' => $otherClient->id]);
 
         Livewire::actingAs($user)
             ->test(Projects::class)
-            ->assertSet('projectCount', 3)
-            ->assertSet('progressProjects', 2)
-            ->assertSet('thisMonthProjects', 3)
             ->assertSee('Projects')
             ->assertSee('add project');
+
+        $this->assertAggregateStat($user->id, 'total_projects', 3);
+        $this->assertAggregateStat($user->id, 'projects_' . now()->format('Y_m'), 3);
+        $this->assertAggregateStat($user->id, 'active_projects', 1);
+        $this->assertAggregateStat($user->id, 'in_progress_projects', 2);
+        $this->assertAggregateStat($otherUser->id, 'total_projects', 1);
+    }
+
+    private function assertAggregateStat(int $userId, string $key, float $expected): void
+    {
+        $actual = AggregateStat::where('user_id', $userId)
+            ->where('key', $key)
+            ->value('value');
+
+        $this->assertEquals($expected, (float) $actual, "Failed asserting aggregate stat [{$key}].");
     }
 
     public function test_authenticated_user_can_open_add_project_modal()

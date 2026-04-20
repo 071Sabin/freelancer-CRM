@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Livewire\Register;
+use Database\Seeders\PlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Volt\Volt;
 use Tests\TestCase;
@@ -21,6 +22,8 @@ class RegistrationTest extends TestCase
     }
     public function test_user_can_successfully_register()
     {
+        $this->seed(PlanSeeder::class);
+
         Livewire::test(Register::class)
             ->set('name', 'Test User')
             ->set('email', 'test@example.com')
@@ -33,6 +36,18 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => 'test user',
             'email' => 'test@example.com',
+        ]);
+
+        $this->assertDatabaseHas('invoice_settings', [
+            'user_id' => 1,
+            'prefix' => 'INV',
+            'next_number' => 1,
+        ]);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'user_id' => 1,
+            'plan_id' => 1,
+            'status' => 'active',
         ]);
     }
 }

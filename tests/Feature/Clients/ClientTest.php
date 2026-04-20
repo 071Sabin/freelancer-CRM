@@ -4,6 +4,7 @@ namespace Tests\Feature\Client\Clients;
 
 use App\Livewire\Clients\Clients;
 use App\Livewire\Clients\ClientsTable;
+use App\Models\AggregateStat;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\User;
@@ -51,19 +52,17 @@ class ClientTest extends TestCase
             ->assertStatus(200)
             ->assertSeeLivewire(Clients::class)
             ->assertSee('Clients');
-        // check if user can see the client component variables and amtches exactly as expected
+        // The page reads summary counts from aggregate_stats, which are maintained by observers.
         Livewire::actingAs($user)->test(Clients::class)
-            ->assertSet('thisMonthClients', 2)
-            // clientDetails is a Collection of objects, so we use the closure
-            ->assertSet('clientDetails', function ($clients) {
-                // dd('Client count is: ' . $clients->count());    
-                return $clients->count() === 3;
-            })
             ->assertSet('currencies', function ($currencies) {
                 // dd('Currency count is: ' . $currencies->count());
                 return $currencies->count() > 0;
             })
             ->assertSet('clientCount', 3);
+
+        $this->assertAggregateStat($user->id, 'total_clients', 3);
+        $this->assertAggregateStat($user->id, 'clients_' . now()->format('Y_m'), 2);
+        $this->assertAggregateStat($hacker->id, 'total_clients', 1);
     }
 
 
@@ -114,6 +113,15 @@ class ClientTest extends TestCase
             'client_name' => 'test',
             'company_email' => 'test@test.com',
         ]);
+    }
+
+    private function assertAggregateStat(int $userId, string $key, float $expected): void
+    {
+        $actual = AggregateStat::where('user_id', $userId)
+            ->where('key', $key)
+            ->value('value');
+
+        $this->assertEquals($expected, (float) $actual, "Failed asserting aggregate stat [{$key}].");
     }
 
     public function test_clicking_edit_opens_client_modal()
