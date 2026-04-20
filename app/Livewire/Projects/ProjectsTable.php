@@ -16,12 +16,16 @@ class ProjectsTable extends DataTableComponent
 {
     protected $model = Project::class;
 
+
     public function configure(): void
     {
         $this->setPrimaryKey('id')->setDefaultSort('created_at', 'desc');
         $this->setPerPageAccepted([10, 25, 50]);
-        // $this->setPaginationMethod('simple');
+        
+        $this->setPaginationMethod('simple');
+
         $this->setSearchDebounce(700);
+        
         $this->setSearchPlaceholder('Search Projects...');
 
         $this->setSearchFieldAttributes([

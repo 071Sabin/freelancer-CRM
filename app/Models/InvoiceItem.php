@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceItem extends Model
 {
+
+    // This tells Laravel: "Anytime an item is added, updated, or deleted, 
+    // automatically update the 'updated_at' timestamp on the parent Invoice!"
+    protected $touches = ['invoice'];
+    
     protected $fillable = [
         'invoice_id',
         'position',

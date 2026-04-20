@@ -35,6 +35,7 @@ return new class extends Migration
             // 1. The "Main DataTable" Index
             // Covers: "Show all my projects, sort by newest"
             $table->index(['user_id', 'deleted_at', 'created_at'], 'idx_proj_user_del_created');
+            $table->index(['user_id', 'deleted_at', 'name', 'id'], 'idx_proj_user_deleted_name_id');
 
             // 2. The "Client Detail Page" Index
             // Covers: "Show all projects for Client X"

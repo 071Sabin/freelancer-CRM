@@ -140,8 +140,8 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        $total = 1000000;
-        $chunkSize = 2000;
+        $total = 0;
+        $chunkSize = 0;
         $emptyJson = json_encode([]);
 
         // 🧠 PRO-TIP: Pre-calculate random pools outside the loop so PHP doesn't choke
@@ -316,6 +316,24 @@ class DatabaseSeeder extends Seeder
         DB::statement("
             INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
             SELECT user_id, 'total_revenue', COALESCE(SUM(total), 0), NOW(), NOW() FROM invoices WHERE invoice_status = 'paid' GROUP BY user_id
+        ");
+
+        // 5. Paid Invoices Count
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'paid_invoices', COUNT(*), NOW(), NOW() FROM invoices WHERE invoice_status = 'paid' GROUP BY user_id
+        ");
+
+        // 6. Overdue Invoices Count (⚠️ Requires Nightly Cron Job to stay accurate)
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'overdue_invoices', COUNT(*), NOW(), NOW() FROM invoices WHERE invoice_status IN ('draft', 'sent') AND due_date < CURDATE() GROUP BY user_id
+        ");
+
+        // 7. Outstanding Revenue (Money you are waiting to collect)
+        DB::statement("
+            INSERT INTO aggregate_stats (user_id, `key`, value, created_at, updated_at)
+            SELECT user_id, 'outstanding_revenue', COALESCE(SUM(balance_due), 0), NOW(), NOW() FROM invoices WHERE invoice_status IN ('draft', 'sent') GROUP BY user_id
         ");
     }
 }

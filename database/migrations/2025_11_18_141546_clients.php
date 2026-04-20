@@ -28,9 +28,10 @@ return new class extends Migration {
             $table->softDeletes();
 
             // 1. Ownership + Status (Perfect for Dashboard Counts)
-            $table->index(['user_id', 'deleted_at'], 'idx_clients_user_deleted');
+            // $table->index(['user_id', 'deleted_at'], 'idx_clients_user_deleted');
             $table->index(['user_id', 'status']);
             $table->fullText(['client_name', 'client_email', 'company_name']);
+            $table->index(['user_id', 'deleted_at', 'client_name', 'id'], 'idx_clients_user_deleted_name_id');
         });
     }
 

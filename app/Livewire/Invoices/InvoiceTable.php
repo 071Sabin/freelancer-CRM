@@ -20,7 +20,7 @@ class InvoiceTable extends DataTableComponent
         $this->setPrimaryKey('id');
         $this->setPerPageAccepted([10, 25, 50, 100]);
         // $this->setQueryStringDisabled();
-        // $this->setPaginationMethod('simple');
+        $this->setPaginationMethod('simple');
         // $this->setSearchIcon('heroicon-m-magnifying-glass');
 
         $this->setSearchPlaceholder('Search Invoices...');

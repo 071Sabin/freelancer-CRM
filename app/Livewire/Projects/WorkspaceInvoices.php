@@ -13,20 +13,18 @@ class WorkspaceInvoices extends Component
 
     public function mount()
     {
-        $this->invoices = Invoice::where('project_id', $this->project->id)->get();
+        $this->invoices = Invoice::where('project_id', $this->project->id)->take(10)->get();
     }
 
     // triggers from: invoiceFormModal after creating invoice and before the add items modal opens.
     #[On('invoice-saved')]
     public function refreshInvoiceList()
     {
-        $this->invoices = Invoice::where('project_id', $this->project->id)->get();
+        $this->invoices = Invoice::where('project_id', $this->project->id)->take(10)->get();
     }
     public function render()
     {
         // return view('livewire.projects.workspace-invoices');
-        return view('livewire.projects.workspace-invoices', [
-            'invoices' => Invoice::where('project_id', $this->project->id)->get()
-        ]);
+        return view('livewire.projects.workspace-invoices');
     }
 }

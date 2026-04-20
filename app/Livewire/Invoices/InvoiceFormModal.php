@@ -527,10 +527,13 @@ class InvoiceFormModal extends Component
     #[Computed]
     public function searchedProjects()
     {
+        $projectSearch = trim($this->projectSearch);
+
         $query = Project::where('user_id', Auth::id())
-            ->when($this->projectSearch, function ($query) {
-                $query->where('name', 'like', '%' . $this->projectSearch . '%');
-            });
+            ->when($projectSearch, function ($query) use ($projectSearch) {
+                $query->where('name', 'like', $this->toPrefixSearch($projectSearch) . '%');
+            })
+            ->orderBy('id');
 
         $projects = $query->limit(15)->get();
 
@@ -540,6 +543,11 @@ class InvoiceFormModal extends Component
         }
 
         return $projects;
+    }
+
+    private function toPrefixSearch(string $search): string
+    {
+        return addcslashes($search, '\%_');
     }
 
     public function render()

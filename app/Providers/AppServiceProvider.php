@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Client;
+use App\Models\Invoice;
 use App\Models\Project;
 use App\Observers\ClientObserver;
+use App\Observers\InvoiceObserver;
 use App\Observers\ProjectObserver;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Client::observe(ClientObserver::class);
         Project::observe(ProjectObserver::class);
+        Invoice::observe(InvoiceObserver::class);
+        
     }
     /**
      * Register any application services.
