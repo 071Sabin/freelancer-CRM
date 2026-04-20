@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        $supportsFullText = in_array(Schema::getConnection()->getDriverName(), ['mysql', 'pgsql'], true);
+
+        Schema::create('projects', function (Blueprint $table) use ($supportsFullText) {
             // Primary key
             $table->bigIncrements('id');
             $table->uuid('uuid')->nullable()->unique();
@@ -48,7 +50,9 @@ return new class extends Migration
 
             // 4. The "Lightning Search" Index
             // Replaces standard LIKE '%search%' for instant text matching
-            $table->fullText('name', 'idx_proj_fulltext_name_desc');
+            if ($supportsFullText) {
+                $table->fullText('name', 'idx_proj_fulltext_name_desc');
+            }
         });
     }
 

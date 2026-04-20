@@ -88,7 +88,7 @@ class Clients extends Component
         $userKey = Auth::user()->id;
 
         $this->currencies =  Currency::orderBy('code', 'asc')->get();
-        
+
         $this->clientCount = AggregateStat::where('user_id', $userKey)
             ->where('key', 'total_clients')
             ->value('value') ?? 0;

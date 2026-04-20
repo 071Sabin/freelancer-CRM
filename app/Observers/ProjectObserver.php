@@ -18,7 +18,9 @@ class ProjectObserver
         AggregateStat::adjust($uid, 'total_projects', 1);
         AggregateStat::adjust($uid, $monthKey, 1);
 
-        if ($project->status === 'in_progress') {
+        if ($project->status === 'active') {
+            AggregateStat::adjust($uid, 'active_projects', 1);
+        } elseif ($project->status === 'in_progress') {
             AggregateStat::adjust($uid, 'in_progress_projects', 1);
         } elseif ($project->status === 'completed') {
             AggregateStat::adjust($uid, 'completed_projects', 1);
@@ -35,11 +37,13 @@ class ProjectObserver
         if ($project->wasChanged('status')) {
             // Remove the old status count
             $oldStatus = $project->getOriginal('status');
+            if ($oldStatus === 'active') AggregateStat::adjust($uid, 'active_projects', -1);
             if ($oldStatus === 'in_progress') AggregateStat::adjust($uid, 'in_progress_projects', -1);
             if ($oldStatus === 'completed') AggregateStat::adjust($uid, 'completed_projects', -1);
 
             // Add the new status count
             $newStatus = $project->status;
+            if ($newStatus === 'active') AggregateStat::adjust($uid, 'active_projects', 1);
             if ($newStatus === 'in_progress') AggregateStat::adjust($uid, 'in_progress_projects', 1);
             if ($newStatus === 'completed') AggregateStat::adjust($uid, 'completed_projects', 1);
         }
@@ -56,7 +60,9 @@ class ProjectObserver
         AggregateStat::adjust($uid, 'total_projects', -1);
         AggregateStat::adjust($uid, $monthKey, -1);
 
-        if ($project->status === 'in_progress') {
+        if ($project->status === 'active') {
+            AggregateStat::adjust($uid, 'active_projects', -1);
+        } elseif ($project->status === 'in_progress') {
             AggregateStat::adjust($uid, 'in_progress_projects', -1);
         } elseif ($project->status === 'completed') {
             AggregateStat::adjust($uid, 'completed_projects', -1);

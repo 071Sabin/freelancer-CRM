@@ -10,7 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        $supportsFullText = in_array(Schema::getConnection()->getDriverName(), ['mysql', 'pgsql'], true);
+
+        Schema::create('clients', function (Blueprint $table) use ($supportsFullText) {
             $table->bigIncrements('id');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('client_name');
@@ -30,7 +32,10 @@ return new class extends Migration {
             // 1. Ownership + Status (Perfect for Dashboard Counts)
             // $table->index(['user_id', 'deleted_at'], 'idx_clients_user_deleted');
             $table->index(['user_id', 'status']);
-            $table->fullText(['client_name', 'client_email', 'company_name']);
+            if ($supportsFullText) {
+                $table->fullText(['client_name', 'client_email', 'company_name']);
+            }
+
             $table->index(['user_id', 'deleted_at', 'client_name', 'id'], 'idx_clients_user_deleted_name_id');
         });
     }
@@ -40,6 +45,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('clients');
     }
 };

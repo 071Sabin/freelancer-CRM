@@ -8,6 +8,7 @@ class Plan extends Model
 {
     protected $table = 'plans';
     protected $primaryKey = 'id';
+    protected $guarded = [];
     public $timestamps = false;
     
     public function invoices()

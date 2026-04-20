@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\admins;
 use App\Models\InvoiceSetting;
+use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;

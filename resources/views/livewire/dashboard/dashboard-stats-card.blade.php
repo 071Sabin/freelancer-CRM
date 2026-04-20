@@ -20,7 +20,7 @@
         <!-- Value -->
         <div wire:loading.remove>
             <p class="font-semibold tracking-tight text-2xl text-neutral-900 dark:text-neutral-100">
-                {{ number_format($value ?? 0) }}
+                {{ number_format($value ?? 0, $type === 'total_revenue' ? 2 : 0) }}
             </p>
         </div>
     </div>

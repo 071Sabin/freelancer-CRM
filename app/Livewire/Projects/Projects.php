@@ -3,10 +3,7 @@
 namespace App\Livewire\Projects;
 
 use App\Livewire\Forms\ProjectForm;
-use App\Models\Client;
-use App\Models\Currency;
 use App\Models\Project;
-use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 
@@ -53,6 +50,7 @@ class Projects extends Component
 
     public function mount()
     {
+
     }
 
     public function render()

@@ -2,14 +2,9 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Models\admins;
-use App\Models\Client;
-use App\Models\Invoice;
-use App\Models\InvoiceSetting;
+use App\Models\AggregateStat;
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -17,40 +12,32 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
+    // public $totalClients = 0;
+    // public $progressProjects = 0;
+    // public $activeProjects = 0;
+    // public $recentProjects;
+    // public $totalRevenue = 0;
+    // public $pendingInvoices = 0;
+    // public $overdueInvoices = 0;
 
     public function mount()
-    {        
-        // dd(Auth::user()->subscription->trial_ends_at);
-        // Existing Stats
-        // $this->totalClients = Client::where('user_id', $userId)->count();
-        // $this->progressProjects = Project::where(['user_id' => $userId, 'status' => 'in_progress'])->count();
-        // $this->activeProjects = Project::where(['user_id' => $userId, 'status' => 'active'])->count();
-        // $this->recentProjects = Project::with('client')->where('user_id', $userId)->latest()->take(3)->get();
+    {
+        // $userId = Auth::id();
+        // $allStats = AggregateStat::where('user_id', $userId)
+        //     ->pluck('value', 'key');
 
-        // // // 1. Total Revenue (Sum of 'Paid' invoices only)
-        // $this->totalRevenue = Invoice::where('user_id', $userId)
-        //     ->where('invoice_status', 'paid')
-        //     ->sum('paid_total');
+        // $this->totalClients = (int) ($allStats['total_clients'] ?? 0);
+        // $this->progressProjects = (int) ($allStats['in_progress_projects'] ?? 0);
+        // $this->activeProjects = (int) ($allStats['active_projects'] ?? 0);
+        // $this->totalRevenue = (float) ($allStats['total_revenue'] ?? 0);
+        // $this->pendingInvoices = (int) ($allStats['pending_invoices'] ?? 0);
+        // $this->overdueInvoices = (int) ($allStats['overdue_invoices'] ?? 0);
 
-        // // 2. Pending Invoices (Those are not 'paid' yet)
-        // $this->pendingInvoices = Invoice::where('user_id', $userId)
-        //     ->where('invoice_status', '!=', 'paid')
-        //     ->count();
-
-        // // 2. Pending Invoices (Only draft status)
-        // // $this->pendingInvoices = Invoice::where('user_id', $userId)
-        // //     ->where('invoice_status', 'draft')
-        // //     ->count();
-
-        // // 3. Overdue Invoices (Invoices paid but due date is overdue)
-        // $this->overdueInvoices = Invoice::where('user_id', $userId)
-        //     ->where('invoice_status', '!=', 'paid')
-        //     ->whereDate('due_date', '<', now())
-        //     ->count();
-
-
-        // set_time_limit(120);
-
+        // $this->recentProjects = Project::with('client')
+        //     ->where('user_id', $userId)
+        //     ->latest()
+        //     ->take(3)
+        //     ->get();
     }
     
     public function render()

@@ -14,9 +14,22 @@ class AggregateStat extends Model
      */
     public static function adjust($userId, $key, $amount = 1)
     {
-        DB::table('aggregate_stats')->updateOrInsert(
-            ['user_id' => $userId, 'key' => $key],
-            ['value' => DB::raw("value + ($amount)"), 'updated_at' => now()]
-        );
+        $updated = DB::table('aggregate_stats')
+            ->where('user_id', $userId)
+            ->where('key', $key)
+            ->update([
+                'value' => DB::raw('value + (' . (float) $amount . ')'),
+                'updated_at' => now(),
+            ]);
+
+        if ($updated === 0) {
+            DB::table('aggregate_stats')->insert([
+                'user_id' => $userId,
+                'key' => $key,
+                'value' => $amount,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }
