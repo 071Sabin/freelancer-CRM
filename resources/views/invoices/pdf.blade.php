@@ -336,8 +336,21 @@
                     @if ($settings)
                         <div class="text-xs text-neutral-500 mt-1 leading-relaxed">
                             {{ $invoice->company_snapshot['company_email'] }}<br>
-                            @if ($invoice->company_snapshot['company_address'])
-                                {{ $invoice->company_snapshot['company_address'] }}<br>
+                            @if ($invoice->company_snapshot['company_address'] ?? null)
+                                @php
+                                    $address = $invoice->company_snapshot['company_address'];
+                                    $addressStr = is_array($address) 
+                                        ? implode(', ', array_filter([
+                                            $address['line1'] ?? '',
+                                            $address['line2'] ?? '',
+                                            $address['city'] ?? '',
+                                            $address['state'] ?? '',
+                                            $address['postal_code'] ?? '',
+                                            $address['country'] ?? '',
+                                        ]))
+                                        : $address;
+                                @endphp
+                                {{ $addressStr }}<br>
                             @endif
                             @if ($invoice->company_snapshot['company_website'])
                                 {{ $invoice->company_snapshot['company_website'] }}<br>

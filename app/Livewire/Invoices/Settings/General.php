@@ -89,7 +89,18 @@ class General extends Component
 
         $this->invoice_language = $this->settings->locale ?? $this->invoice_language;
         $this->timezone = $this->settings->timezone ?? $this->timezone;
-        $this->company_address = array_merge($this->company_address, $this->settings->company_address ?? []);
+        
+        $companyAddress = $this->settings->company_address;
+        if (is_array($companyAddress)) {
+            $this->company_address = array_merge($this->company_address, $companyAddress);
+        } elseif (is_string($companyAddress) && !empty($companyAddress)) {
+            $decoded = json_decode($companyAddress, true);
+            if (is_array($decoded)) {
+                $this->company_address = array_merge($this->company_address, $decoded);
+            } else {
+                $this->company_address['line1'] = $companyAddress;
+            }
+        }
     }
 
     public function save()

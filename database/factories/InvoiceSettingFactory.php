@@ -27,12 +27,12 @@ class InvoiceSettingFactory extends Factory
             'locale' => 'en',
             'timezone' => 'UTC',
             'company_address' => [
-                'line1' => '',
-                'line2' => '',
-                'city' => '',
-                'state' => '',
-                'postal_code' => '',
-                'country' => ''
+                'line1' => $this->faker->streetAddress(),
+                'line2' => $this->faker->secondaryAddress(),
+                'city' => $this->faker->city(),
+                'state' => $this->faker->state(),
+                'postal_code' => $this->faker->postcode(),
+                'country' => $this->faker->country()
             ],
             'default_footer' => 'THIS IS SYSTEM GENERATED INVOICE.',
             // Optional fields (set to null by default, or use $this->faker to generate fake data)
@@ -40,7 +40,6 @@ class InvoiceSettingFactory extends Factory
             'company_email' => $this->faker->safeEmail(),
             'company_phone' => $this->faker->phoneNumber(),
             'company_website' => $this->faker->url(),
-            'company_address' => $this->faker->address(),
             'tax_id' => $this->faker->numerify('#########'),
         ];
     }
