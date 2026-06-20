@@ -88,10 +88,11 @@
                 <div class="expiry">Expires in 10 minutes</div>
             </div>
             
-            <p>If you did not request this code, you can safely ignore this email. Someone else may have typed your email address by mistake.</p>
+            <p>If you did not request this code, you can safely ignore this email.</p>
         </div>
         <div class="footer">
             &copy; {{ date('Y') }} Client Pivot. All rights reserved.
+            <span class="footer-note">Please do not reply to this automated message.</span>
         </div>
     </div>
 </body>
