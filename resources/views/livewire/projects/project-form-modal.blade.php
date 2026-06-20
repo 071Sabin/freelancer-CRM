@@ -127,11 +127,9 @@
 
                         <div>
                             <flux:select wire:model="project_form.status" label="Status">
-                                <flux:select.option value="active">Active</flux:select.option>
-                                <flux:select.option value="in_progress">In Progress</flux:select.option>
-                                <flux:select.option value="on_hold">On Hold</flux:select.option>
-                                <flux:select.option value="completed">Completed</flux:select.option>
-                                <flux:select.option value="cancelled">Cancelled</flux:select.option>
+                                @foreach (\App\Enums\ProjectStatus::cases() as $status)
+                                    <flux:select.option value="{{ $status->value }}">{{ $status->label() }}</flux:select.option>
+                                @endforeach
                             </flux:select>
                         </div>
 

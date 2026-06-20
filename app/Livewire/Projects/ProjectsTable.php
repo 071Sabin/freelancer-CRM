@@ -153,14 +153,9 @@ class ProjectsTable extends DataTableComponent
     {
         return [
             SelectFilter::make('Status', 'status')
-                ->options([
-                    '' => 'All',
-                    'active' => 'Active',
-                    'in_progress' => 'In Progress',
-                    'on_hold' => 'On Hold', 
-                    'completed' => 'Completed',
-                    'cancelled' => 'Cancelled',
-                ])
+                ->options(
+                    array_merge(['' => 'All'], \App\Enums\ProjectStatus::options())
+                )
                 ->filter(function (Builder $query, $value) {
                     if ($value === '') {
                         return $query;

@@ -28,6 +28,10 @@ class Project extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'status' => \App\Enums\ProjectStatus::class,
+    ];
+
     protected static function booted()
     {
         static::creating(function ($model) {

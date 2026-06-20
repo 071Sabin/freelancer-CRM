@@ -31,6 +31,10 @@ class Client extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'status' => \App\Enums\ClientStatus::class,
+    ];
+
     
 
     /**
@@ -51,16 +55,6 @@ class Client extends Model
     {
         return Attribute::make(
             get: fn(?string $value) => $value ? Str::title($value) : null,
-        );
-    }
-
-    /**
-     * Interact with the status (e.g., 'active' becomes 'Active').
-     */
-    protected function status(): Attribute
-    {
-        return Attribute::make(
-            get: fn(?string $value) => $value ? ucfirst($value) : null,
         );
     }
 

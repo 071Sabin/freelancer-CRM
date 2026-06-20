@@ -18,7 +18,7 @@ class ClientObserver
         AggregateStat::adjust($uid, 'total_clients', 1);
         AggregateStat::adjust($uid, $monthKey, 1);
 
-        if ($client->status === 'active') {
+        if (\App\Enums\ClientStatus::tryFrom($client->status?->value ?? $client->status) === \App\Enums\ClientStatus::ACTIVE) {
             AggregateStat::adjust($uid, 'active_clients', 1);
         }
     }
@@ -34,11 +34,11 @@ class ClientObserver
         if ($client->wasChanged('status')) {
 
             // It became active
-            if ($client->status === 'active') {
+            if (\App\Enums\ClientStatus::tryFrom($client->status?->value ?? $client->status) === \App\Enums\ClientStatus::ACTIVE) {
                 AggregateStat::adjust($uid, 'active_clients', 1);
             }
             // It was active, but changed to something else (inactive, pending, etc)
-            elseif ($client->getOriginal('status') === 'active') {
+            elseif (\App\Enums\ClientStatus::tryFrom($client->getOriginal('status')?->value ?? $client->getOriginal('status')) === \App\Enums\ClientStatus::ACTIVE) {
                 AggregateStat::adjust($uid, 'active_clients', -1);
             }
         }
@@ -56,7 +56,7 @@ class ClientObserver
         AggregateStat::adjust($uid, 'total_clients', -1);
         AggregateStat::adjust($uid, $monthKey, -1);
 
-        if ($client->status === 'active') {
+        if (\App\Enums\ClientStatus::tryFrom($client->status?->value ?? $client->status) === \App\Enums\ClientStatus::ACTIVE) {
             AggregateStat::adjust($uid, 'active_clients', -1);
         }
     }

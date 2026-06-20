@@ -27,7 +27,13 @@ class ClientForm extends Form
     public $billing_address = '';
     public $hourly_rate = '';
     public $currency_id = '';
-    public $status = 'active';
+    public $status;
+
+    public function __construct(\Livewire\Component $component, $parameterName)
+    {
+        parent::__construct($component, $parameterName);
+        $this->status = \App\Enums\ClientStatus::ACTIVE->value;
+    }
     public $private_notes = '';
 
     // Populates the form when a user clicks "Edit"
@@ -43,7 +49,7 @@ class ClientForm extends Form
         $this->billing_address = $client->billing_address;
         $this->hourly_rate = $client->hourly_rate;
         $this->currency_id = $client->currency_id;
-        $this->status = $client->status;
+        $this->status = $client->status instanceof \App\Enums\ClientStatus ? $client->status->value : $client->status;
         $this->private_notes = $client->private_notes;
     }
 
@@ -59,7 +65,7 @@ class ClientForm extends Form
             'billing_address' => 'required|string',
             'hourly_rate' => 'required|numeric',
             'currency_id' => 'required|integer|exists:currencies,id',
-            'status' => 'required|string|max:50',
+            'status' => ['required', new \Illuminate\Validation\Rules\Enum(\App\Enums\ClientStatus::class)],
             'private_notes' => 'nullable|string',
         ];
     }

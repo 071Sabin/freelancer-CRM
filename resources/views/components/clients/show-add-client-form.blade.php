@@ -96,9 +96,9 @@
                                 placeholder="0.00" />
 
                             <flux:select wire:model="form.status" label="Status" placeholder="Status...">
-                                <flux:select.option value="active">Active</flux:select.option>
-                                <flux:select.option value="inactive">Inactive</flux:select.option>
-                                <flux:select.option value="lead">Lead</flux:select.option>
+                                @foreach (\App\Enums\ClientStatus::cases() as $status)
+                                    <flux:select.option value="{{ $status->value }}">{{ $status->label() }}</flux:select.option>
+                                @endforeach
                             </flux:select>
                         </div>
                     </div>
