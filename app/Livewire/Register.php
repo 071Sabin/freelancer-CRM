@@ -48,7 +48,7 @@ class Register extends Component
             'locale' => 'en',
             'timezone' => 'UTC',
             'default_due_days' => 14,
-            'default_late_fee_type' => 'percentage',
+            'default_late_fee_type' => \App\Enums\LateFeeType::PERCENT->value,
             'default_late_fee_rate' => 0,
             'default_late_fee_amount' => 0, // Fixed amount
             'default_discount_rate' => 0,

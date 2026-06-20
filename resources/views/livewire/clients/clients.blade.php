@@ -80,17 +80,10 @@
         <div wire:loading.remove wire:target="view" class="w-full flex flex-col max-h-[90vh]">
             @if (!empty($viewingClient))
                 @php
-                    // Modern "Badge" styling with Ring utilities
-                    $statusHtml = match (ucfirst($viewingClient['status'] ?? '')) {
-                        'Active'
-                            => '<span class="inline-flex items-center rounded-md bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-500/10 dark:text-green-400 dark:ring-green-500/20">Active</span>',
-                        'Inactive'
-                            => '<span class="inline-flex items-center rounded-md bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">Inactive</span>',
-                        'Lead'
-                            => '<span class="inline-flex items-center rounded-md bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-800 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-500 dark:ring-amber-400/20">Lead</span>',
-                        default
-                            => '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2.5 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">Unknown</span>',
-                    };
+                    $status = \App\Enums\ClientStatus::tryFrom($viewingClient['status'] ?? '');
+                    $statusHtml = $status 
+                        ? sprintf('<span class="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium %s">%s</span>', $status->colourClass(), $status->label())
+                        : '<span class="inline-flex items-center rounded-md bg-neutral-50 px-2.5 py-1 text-xs font-medium text-neutral-600 ring-1 ring-inset ring-neutral-500/10 dark:bg-neutral-400/10 dark:text-neutral-400 dark:ring-neutral-400/20">Unknown</span>';
                 @endphp
 
                 <div
@@ -338,9 +331,9 @@
 
                                 <flux:select wire:model="form.status" label="Status" placeholder="Status..."
                                     class="text-xs md:text-sm">
-                                    <flux:select.option value="active">Active</flux:select.option>
-                                    <flux:select.option value="inactive">Inactive</flux:select.option>
-                                    <flux:select.option value="lead">Lead</flux:select.option>
+                                    @foreach (\App\Enums\ClientStatus::cases() as $status)
+                                        <flux:select.option value="{{ $status->value }}">{{ $status->label() }}</flux:select.option>
+                                    @endforeach
                                 </flux:select>
                             </div>
                         </div>

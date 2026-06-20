@@ -50,7 +50,7 @@ class InvoiceFormModal extends Component
     public $discount_value = 0;
     public $discount_type = 'percentage'; // percentage, fixed
     public $late_fee_value = 0;
-    public $late_fee_type = 'percentage'; // percentage, fixed
+    public $late_fee_type;
 
     protected $listeners = [
         'edit-invoice' => 'edit',
@@ -273,7 +273,8 @@ class InvoiceFormModal extends Component
 
         // Late Fee
         $this->late_fee_value = $metadata['late_fee_value'] ?? ($settings->default_late_fee_rate ?? 0);
-        $this->late_fee_type = $metadata['late_fee_type'] ?? ($settings->default_late_fee_type ?? 'percentage');
+        $lateFeeTypeFromSettings = $settings->default_late_fee_type instanceof \App\Enums\LateFeeType ? $settings->default_late_fee_type->value : $settings->default_late_fee_type;
+        $this->late_fee_type = $metadata['late_fee_type'] ?? ($lateFeeTypeFromSettings ?? 'percent');
 
         // Dates
         $this->issue_date = $this->editingInvoice->issue_date ? \Carbon\Carbon::parse($this->editingInvoice->issue_date)->format('Y-m-d') : now()->format('Y-m-d');
@@ -382,7 +383,7 @@ class InvoiceFormModal extends Component
 
             $currentTotal = $taxableAmount + $this->tax_total;
 
-            if ($this->late_fee_type === 'percentage') {
+            if ($this->late_fee_type === 'percent') {
                 $lateFeeAmount = ($currentTotal * $this->late_fee_value) / 100;
             } else {
                 $lateFeeAmount = $this->late_fee_value;
@@ -502,6 +503,7 @@ class InvoiceFormModal extends Component
         $currentUser = Auth::id();
         $this->settings = InvoiceSetting::where('user_id', $currentUser)->first();
         $this->currencies = Currency::all()->sortBy('code');
+        $this->late_fee_type = \App\Enums\LateFeeType::PERCENT->value;
     }
 
 

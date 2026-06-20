@@ -18,7 +18,13 @@ class ProjectForm extends Form
     public ?Project $project = null;
     
     public $name, $value, $description, $client_id='', $deadline, $hourly_rate, $currency_id='';
-    public $status = 'active'; // This one is fine as it has a valid default
+    public $status; // This one is fine as it has a valid default
+
+    public function __construct(\Livewire\Component $component, $parameterName)
+    {
+        parent::__construct($component, $parameterName);
+        $this->status = \App\Enums\ProjectStatus::ACTIVE->value;
+    }
 
     public function setProject(Project $project)
     {
@@ -27,7 +33,7 @@ class ProjectForm extends Form
         $this->value = $project->value;
         $this->description = $project->description;
         $this->client_id = $project->client_id;
-        $this->status = $project->status;
+        $this->status = $project->status instanceof \App\Enums\ProjectStatus ? $project->status->value : $project->status;
         $this->currency_id = $project->currency_id;
         $this->hourly_rate = $project->hourly_rate;
         $this->deadline = $project->deadline;
@@ -47,7 +53,7 @@ class ProjectForm extends Form
             'description' => 'nullable|string',
             'value' => 'required|numeric|min:0',
             'client_id' => 'required|exists:clients,id',
-            'status' => 'required|string|max:100',
+            'status' => ['required', new \Illuminate\Validation\Rules\Enum(\App\Enums\ProjectStatus::class)],
             'currency_id' => 'required|exists:currencies,id',
             'hourly_rate' => 'required|numeric|min:0',
             'deadline' => 'required|date',

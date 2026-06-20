@@ -94,35 +94,16 @@ class ClientsTable extends DataTableComponent
             Column::make("Currency", "currency_id")
                 ->hideIf(true),
             Column::make('Status', 'status')
-                ->format(fn($value) => match ($value) {
-
-                        'Active' => '<span class="
-                        inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
-                        bg-green-100 text-green-700
-                        border border-green-400
-                        dark:bg-green-900/30 dark:text-green-300 dark:border-green-500">
-                        Active
-                    </span>',
-
-                        'Inactive' => '<span class="
-                        inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
-                        bg-red-100 text-red-700
-                        border border-red-400
-                        dark:bg-red-900/30 dark:text-red-300 dark:border-red-500">
-                        Inactive
-                    </span>',
-
-                        'Lead' => '<span class="
-                        inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full
-                        bg-amber-100 text-amber-700
-                        border border-amber-400
-                        dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-500">
-                        Lead
-                    </span>',
-
-                    default => '<span class="text-gray-500 dark:text-gray-400 text-xs">
-                                    Unknown
-                                </span>',
+                ->format(function ($value) {
+                    $status = $value instanceof \App\Enums\ClientStatus ? $value : \App\Enums\ClientStatus::tryFrom($value);
+                    if (!$status) {
+                        return '<span class="text-gray-500 dark:text-gray-400 text-xs">Unknown</span>';
+                    }
+                    return sprintf(
+                        '<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full %s">%s</span>',
+                        $status->colourClass(),
+                        $status->label()
+                    );
                 })->html(),
             // Column::make("Private notes", "private_notes")
             //     ->sortable(),
@@ -140,12 +121,9 @@ class ClientsTable extends DataTableComponent
     {
         return [
             SelectFilter::make('Status', 'status')
-                ->options([
-                    '' => 'All',
-                    'active' => 'Active',
-                    'inactive' => 'Inactive',
-                    'lead' => 'Lead',
-                ])
+                ->options(
+                    array_merge(['' => 'All'], \App\Enums\ClientStatus::options())
+                )
                 ->filter(function ($query, $value) {
                     if ($value === '') {
                         return $query;

@@ -18,11 +18,12 @@ class ProjectObserver
         AggregateStat::adjust($uid, 'total_projects', 1);
         AggregateStat::adjust($uid, $monthKey, 1);
 
-        if ($project->status === 'active') {
+        $status = \App\Enums\ProjectStatus::tryFrom($project->status?->value ?? $project->status);
+        if ($status === \App\Enums\ProjectStatus::ACTIVE) {
             AggregateStat::adjust($uid, 'active_projects', 1);
-        } elseif ($project->status === 'in_progress') {
+        } elseif ($status === \App\Enums\ProjectStatus::IN_PROGRESS) {
             AggregateStat::adjust($uid, 'in_progress_projects', 1);
-        } elseif ($project->status === 'completed') {
+        } elseif ($status === \App\Enums\ProjectStatus::COMPLETED) {
             AggregateStat::adjust($uid, 'completed_projects', 1);
         }
     }
@@ -36,16 +37,16 @@ class ProjectObserver
 
         if ($project->wasChanged('status')) {
             // Remove the old status count
-            $oldStatus = $project->getOriginal('status');
-            if ($oldStatus === 'active') AggregateStat::adjust($uid, 'active_projects', -1);
-            if ($oldStatus === 'in_progress') AggregateStat::adjust($uid, 'in_progress_projects', -1);
-            if ($oldStatus === 'completed') AggregateStat::adjust($uid, 'completed_projects', -1);
+            $oldStatus = \App\Enums\ProjectStatus::tryFrom($project->getOriginal('status')?->value ?? $project->getOriginal('status'));
+            if ($oldStatus === \App\Enums\ProjectStatus::ACTIVE) AggregateStat::adjust($uid, 'active_projects', -1);
+            if ($oldStatus === \App\Enums\ProjectStatus::IN_PROGRESS) AggregateStat::adjust($uid, 'in_progress_projects', -1);
+            if ($oldStatus === \App\Enums\ProjectStatus::COMPLETED) AggregateStat::adjust($uid, 'completed_projects', -1);
 
             // Add the new status count
-            $newStatus = $project->status;
-            if ($newStatus === 'active') AggregateStat::adjust($uid, 'active_projects', 1);
-            if ($newStatus === 'in_progress') AggregateStat::adjust($uid, 'in_progress_projects', 1);
-            if ($newStatus === 'completed') AggregateStat::adjust($uid, 'completed_projects', 1);
+            $newStatus = \App\Enums\ProjectStatus::tryFrom($project->status?->value ?? $project->status);
+            if ($newStatus === \App\Enums\ProjectStatus::ACTIVE) AggregateStat::adjust($uid, 'active_projects', 1);
+            if ($newStatus === \App\Enums\ProjectStatus::IN_PROGRESS) AggregateStat::adjust($uid, 'in_progress_projects', 1);
+            if ($newStatus === \App\Enums\ProjectStatus::COMPLETED) AggregateStat::adjust($uid, 'completed_projects', 1);
         }
     }
 
@@ -60,11 +61,12 @@ class ProjectObserver
         AggregateStat::adjust($uid, 'total_projects', -1);
         AggregateStat::adjust($uid, $monthKey, -1);
 
-        if ($project->status === 'active') {
+        $status = \App\Enums\ProjectStatus::tryFrom($project->status?->value ?? $project->status);
+        if ($status === \App\Enums\ProjectStatus::ACTIVE) {
             AggregateStat::adjust($uid, 'active_projects', -1);
-        } elseif ($project->status === 'in_progress') {
+        } elseif ($status === \App\Enums\ProjectStatus::IN_PROGRESS) {
             AggregateStat::adjust($uid, 'in_progress_projects', -1);
-        } elseif ($project->status === 'completed') {
+        } elseif ($status === \App\Enums\ProjectStatus::COMPLETED) {
             AggregateStat::adjust($uid, 'completed_projects', -1);
         }
     }

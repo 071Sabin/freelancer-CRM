@@ -85,14 +85,15 @@
 
                     <flux:select wire:model.defer="default_late_fee_type" label="Late Fee Type"
                         placeholder="Select type...">
-                        <flux:select.option value="percentage">Percentage (%)</flux:select.option>
-                        <flux:select.option value="fixed">Fixed Amount ($)</flux:select.option>
+                        @foreach (\App\Enums\LateFeeType::cases() as $type)
+                            <flux:select.option value="{{ $type->value }}">{{ $type->label() }}</flux:select.option>
+                        @endforeach
                     </flux:select>
 
-                    @if ($default_late_fee_type === 'percentage')
+                    @if ($default_late_fee_type === \App\Enums\LateFeeType::PERCENT->value)
                         <x-input-field type="number" step="0.01" label="Late Fee Rate (%)"
                             model="default_late_fee_rate" placeholder="5.00" />
-                    @elseif($default_late_fee_type === 'fixed')
+                    @elseif($default_late_fee_type === \App\Enums\LateFeeType::AMOUNT->value)
                         <x-input-field type="number" step="0.01" label="Late Fee Amount"
                             model="default_late_fee_amount" placeholder="50.00" />
                     @else

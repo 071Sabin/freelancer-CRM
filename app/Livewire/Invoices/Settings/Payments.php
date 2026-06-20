@@ -20,7 +20,7 @@ class Payments extends Component
     public ?float $default_discount_rate = null;
     public int $default_due_days;
     public bool $allow_partial_payments = false;
-    public string $default_late_fee_type = 'percentage';
+    public string $default_late_fee_type;
     public ?float $default_late_fee_rate = null;
     public ?float $default_late_fee_amount = null;
 
@@ -32,7 +32,7 @@ class Payments extends Component
             'default_due_days' => 'required|integer|min:0',
             'allow_partial_payments' => 'boolean',
 
-            'default_late_fee_type' => 'nullable|in:percentage,fixed',
+            'default_late_fee_type' => ['nullable', new \Illuminate\Validation\Rules\Enum(\App\Enums\LateFeeType::class)],
             'default_late_fee_rate' => 'nullable|numeric|min:0',
             'default_late_fee_amount' => 'nullable|numeric|min:0',
         ];
@@ -41,7 +41,7 @@ class Payments extends Component
     public function mount()
     {
         $this->settings = InvoiceSetting::where('user_id', Auth::id())->firstOrFail();
-        $this->default_late_fee_type   = $this->settings->default_late_fee_type ?? $this->default_late_fee_type;
+        $this->default_late_fee_type   = $this->settings->default_late_fee_type instanceof \App\Enums\LateFeeType ? $this->settings->default_late_fee_type->value : ($this->settings->default_late_fee_type ?? \App\Enums\LateFeeType::PERCENT->value);
         $this->default_late_fee_rate   = $this->settings->default_late_fee_rate ?? $this->default_late_fee_rate;
         $this->default_late_fee_amount = $this->settings->default_late_fee_amount ?? $this->default_late_fee_amount;
         $this->default_discount_rate = $this->settings->default_discount_rate ?? $this->default_discount_rate;

@@ -46,6 +46,7 @@ class InvoiceSetting extends Model
         'default_discount_rate' => 'decimal:2',
         'default_late_fee_rate' => 'decimal:2',
         'default_late_fee_amount' => 'decimal:2',
+        'default_late_fee_type' => \App\Enums\LateFeeType::class,
         'company_address' => 'array',
         'bank_details' => 'array',
         'payment_methods' => 'array',

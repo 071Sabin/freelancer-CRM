@@ -644,8 +644,11 @@
                                                     class="w-full" wire:model.blur="late_fee_value" />
 
                                                 <flux:select wire:model.live="late_fee_type" class="w-24">
-                                                    <flux:select.option value="percentage">%</flux:select.option>
-                                                    <flux:select.option value="fixed">$</flux:select.option>
+                                                    @foreach (\App\Enums\LateFeeType::cases() as $type)
+                                                        <flux:select.option value="{{ $type->value }}">
+                                                            {{ $type === \App\Enums\LateFeeType::PERCENT ? '%' : $type->label() }}
+                                                        </flux:select.option>
+                                                    @endforeach
                                                 </flux:select>
                                             </div>
                                         </div>
