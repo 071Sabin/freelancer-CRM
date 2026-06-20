@@ -135,19 +135,27 @@ class ProjectFormModal extends Component
     {
         $search = trim($this->search);
 
-        if (strlen($search) < self::CLIENT_SEARCH_MIN_LENGTH) {
-            return collect();
-        }
-
-        $prefixSearch = $this->toPrefixSearch($search);
-
-        return Client::query()
+        $query = Client::query()
             ->select(['id', 'client_name'])
             ->where('user_id', Auth::id())
-            ->where('client_name', 'like', $prefixSearch . '%')
             ->orderBy('id')
-            ->limit(self::CLIENT_SEARCH_LIMIT)
-            ->get();
+            ->limit(self::CLIENT_SEARCH_LIMIT);
+
+        if ($search !== '') {
+            $prefixSearch = $this->toPrefixSearch($search);
+            $query->where('client_name', 'like', '%' . $prefixSearch . '%');
+        }
+
+        $clients = $query->get();
+
+        if ($this->project_form->client_id && !$clients->contains('id', $this->project_form->client_id)) {
+            $selected = Client::select(['id', 'client_name'])->find($this->project_form->client_id);
+            if ($selected) {
+                $clients->push($selected);
+            }
+        }
+
+        return $clients;
     }
 
     private function toPrefixSearch(string $search): string

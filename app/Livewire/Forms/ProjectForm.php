@@ -35,7 +35,6 @@ class ProjectForm extends Form
 
     public function updatedClientId($value)
     {
-        // dd('fired', $value);
         $client = Client::findOrFail($value);
         $this->currency_id = $client->currency_id;
         $this->hourly_rate = $client->hourly_rate;
@@ -93,36 +92,6 @@ class ProjectForm extends Form
             'deadline.date'     => 'Please provide a valid calendar date for the deadline.',
         ];
     }
-
-    // public function storeOrUpdate()
-    // {
-    //     $this->validate();
-
-    //     if($this->project){
-    //         $this->authorize('update', $this->project);
-    //     }
-
-    //     $prjData = [
-    //         'name' => strtolower($this->name),
-    //         'description' => strtolower($this->description),
-    //         'value' => $this->value,
-    //         'client_id' => $this->client_id,
-    //         'status' => strtolower($this->status),
-    //         'currency_id' => $this->currency_id,
-    //         'hourly_rate' => $this->hourly_rate,
-    //         'deadline' => $this->deadline,
-    //         'user_id' => auth()->id(),
-    //     ];
-    //     if ($this->project) {
-    //         $this->project->update($prjData);
-    //     } else {
-    //         $project = Project::create($prjData);
-    //     }
-
-    //     // Reset form fields
-    //     $this->reset();
-    // }
-
 
     public function storeOrUpdate($notify_client)
     {

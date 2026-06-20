@@ -35,7 +35,6 @@ Route::get('/p/view/{uuid}', Portal::class)->name('client.portal');
 
 Route::middleware('auth')->group(function () {
 
-
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/clients', Clients::class)->name('clients');
     Route::get('/projects', Projects::class)->name('projects');

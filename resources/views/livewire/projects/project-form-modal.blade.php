@@ -76,8 +76,7 @@
                         {{-- client searching and select option --}}
                         <div x-data="{ open: false }" class="relative" @click.outside="open = false">
                             @php
-                                $clientSearch = trim($search);
-                                $clientOptions = strlen($clientSearch) >= 3 ? $this->clients : collect();
+                                $clientOptions = $this->clients;
                             @endphp
 
                             <label class="block mb-4 text-sm font-medium text-neutral-800 dark:text-white">
@@ -105,25 +104,19 @@
                                 </div>
 
                                 <ul class="max-h-56 overflow-y-auto py-1">
-                                    @if (strlen($clientSearch) < 3)
-                                        <li class="px-3 py-3 text-center text-sm text-neutral-500 dark:text-neutral-400">
-                                            Type at least 3 characters to search.
+                                    @forelse ($clientOptions as $client)
+                                        <li wire:click="selectClient({{ $client->id }})" x-on:click="open = false"
+                                            class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
+                                            <span class="truncate">{{ ucwords($client->client_name) }}</span>
+                                            @if ($project_form->client_id == $client->id)
+                                                <flux:icon.check class="size-4 shrink-0 text-blue-500" />
+                                            @endif
                                         </li>
-                                    @else
-                                        @forelse ($clientOptions as $client)
-                                            <li wire:click="selectClient({{ $client->id }})" x-on:click="open = false"
-                                                class="flex cursor-pointer items-center justify-between px-3 py-2 text-sm text-neutral-700 transition hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800">
-                                                <span class="truncate">{{ ucwords($client->client_name) }}</span>
-                                                @if ($project_form->client_id == $client->id)
-                                                    <flux:icon.check class="size-4 shrink-0 text-blue-500" />
-                                                @endif
-                                            </li>
-                                        @empty
-                                            <li class="px-3 py-3 text-center text-sm text-neutral-500 dark:text-neutral-400">
-                                                No clients found.
-                                            </li>
-                                        @endforelse
-                                    @endif
+                                    @empty
+                                        <li class="px-3 py-3 text-center text-sm text-neutral-500 dark:text-neutral-400">
+                                            No clients found.
+                                        </li>
+                                    @endforelse
                                 </ul>
                             </div>
 
