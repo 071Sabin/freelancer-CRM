@@ -7,7 +7,9 @@ use App\Models\InvoiceSetting;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Mail\TwoFactorCodeMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 
@@ -33,47 +35,23 @@ class Register extends Component
             'password' => 'required|min:6|max:16|confirmed',
         ]);
 
-        $a = new User();
-        $a->name = strtolower($this->name);
-        $a->email = strtolower($this->email);
-        $a->password = bcrypt($this->password);
-        $a->save();
+        // Generate OTP and set 10 minutes expiry
+        $code = (string) rand(100000, 999999);
 
-        InvoiceSetting::create([
-            'user_id' => $a->id,
-            'prefix' => 'INV',
-            'next_number' => 1,
-            'default_currency' => 1,
-            'number_format' => '{PREFIX}{NUMBER}',
-            'locale' => 'en',
-            'timezone' => 'UTC',
-            'default_due_days' => 14,
-            'default_late_fee_type' => \App\Enums\LateFeeType::PERCENT->value,
-            'default_late_fee_rate' => 0,
-            'default_late_fee_amount' => 0, // Fixed amount
-            'default_discount_rate' => 0,
-            'default_tax_rate' => 0,
-            'default_tax_inclusive' => false,
-            'company_address' => [
-                'line1' => '',
-                'line2' => '',
-                'city' => '',
-                'state' => '',
-                'postal_code' => '',
-                'country' => ''
+        // Store registration info in session
+        session([
+            'registration_data' => [
+                'name' => strtolower($this->name),
+                'email' => strtolower($this->email),
+                'password' => bcrypt($this->password),
             ],
-            'default_footer' => 'THIS IS SYSTEM GENERATED INVOICE.',
+            'registration_otp' => $code . '|' . now()->addMinutes(10)->timestamp,
         ]);
 
-        Subscription::create([
-            'user_id' => $a->id,
-            'plan_id' => 1,
-            'status' => 'active',
-            'trial_ends_at' => now()->addDays(14),
-        ]);
+        // Send OTP mail to user
+        Mail::to(strtolower($this->email))->send(new TwoFactorCodeMail($code));
 
-        // session()->flash('success', $this->name . ", you're registered successfully!");
-        return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
+        return redirect()->route('verify.otp')->with('success', 'Registration successful! Please verify the code sent to your email.');
     }
 
     public function render()

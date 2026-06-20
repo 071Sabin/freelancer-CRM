@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\Project;
+use App\Mail\TwoFactorCodeMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -52,6 +54,26 @@ class Login extends Component
 
         if (Auth::attempt($credentials)) {
             RateLimiter::clear($throttleKey);
+
+            $user = Auth::user();
+            if ($user->two_factor_code !== null) {
+                $userId = $user->id;
+                $userEmail = $user->email;
+
+                Auth::logout();
+
+                // Generate new OTP on login attempt for unverified user
+                $code = (string) rand(100000, 999999);
+                $user->two_factor_code = $code . '|' . now()->addMinutes(10)->timestamp;
+                $user->save();
+
+                Mail::to($userEmail)->send(new TwoFactorCodeMail($code));
+
+                session(['2fa_user_id' => $userId]);
+
+                return redirect()->route('verify.otp')->with('warning', 'Please verify the 2FA code sent to your email.');
+            }
+
             return redirect()->route('dashboard');
         } else {
             RateLimiter::hit($throttleKey, 60);

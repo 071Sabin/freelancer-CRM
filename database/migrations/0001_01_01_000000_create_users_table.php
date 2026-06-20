@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('subscription_status')->default('inactive'); // inactive, active, past_due
             $table->rememberToken(); // optional but recommended for auth
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('two_factor_code')->nullable();
             $table->timestamps();
         });
 

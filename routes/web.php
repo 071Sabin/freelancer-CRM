@@ -8,6 +8,7 @@ use App\Livewire\Invoices\Settings\Payments;
 use App\Livewire\Login;
 use App\Livewire\Projects\Projects;
 use App\Livewire\Register;
+use App\Livewire\VerifyOtp;
 use App\Livewire\Settings;
 use App\Http\Controllers\DodoWebhookController;
 use App\Livewire\Dashboard\Dashboard;
@@ -23,6 +24,7 @@ Route::middleware('guest:web')->group(function () {
     Route::view('/about', 'about')->name('about');
     Route::get('/register', Register::class)->name('register');
     Route::get('/login', Login::class)->name('login');
+    Route::get('/verify-otp', VerifyOtp::class)->name('verify.otp');
 });
 
 // this is to catch the dodo webhook
