@@ -25,7 +25,21 @@
 
     <form wire:submit.prevent="save">
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
+        <div class="relative">
+            @if (!auth()->user()->canUseCustomBranding())
+                <div class="absolute inset-0 bg-zinc-50/40 dark:bg-zinc-950/40 backdrop-blur-sm z-10 flex flex-col items-center justify-center text-center p-6 min-h-[300px]">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 mb-3 shadow-sm border border-purple-200 dark:border-purple-800/40">
+                        <x-common.lock class="size-6" />
+                    </div>
+                    <h4 class="text-sm font-bold text-neutral-900 dark:text-white">Upgrade Required</h4>
+                    <p class="text-xs text-neutral-500 max-w-xs mt-1">Custom logo and branding options are only available on Pro and Agency plans. Upgrade your subscription to unlock these settings.</p>
+                    <a href="{{ route('pricing') }}" wire:navigate class="mt-4 inline-flex items-center justify-center rounded-lg bg-purple-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-purple-500 transition-colors">
+                        View Premium Plans
+                    </a>
+                </div>
+            @endif
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-y-6 gap-x-12">
 
             <div class="md:col-span-1">
                 <flux:heading size="lg" class="mb-2">Logo & Identity</flux:heading>
@@ -193,12 +207,14 @@
 
         </div>
 
+        </div>
+
         <div class="mt-16 pt-6 flex justify-end border-t border-zinc-100 dark:border-zinc-800">
             <div class="flex items-center gap-4">
                 <flux:text wire:dirty class="text-amber-500 text-sm font-medium animate-pulse">
                     Unsaved changes...
                 </flux:text>
-                <x-primary-button type="submit">
+                <x-primary-button type="submit" :disabled="!auth()->user()->canUseCustomBranding()">
                     Save Branding
                 </x-primary-button>
             </div>
