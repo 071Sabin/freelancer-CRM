@@ -19,6 +19,32 @@
         <x-notification type="error">{{ session('error') }}</x-notification>
     @endif
 
+    @if ($runningTimer)
+        <div class="mb-4 flex items-center justify-between px-3 py-1.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-xs shrink-0 shadow-sm">
+            <div class="flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
+                <flux:icon.clock class="size-3.5 text-red-500 shrink-0" />
+                <span>
+                    Active: <strong class="text-neutral-850 dark:text-neutral-100 font-semibold">{{ $runningTimer->task->title ?? 'General Tasks' }}</strong>
+                </span>
+                <span class="tabular-nums font-semibold text-neutral-800 dark:text-white" x-data="{ 
+                    start: {{ $runningTimer->start_time->timestamp }}, 
+                    now: Math.floor(Date.now() / 1000),
+                    format(sec) {
+                        let h = Math.floor(sec / 3600).toString().padStart(2, '0');
+                        let m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+                        let s = (sec % 60).toString().padStart(2, '0');
+                        return `${h}:${m}:${s}`;
+                    }
+                }" x-init="setInterval(() => now = Math.floor(Date.now() / 1000), 1000)">
+                    (<span x-text="format(now - start)"></span>)
+                </span>
+            </div>
+            <flux:button wire:click="stopTimer({{ $runningTimer->task_id }})" size="xs" variant="ghost" class="text-red-600 hover:text-red-705 dark:text-red-400 text-[10px] font-semibold py-0 px-2 h-6 min-h-0">
+                Stop
+            </flux:button>
+        </div>
+    @endif
+
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
 
         {{-- LEFT --}}
@@ -30,6 +56,22 @@
             <p class="text-sm text-neutral-500 mt-0.5 max-w-md">
                 Manage tasks to automatically update the client's progress bar.
             </p>
+
+            {{-- Time Logs Invoice Trigger --}}
+            @php
+                $unbilledDuration = \App\Models\TimeLog::where('project_id', $project->id)->where('is_billed', false)->whereNotNull('end_time')->sum('duration_seconds');
+                $unbilledHours = round($unbilledDuration / 3600, 2);
+            @endphp
+            @if ($unbilledHours > 0)
+                <div class="mt-2 flex items-center gap-2">
+                    <span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-800 ring-1 ring-inset ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:ring-amber-400/20">
+                        {{ $unbilledHours }} Unbilled Hours
+                    </span>
+                    <flux:button wire:click="billTimeLogs" variant="filled" size="sm" class="text-xs bg-amber-600 hover:bg-amber-700 text-white border-none">
+                        Invoice Hours
+                    </flux:button>
+                </div>
+            @endif
         </div>
 
 
@@ -90,45 +132,83 @@
         @endif
 
         @forelse ($tasks as $task)
+            @php
+                $taskLoggedSeconds = \App\Models\TimeLog::where('task_id', $task->id)->whereNotNull('end_time')->sum('duration_seconds');
+                $h = floor($taskLoggedSeconds / 3600);
+                $m = floor(($taskLoggedSeconds % 3600) / 60);
+                $taskTimeFormatted = "{$h}h {$m}m";
+                $isCurrentRunning = $runningTimer && $runningTimer->task_id === $task->id;
+            @endphp
             <div
-                class="group flex items-center justify-between gap-3 p-3 sm:p-4 bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+                class="group flex items-center justify-between gap-3 p-2.5 sm:p-3 bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-within:ring-1 focus-within:ring-neutral-400">
 
                 {{-- Content Container --}}
-                <div class="flex items-start gap-3 min-w-0 flex-1">
+                <div class="flex items-start gap-2.5 min-w-0 flex-1">
 
                     {{-- Checkbox --}}
                     <flux:checkbox wire:click="toggleTask({{ $task->id }})" :checked="$task->is_completed"
                         class="mt-1 shrink-0" />
 
                     {{-- Task Details --}}
-                    <div class="flex flex-col min-w-0">
+                    <div class="flex flex-col min-w-0 flex-1">
                         <span
-                            class="font-medium text-sm sm:text-base truncate {{ $task->is_completed ? 'line-through text-neutral-400' : 'text-neutral-800 dark:text-neutral-200' }}"
+                            class="font-semibold text-sm truncate {{ $task->is_completed ? 'line-through text-neutral-450' : 'text-neutral-850 dark:text-neutral-200' }}"
                             title="{{ $task->title }}">
                             {{ $task->title }}
                         </span>
 
                         @if ($task->description)
-                            <span class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-0.5"
+                            <span class="text-[11px] text-neutral-500 dark:text-neutral-400 line-clamp-2 mt-0.5"
                                 title="{{ $task->description }}">
                                 {{ $task->description }}
                             </span>
                         @endif
 
-                        {{-- Client Visible Badge (Redesigned for modern SaaS UI) --}}
-                        @if ($task->is_visible_to_client)
-                            <span
-                                class="mt-2 w-max inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-[10px] font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider border border-blue-100 dark:border-blue-800/50">
-                                <flux:icon.eye class="size-3" /> Client Visible
+                        <div class="mt-1.5 flex flex-wrap gap-1.5 items-center">
+                            {{-- Clock Badge (Always Shown) --}}
+                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-200/60 dark:bg-neutral-750/70 text-[9px] font-bold text-neutral-600 dark:text-neutral-350 uppercase tracking-wider">
+                                <flux:icon.clock class="size-3" /> {{ $taskTimeFormatted }}
                             </span>
+
+                            @if ($task->is_visible_to_client)
+                                <span
+                                    class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-[9px] font-bold text-blue-600 dark:text-blue-450 uppercase tracking-wider border border-blue-100 dark:border-blue-800/40">
+                                    <flux:icon.eye class="size-3" /> Client Visible
+                                </span>
+                                
+                                @if ($task->client_status === 'approved')
+                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-900/30 text-[9px] font-bold text-emerald-600 dark:text-emerald-450 uppercase tracking-wider border border-emerald-100 dark:border-emerald-800/40">
+                                        Approved
+                                    </span>
+                                @elseif ($task->client_status === 'revision_requested')
+                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-900/30 text-[9px] font-bold text-rose-600 dark:text-rose-450 uppercase tracking-wider border border-rose-100 dark:border-rose-800/40">
+                                        Revision Req.
+                                    </span>
+                                @endif
+                            @endif
+                        </div>
+
+                        @if ($task->is_visible_to_client && $task->client_status === 'revision_requested' && $task->client_feedback)
+                            <div class="mt-1.5 text-[11px] text-rose-700 bg-rose-50/50 dark:bg-rose-950/10 rounded px-2 py-1 border border-rose-200/40 max-w-md">
+                                <strong>Client Note:</strong> {{ $task->client_feedback }}
+                            </div>
                         @endif
                     </div>
+                </div>
+
+                {{-- Time Tracking Actions --}}
+                <div class="flex items-center gap-1.5 mr-1.5 shrink-0">
+                    @if ($isCurrentRunning)
+                        <flux:button wire:click="stopTimer({{ $task->id }})" variant="danger" size="sm" class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4" icon="stop" title="Stop Timer" />
+                    @else
+                        <flux:button wire:click="startTimer({{ $task->id }})" variant="ghost" size="sm" class="!size-7 sm:!size-8 [&>svg]:size-3.5 sm:[&>svg]:size-4 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/20" icon="play" title="Start Timer" />
+                    @endif
                 </div>
 
                 {{-- Action Buttons --}}
                 {{-- UX Fix: opacity-100 on mobile, hover/focus reveal on sm and above --}}
                 <div
-                    class="flex items-center gap-1 sm:gap-1.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+                    class="flex items-center gap-1 sm:gap-1.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200 font-sans">
 
                     {{-- Toggle Visibility --}}
                     <flux:button wire:click="toggleVisibility({{ $task->id }})" variant="ghost"

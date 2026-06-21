@@ -32,6 +32,11 @@ class Branding extends Component
 
     public function save()
     {
+        if ($this->logo && !auth()->user()->canUseCustomBranding()) {
+            session()->flash('error', 'Upgrade Required: Custom branding (logo upload) is not available on your current plan. Please upgrade to Pro or Agency.');
+            return;
+        }
+
         // dd($this->default_footer);
         $data = [
             'default_footer' => $this->default_footer,

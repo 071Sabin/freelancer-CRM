@@ -37,7 +37,21 @@
         </div>
 
         <div
-            class="bg-white dark:bg-neutral-900 rounded-xl sm:rounded-2xl shadow-sm ring-1 ring-neutral-900/5 dark:ring-neutral-700/50 overflow-hidden transition-all duration-200">
+            class="relative bg-white dark:bg-neutral-900 rounded-xl sm:rounded-2xl shadow-sm ring-1 ring-neutral-900/5 dark:ring-neutral-700/50 overflow-hidden transition-all duration-200">
+            
+            @if (!Auth::user()->canUseWhatsApp())
+                <div class="absolute inset-0 bg-neutral-50/40 dark:bg-neutral-950/40 backdrop-blur-sm z-10 flex flex-col items-center justify-center text-center p-6">
+                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 mb-3 shadow-sm border border-purple-200 dark:border-purple-800/40">
+                        <x-common.lock class="size-6" />
+                    </div>
+                    <h4 class="text-sm font-bold text-neutral-900 dark:text-white">Upgrade Required</h4>
+                    <p class="text-xs text-neutral-500 max-w-xs mt-1">WhatsApp Cloud API integration is only available on Pro and Agency plans. Upgrade your subscription to unlock this feature.</p>
+                    <a href="{{ route('pricing') }}" wire:navigate class="mt-4 inline-flex items-center justify-center rounded-lg bg-purple-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-purple-500 transition-colors">
+                        View Premium Plans
+                    </a>
+                </div>
+            @endif
+
             <div
                 class="px-4 sm:px-6 py-4 sm:py-5 border-b border-neutral-900/5 dark:border-neutral-700/50 bg-neutral-50/50 dark:bg-neutral-800/40">
                 <h3 class="text-base sm:text-lg font-semibold leading-6 text-neutral-900 dark:text-white">
@@ -47,15 +61,15 @@
                     Set up your credentials to send project updates and magic links directly to your clients.
                 </p>
             </div>
-
+ 
             <div class="p-4 sm:p-6 space-y-5 sm:space-y-6">
                 <div class="max-w-xl w-full">
-                    <x-input-field label="Permanent Access Token" type="password" model="wa_access_token" required placeholder='*****************' />
-                </div>sabin panthi
-
+                    <x-input-field label="Permanent Access Token" type="password" model="wa_access_token" required="{{ Auth::user()->canUseWhatsApp() ? 'true' : 'false' }}" placeholder='*****************' disabled="{{ !Auth::user()->canUseWhatsApp() }}" />
+                </div>
+ 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl w-full">
-                    <x-input-field label="Phone Number ID" type="text" model="wa_phone_number_id" required placeholder='WA Phone Number ID' />
-                    <x-input-field label="Business Account ID" type="text" model="wa_business_account_id" required placeholder="Business Account ID" />
+                    <x-input-field label="Phone Number ID" type="text" model="wa_phone_number_id" required="{{ Auth::user()->canUseWhatsApp() ? 'true' : 'false' }}" placeholder='WA Phone Number ID' disabled="{{ !Auth::user()->canUseWhatsApp() }}" />
+                    <x-input-field label="Business Account ID" type="text" model="wa_business_account_id" required="{{ Auth::user()->canUseWhatsApp() ? 'true' : 'false' }}" placeholder="Business Account ID" disabled="{{ !Auth::user()->canUseWhatsApp() }}" />
                 </div>
             </div>
         </div>

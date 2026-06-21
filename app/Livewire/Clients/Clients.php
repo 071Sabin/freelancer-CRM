@@ -28,6 +28,12 @@ class Clients extends Component
 
     public function addClient()
     {
+        if (auth()->user()->hasReachedClientLimit()) {
+            session()->flash('error', 'Limit Reached: You have reached the client limit for your current plan. Please upgrade to add more clients.');
+            $this->modal('add-client-modal')->close();
+            return;
+        }
+
         try {
             $this->form->storeOrUpdate();
 

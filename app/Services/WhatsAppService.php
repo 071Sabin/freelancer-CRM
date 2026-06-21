@@ -53,6 +53,14 @@ class WhatsAppService
     public function sendMessage($userId, $toPhoneNumber, $message)
     {
         try {
+            $user = \App\Models\User::find($userId);
+            if ($user && !$user->canUseWhatsApp()) {
+                return [
+                    'success' => false,
+                    'error' => 'Upgrade Required: WhatsApp integration is not available on your current plan. Please upgrade to Pro or Agency.'
+                ];
+            }
+
             // 1. Fetch user's integration settings.
             // Note: wa_access_token is automatically decrypted by the Integration model!
             $integration = Integration::where('user_id', $userId)->first();

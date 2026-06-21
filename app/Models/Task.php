@@ -20,6 +20,8 @@ class Task extends Model
         'is_completed',
         'position',
         'is_visible_to_client',
+        'client_status',
+        'client_feedback',
     ];
 
     // DATA INTEGRITY: This ensures that in the API or frontend,
@@ -47,5 +49,10 @@ class Task extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function timeLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TimeLog::class);
     }
 }

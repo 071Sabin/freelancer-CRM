@@ -5,7 +5,7 @@ namespace App\Livewire\ClientPortal;
 use App\Models\Invoice;
 use App\Models\InvoiceSetting;
 use App\Models\Project;
-use App\Services\DodoPaymentService;
+use App\Services\StripePaymentService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Title;
@@ -18,6 +18,7 @@ class Portal extends Component
     public $progressPercentage = 0;
     public $clientTasks; // Tasks that clients will see whose visibility is set true
     public $hasPendingInternalTasks = false;
+    public $feedbackText = [];
 
 
     public function downloadInvoice($invoiceId)
@@ -49,7 +50,7 @@ class Portal extends Component
     // public $invoice;
 
     // this function runs on PAY NOW button click in client portal
-    public function payNow(DodoPaymentService $paymentService, $invoiceId)
+    public function payNow(StripePaymentService $paymentService, $invoiceId)
     {
         try {
             // dd($invoiceId);
@@ -57,7 +58,7 @@ class Portal extends Component
             // ask URL from service
             $checkoutUrl = $paymentService->generateCheckoutUrl($invoice);
 
-            // redirect client to dodo payment page
+            // redirect client to Stripe Connect payment page
             return redirect()->away($checkoutUrl);
         } catch (\Exception $e) {
             // If link is not created then show error to client page.
@@ -89,6 +90,40 @@ class Portal extends Component
             ->count() > 0;
     }
 
+
+    public function approveTask($taskId)
+    {
+        $task = $this->project->tasks()->where('is_visible_to_client', true)->findOrFail($taskId);
+        
+        $task->update([
+            'client_status' => 'approved',
+            'client_feedback' => $this->feedbackText[$taskId] ?? null,
+            'is_completed' => true,
+        ]);
+
+        $this->mount($this->project->uuid);
+        session()->flash('success', "Milestone '{$task->title}' approved successfully!");
+    }
+
+    public function requestRevision($taskId)
+    {
+        $task = $this->project->tasks()->where('is_visible_to_client', true)->findOrFail($taskId);
+
+        $this->validate([
+            "feedbackText.{$taskId}" => 'required|string|max:500'
+        ], [
+            "feedbackText.{$taskId}.required" => 'Please provide revision feedback.'
+        ]);
+
+        $task->update([
+            'client_status' => 'revision_requested',
+            'client_feedback' => $this->feedbackText[$taskId],
+            'is_completed' => false,
+        ]);
+
+        $this->mount($this->project->uuid);
+        session()->flash('warning', "Revision requested for milestone '{$task->title}'.");
+    }
 
     public function render()
     {

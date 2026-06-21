@@ -31,13 +31,15 @@ class Integrations extends Component
 
     public function saveIntegrations()
     {
+        $canUseWhatsApp = Auth::user()->canUseWhatsApp();
+
         // Validation (you can set it stricter as you want/need)
         $this->validate([
             'ai_provider' => 'nullable|string|in:openai,gemini',
             'ai_api_key' => 'nullable|string',
-            'wa_access_token' => 'nullable|string',
-            'wa_phone_number_id' => 'nullable|string',
-            'wa_business_account_id' => 'nullable|string',
+            'wa_access_token' => $canUseWhatsApp ? 'nullable|string' : 'nullable',
+            'wa_phone_number_id' => $canUseWhatsApp ? 'nullable|string' : 'nullable',
+            'wa_business_account_id' => $canUseWhatsApp ? 'nullable|string' : 'nullable',
         ]);
 
         // Create or Update
@@ -46,9 +48,9 @@ class Integrations extends Component
             [
                 'ai_provider' => $this->ai_provider,
                 'ai_api_key' => $this->ai_api_key,
-                'wa_access_token' => $this->wa_access_token,
-                'wa_phone_number_id' => $this->wa_phone_number_id,
-                'wa_business_account_id' => $this->wa_business_account_id,
+                'wa_access_token' => $canUseWhatsApp ? $this->wa_access_token : null,
+                'wa_phone_number_id' => $canUseWhatsApp ? $this->wa_phone_number_id : null,
+                'wa_business_account_id' => $canUseWhatsApp ? $this->wa_business_account_id : null,
             ]
         );
 

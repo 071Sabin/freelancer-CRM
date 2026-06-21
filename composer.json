@@ -21,7 +21,8 @@
         "livewire/livewire": "^3.6.4",
         "livewire/volt": "^1.7.0",
         "predis/predis": "^3.4",
-        "rappasoft/laravel-livewire-tables": "^3.7"
+        "rappasoft/laravel-livewire-tables": "^3.7",
+        "zohomail/laravel-zeptomail": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",

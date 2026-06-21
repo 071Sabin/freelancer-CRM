@@ -11,6 +11,7 @@ use App\Livewire\Register;
 use App\Livewire\VerifyOtp;
 use App\Livewire\Settings;
 use App\Http\Controllers\DodoWebhookController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Invoices\InvoiceIndex;
 use App\Livewire\Pricing;
@@ -29,6 +30,7 @@ Route::middleware('guest:web')->group(function () {
 
 // this is to catch the dodo webhook
 Route::post('/webhook/dodo', [DodoWebhookController::class, 'handle']);
+Route::post('/webhook/stripe', [StripeWebhookController::class, 'handle']);
 
 Route::get('/pricing', Pricing::class)->name('pricing');
 

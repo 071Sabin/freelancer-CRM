@@ -32,7 +32,21 @@
     </div>
 
     {{-- ADD PROJECT BUTTON --}}
-    <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-4">
+    <div class="flex flex-col sm:flex-row justify-end items-center my-3 gap-3">
+        @if (auth()->user()->isPremium())
+            <flux:button variant="ghost" class="flex gap-1.5 text-xs sm:text-sm font-semibold border border-neutral-300 dark:border-neutral-700"
+                wire:click="$dispatch('open-proposal-modal')">
+                <flux:icon.sparkles class="size-4 text-purple-600 dark:text-purple-400" />
+                AI Proposal Writer
+            </flux:button>
+        @else
+            <flux:tooltip content="Upgrade to Pro/Agency to unlock the AI Proposal Writer">
+                <flux:button variant="ghost" disabled class="flex gap-1.5 text-xs sm:text-sm font-semibold border border-neutral-200 dark:border-neutral-800 opacity-50 cursor-not-allowed">
+                    <x-common.lock class="size-4 text-neutral-400" />
+                    AI Proposal Writer
+                </flux:button>
+            </flux:tooltip>
+        @endif
         <x-primary-button class="flex gap-1"
             wire:click="$dispatchTo('projects.project-form-modal', 'open-project-modal')">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
@@ -47,6 +61,9 @@
 
     {{-- ADD & EDIT PROJECT FORM COMPONENT --}}
     <livewire:projects.project-form-modal />
+
+    {{-- AI PROPOSAL GENERATOR COMPONENT --}}
+    <livewire:projects.proposal-generator />
     
 
     @if ($projectCount > 0)

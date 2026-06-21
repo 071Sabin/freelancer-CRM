@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -52,5 +53,64 @@ class StripePaymentService
         // 4. If the API request failed
         Log::error('Stripe Token Exchange Failed: ' . $response->body());
         return redirect('/dashboard')->with('error', 'Could not verify your Stripe account. Please try again.');
+    }
+
+    /**
+     * Generate a Stripe Connect Checkout Session URL for client invoices.
+     */
+    public function generateCheckoutUrl(Invoice $invoice)
+    {
+        $user = $invoice->user; // The freelancer who owns this invoice
+        if (!$user || !$user->stripe_account_id) {
+            throw new \Exception("The freelancer does not have a Stripe account connected. Payments cannot be accepted.");
+        }
+
+        // Convert amount to cents
+        $amountCents = intval(round($invoice->total * 100));
+        $currencyCode = strtolower($invoice->currency->code ?? 'usd');
+
+        // Create Checkout Session using destination charges
+        $payload = [
+            'mode' => 'payment',
+            'success_url' => route('client.portal', ['uuid' => $invoice->project->uuid]) . '?payment=success',
+            'cancel_url' => route('client.portal', ['uuid' => $invoice->project->uuid]) . '?payment=cancelled',
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => $currencyCode,
+                        'unit_amount' => $amountCents,
+                        'product_data' => [
+                            'name' => 'Invoice #' . $invoice->invoice_number,
+                            'description' => 'Project: ' . ($invoice->project->name ?? 'Service Work'),
+                        ],
+                    ],
+                    'quantity' => 1,
+                ]
+            ],
+            'payment_intent_data' => [
+                'application_fee_amount' => intval(round($amountCents * 0.01)), // 1% platform transaction fee
+                'transfer_data' => [
+                    'destination' => $user->stripe_account_id,
+                ],
+            ],
+            'metadata' => [
+                'invoice_id' => (string) $invoice->id,
+                'user_id' => (string) $user->id,
+            ]
+        ];
+
+        $stripeSecret = env('STRIPE_SECRET') ?: config('services.stripe.secret');
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $stripeSecret,
+        ])
+        ->asForm()
+        ->post('https://api.stripe.com/v1/checkout/sessions', $payload);
+
+        if ($response->successful()) {
+            return $response->json('url');
+        }
+
+        Log::error('Stripe Checkout Session Creation Failed: ' . $response->body());
+        throw new \Exception('Could not generate the Stripe payment link: ' . $response->json('error.message', 'Unknown Stripe API error'));
     }
 }

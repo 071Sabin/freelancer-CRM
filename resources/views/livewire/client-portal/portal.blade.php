@@ -224,18 +224,62 @@
 
                                 {{-- Card --}}
                                 <div
-                                    class="flex-1 min-w-0 rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 transition-colors {{ $task->is_completed ? 'bg-neutral-50 dark:bg-neutral-900/40 border-neutral-200 dark:border-neutral-800' : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600' }}">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <span
-                                            class="truncate text-xs sm:text-sm font-medium {{ $task->is_completed ? 'text-neutral-400 line-through' : 'text-neutral-800 dark:text-neutral-100' }}"
-                                            title="{{ $task->title }}">
-                                            {{ Str::limit($task->title, 30) }}
-                                        </span>
+                                    class="flex-1 min-w-0 rounded-lg border px-3 sm:px-4 py-2.5 sm:py-3 transition-colors {{ $task->is_completed ? 'bg-neutral-50 dark:bg-neutral-900/40 border-neutral-200 dark:border-neutral-800' : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700' }}">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span
+                                                class="truncate text-xs sm:text-sm font-medium {{ $task->is_completed ? 'text-neutral-400 line-through' : 'text-neutral-800 dark:text-neutral-100' }}"
+                                                title="{{ $task->title }}">
+                                                {{ $task->title }}
+                                            </span>
 
-                                        <span
-                                            class="shrink-0 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded {{ $task->is_completed ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10' : 'text-blue-600 bg-blue-50 dark:bg-blue-500/10' }}">
-                                            {{ $task->is_completed ? 'Done' : 'Active' }}
-                                        </span>
+                                            @if ($task->client_status === 'approved')
+                                                <span class="shrink-0 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-800/40">
+                                                    Approved
+                                                </span>
+                                            @elseif ($task->client_status === 'revision_requested')
+                                                <span class="shrink-0 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded text-rose-600 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-800/40">
+                                                    Revision Requested
+                                                </span>
+                                            @else
+                                                <span class="shrink-0 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded text-blue-600 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-800/40">
+                                                    Pending Approval
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        @if ($task->description)
+                                            <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                                                {{ $task->description }}
+                                            </p>
+                                        @endif
+
+                                        @if ($task->client_status === 'revision_requested' && $task->client_feedback)
+                                            <div class="p-2 bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/30 rounded text-xs text-rose-700 dark:text-rose-300">
+                                                <strong>Revision Feedback:</strong> {{ $task->client_feedback }}
+                                            </div>
+                                        @endif
+
+                                        @if ($task->client_status !== 'approved')
+                                            <div class="mt-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/60 space-y-2">
+                                                <input type="text" 
+                                                    wire:model="feedbackText.{{ $task->id }}" 
+                                                    placeholder="Optional feedback or revision notes..." 
+                                                    class="w-full text-xs px-2.5 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-750 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-400 text-neutral-800 dark:text-neutral-100" />
+                                                @error('feedbackText.' . $task->id)
+                                                    <span class="text-[10px] text-rose-600">{{ $message }}</span>
+                                                @enderror
+
+                                                <div class="flex gap-2 justify-end">
+                                                    <flux:button wire:click="requestRevision({{ $task->id }})" variant="ghost" size="sm" class="text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20">
+                                                        Request Revision
+                                                    </flux:button>
+                                                    <flux:button wire:click="approveTask({{ $task->id }})" variant="filled" size="sm" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white border-none">
+                                                        Approve Milestone
+                                                    </flux:button>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

@@ -128,6 +128,12 @@ class InvoiceFormModal extends Component
     // this creates draft invoice and saves as draft. then opens the edit modal
     public function create()
     {
+        if (auth()->user()->hasReachedInvoiceLimit()) {
+            session()->flash('error', 'Limit Reached: You have reached the invoice creation limit for your current plan this month. Please upgrade to create more invoices.');
+            $this->modal('create-invoice-modal')->close();
+            return;
+        }
+
         $this->validate();
 
         $user = Auth::user();

@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
         $middleware->validateCsrfTokens(except: [
             '/webhook/dodo', // Let the Dodo bypass
+            '/webhook/stripe', // Stripe webhook bypass
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
