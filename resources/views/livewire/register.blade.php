@@ -1,5 +1,5 @@
 <div
-    class="min-h-screen flex items-center justify-center bg-white dark:bg-black px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
+    class="py-10 flex items-center justify-center bg-white dark:bg-black px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-300">
     @if (session('success'))
         <x-notification type="success">{{ session('success') }}</x-notification>
     @endif
