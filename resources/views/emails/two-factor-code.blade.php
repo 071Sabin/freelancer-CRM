@@ -5,94 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your 2FA Verification Code</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
             margin: 0;
             padding: 0;
             -webkit-text-size-adjust: none;
             -ms-text-size-adjust: none;
-        }
-        .container {
-            max-width: 500px;
-            margin: 40px auto;
-            background: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
-        }
-        .header {
-            background-color: #10b981; /* Emerald 500 */
-            padding: 32px;
-            text-align: center;
-            color: #ffffff;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-        }
-        .content {
-            padding: 32px;
             line-height: 1.6;
         }
-        .greeting {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
+        .wrapper {
+            padding: 40px 20px;
+            width: 100%;
+            background-color: #f9fafb;
+            box-sizing: border-box;
         }
-        .code-container {
-            background-color: #f1f5f9;
-            border: 1px solid #e2e8f0;
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            background: #ffffff;
             border-radius: 12px;
-            padding: 20px;
+            border: 1px solid #e5e7eb;
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+        .logo {
+            margin-bottom: 32px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 16px;
+            letter-spacing: -0.5px;
+        }
+        .text {
+            font-size: 15px;
+            color: #4b5563;
+            margin: 0 0 24px;
+        }
+        .code-wrapper {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
             text-align: center;
-            margin: 24px 0;
+            margin: 32px 0;
         }
         .code {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            color: #0f172a;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 12px;
+            color: #111827;
             margin: 0;
+            margin-left: 12px; /* Offset for letter-spacing to center it properly */
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
-        .expiry {
-            font-size: 13px;
-            color: #64748b;
-            margin-top: 8px;
+        .code-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        .divider {
+            height: 1px;
+            background-color: #e5e7eb;
+            margin: 32px 0;
         }
         .footer {
-            padding: 24px 32px;
-            background-color: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            font-size: 12px;
-            color: #64748b;
-            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .footer p {
+            margin: 0 0 8px;
+        }
+        .highlight {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Mobile Responsive Styles */
+        @media only screen and (max-width: 600px) {
+            .wrapper {
+                padding: 20px 10px;
+            }
+            .container {
+                padding: 24px;
+            }
+            .title {
+                font-size: 20px;
+            }
+            .code {
+                font-size: 32px;
+                letter-spacing: 8px;
+                margin-left: 8px;
+            }
+            .code-wrapper {
+                padding: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Client Pivot</h1>
-        </div>
-        <div class="content">
-            <div class="greeting">Security Verification</div>
-            <p>Please use the following 6-digit verification code to complete your sign-in process. For security purposes, this code is only valid for 10 minutes.</p>
-            
-            <div class="code-container">
-                <div class="code">{{ $code }}</div>
-                <div class="expiry">Expires in 10 minutes</div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="logo">
+                Client Pivot
             </div>
             
-            <p>If you did not request this code, you can safely ignore this email.</p>
-        </div>
-        <div class="footer">
-            &copy; {{ date('Y') }} Client Pivot. All rights reserved.
-            <span class="footer-note">Please do not reply to this automated message.</span>
+            <h1 class="title">Authenticate your account</h1>
+            
+            <p class="text">
+                Please use the verification code below to sign in. This code is valid for the next <span class="highlight">10 minutes</span>.
+            </p>
+            
+            <div class="code-wrapper">
+                <div class="code-label">Verification Code</div>
+                <div class="code">{{ $code }}</div>
+            </div>
+            
+            <p class="text" style="font-size: 14px;">
+                If you didn't request this email, there's nothing to worry about — you can safely ignore it.
+            </p>
+            
+            <div class="divider"></div>
+            
+            <div class="footer">
+                <p>&copy; {{ date('Y') }} Client Pivot. All rights reserved.</p>
+                <p>This is an automated message, please do not reply.</p>
+            </div>
         </div>
     </div>
 </body>
