@@ -242,8 +242,7 @@
                     <flux:sidebar.item icon="document-currency-dollar" href="{{ route('invoices') }}" wire:navigate
                         :current="request()->routeIs('invoices') || request()->routeIs('invoices.*')">Invoices
                     </flux:sidebar.item>
-                    <flux:sidebar.group expandable icon="cog" heading="Client Automations" class="grid"
-                        :current="request()->routeIs('aibyok')">
+                    <flux:sidebar.group expandable icon="cog" heading="Client Automations" class="grid">
                         <flux:sidebar.item href="#">Marketing site</flux:sidebar.item>
                         <flux:sidebar.item href="#">Android app</flux:sidebar.item>
                         <flux:sidebar.item href="#">Brand guidelines</flux:sidebar.item>
@@ -255,7 +254,16 @@
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="document" href="#" wire:navigate
                         :current="request()->routeIs('proposals')">Proposals</flux:sidebar.item>
+                        
+                    <flux:sidebar.group expandable icon="cog-6-tooth" heading="Settings" class="grid">
+                        <flux:sidebar.item href="{{ route('settings.profile') }}" wire:navigate :current="request()->routeIs('settings.profile')">Profile</flux:sidebar.item>
+                        <flux:sidebar.item href="{{ route('settings.security') }}" wire:navigate :current="request()->routeIs('settings.security')">Security</flux:sidebar.item>
+                        <flux:sidebar.item href="{{ route('settings.notifications') }}" wire:navigate :current="request()->routeIs('settings.notifications')">Notifications</flux:sidebar.item>
+                        <flux:sidebar.item href="{{ route('settings.whatsapp') }}" wire:navigate :current="request()->routeIs('settings.whatsapp')">WhatsApp</flux:sidebar.item>
+                        <flux:sidebar.item href="{{ route('settings.payment') }}" wire:navigate :current="request()->routeIs('settings.payment')">Payment</flux:sidebar.item>
 
+                        <flux:sidebar.item href="{{ route('settings.account') }}" wire:navigate :current="request()->routeIs('settings.account')">Account</flux:sidebar.item>
+                    </flux:sidebar.group>
                     {{-- <flux:sidebar.item>
                         @if (auth()->user()->subscription && auth()->user()->subscription->status === 'active')
                             <span class="bg-green-100 text-green-800 w-full px-3 rounded-l py-2">Pro Member</span>
@@ -271,7 +279,7 @@
                 </flux:sidebar.nav>
 
 
-                @if (auth()->user()->isOnTrial())
+                @if (!auth()->user()->isPremium())
                     <div x-data x-show="true" x-transition.opacity.duration.200ms
                         class="hidden lg:block">
                         <div class="group relative overflow-hidden rounded-2xl p-[1px] transition-all duration-300">
@@ -352,9 +360,6 @@
 
                 <flux:sidebar.spacer />
                 <flux:sidebar.nav>
-                    <flux:sidebar.item icon="cog-6-tooth" href="{{ route('settings') }}" wire:navigate
-                        :current="request()->routeIs('settings')">Settings
-                    </flux:sidebar.item>
                     <flux:sidebar.item icon="information-circle" href="#" wire:navigate
                         :current="request()->routeIs('help')">Help</flux:sidebar.item>
                     <flux:dropdown x-data align="end">

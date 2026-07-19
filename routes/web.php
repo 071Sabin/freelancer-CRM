@@ -55,7 +55,15 @@ Route::middleware('auth')->group(function () {
             Route::get('/branding', Branding::class)->name('branding');
         });
 
-    Route::get('/settings', Settings::class)->name('settings');
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/profile', \App\Livewire\Settings\Profile::class)->name('profile');
+        Route::get('/security', \App\Livewire\Settings\Security::class)->name('security');
+        Route::get('/notifications', \App\Livewire\Settings\Notifications::class)->name('notifications');
+        Route::get('/whatsapp', \App\Livewire\Settings\Whatsapp::class)->name('whatsapp');
+        Route::get('/payment', \App\Livewire\Settings\Payment::class)->name('payment');
+
+        Route::get('/account', \App\Livewire\Settings\Account::class)->name('account');
+    });
     Route::get('/stripe/callback', StripeCallback::class)->name('stripe.callback');
 
     Route::post('/logout', [Dashboard::class, 'logout'])->name('logout');

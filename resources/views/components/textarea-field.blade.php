@@ -19,7 +19,7 @@
                                 py-2.5 px-3 
                                 text-neutral-900 dark:text-white 
                                 bg-white dark:bg-neutral-900 
-                                shadow-sm 
+                                shadow-[0_2px_4px_0_rgba(0,0,0,0.02)] 
                                 ring-1 ring-inset ring-neutral-300 dark:ring-neutral-700 
                                 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 
                                 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 

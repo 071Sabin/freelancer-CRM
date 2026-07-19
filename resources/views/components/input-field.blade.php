@@ -16,13 +16,13 @@
             placeholder="{{ $placeholder ?? '' }}"
             {{ $attributes->merge([
                 'class' => '
-                                block w-full rounded-lg border-0 py-2 px-3 text-xs lg:text-sm leading-6 
-                                text-neutral-900 bg-white shadow-xs placeholder-neutral-400 
-                                focus:ring-1 focus:ring-inset focus:ring-indigo-600 
-                                transition-shadow duration-200 ease-in-out dark:border-neutral-600 border-1 border-neutral-200
-                                disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500 disabled:ring-neutral-200 
-                                dark:bg-white/10 dark:text-white dark:ring-neutral-700 dark:placeholder-neutral-400 dark:focus:ring-indigo-500
-                            ',
+                    block w-full rounded-lg border-0 py-2 px-3 text-xs lg:text-sm leading-6 
+                    text-neutral-900 bg-white shadow-[0_2px_4px_0_rgba(0,0,0,0.02)] placeholder-neutral-400 
+                    focus:ring-1 focus:ring-inset focus:ring-indigo-600 
+                    transition-shadow duration-200 ease-in-out dark:border-neutral-600 border-1 border-neutral-200
+                    disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500 disabled:ring-neutral-200 
+                    dark:bg-white/10 dark:text-white dark:ring-neutral-700 dark:placeholder-neutral-400 dark:focus:ring-indigo-500
+                ',
             ]) }} />
 
         @if ($model)

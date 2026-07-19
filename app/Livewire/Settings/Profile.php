@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Settings;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-#[Title('Client Pivot | Settings')]
-class Settings extends Component
+#[Title('Client Pivot | Profile Settings')]
+class Profile extends Component
 {
     use WithFileUploads;
 
@@ -30,7 +28,6 @@ class Settings extends Component
     {
         if (Auth::guard('web')->check()) {
             $freelancer = auth()->user();
-            // dd($this->profile_pic);
 
             $this->validate([
                 'name' => 'required|string|max:255',
@@ -59,24 +56,8 @@ class Settings extends Component
         }
     }
 
-    public function connectStripe()
-    {
-        // Get the Client ID from our config
-        $clientId = config('services.stripe.client_id');
-
-        // Where Stripe should send them back (must match the URL in your dashboard exactly)
-        $redirectUri = urlencode(url('/stripe/callback'));
-
-        // Build the official Stripe Connect URL
-        $stripeUrl = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id={$clientId}&scope=read_write&redirect_uri={$redirectUri}";
-
-        // Redirect the user to Stripe
-        return redirect()->away($stripeUrl);
-    }
-
-    
     public function render()
     {
-        return view('livewire.settings');
+        return view('livewire.settings.profile');
     }
 }

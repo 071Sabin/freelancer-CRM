@@ -77,6 +77,9 @@ trait HasPlanLimits
      */
     public function canUseWhatsApp(): bool
     {
+        if ($this->isPremium()) {
+            return true;
+        }
         $plan = $this->getActivePlan();
         return $plan ? (bool)$plan->has_whatsapp : false;
     }
