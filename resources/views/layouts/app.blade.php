@@ -102,8 +102,6 @@
                             class="px-5 py-2 rounded-lg bg-slate-900 dark:bg-indigo-600 text-white font-semibold">
                             Get Started
                         </a>
-                        <flux:button x-data x-on:click="$flux.dark = ! $flux.dark" icon="moon" variant="subtle"
-                            aria-label="Toggle dark mode" />
                     </div>
 
                     {{-- Mobile Button --}}
@@ -135,7 +133,7 @@
             {{ $slot }}
         </div>
 
-        <footer class="relative mt-20 border-t border-zinc-200 bg-white pt-16 pb-8 dark:border-zinc-800 dark:bg-zinc-950">
+        <footer class="relative border-t border-zinc-200 bg-white pt-16 pb-8 dark:border-zinc-800 dark:bg-zinc-950">
             <div
                 class="absolute inset-x-0 -top-px -z-10 h-px w-full bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent">
             </div>
@@ -154,14 +152,6 @@
                         <p class="max-w-xs text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                             Intelligent client management for modern freelancers. Scale your business, not your overhead.
                         </p>
-                        <div class="flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                            <span class="relative flex h-2 w-2">
-                                <span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                            Systems Operational
-                        </div>
                     </div>
 
                     <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
