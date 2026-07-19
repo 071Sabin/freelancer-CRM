@@ -99,9 +99,9 @@ return [
         
         'zeptomail' => [
             'transport' => 'zeptomail',
-            'authorization' => env('ZEPTOMAIL_AUTHORIZATION'),
-            'uri' => env('ZEPTOMAIL_URI', 'api.zeptomail.com/v1.1/email'),
-            'bounce_address' => env('ZEPTOMAIL_BOUNCE_ADDRESS'), // Add this line
+            'api_key' => env('ZEPTOMAIL_API_KEY'),
+            'host' => env('ZEPTOMAIL_URI', 'zoho.in'),
+            'bounce_address' => env('ZEPTOMAIL_BOUNCE_ADDRESS'),
         ],
 
     ],

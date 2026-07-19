@@ -11,13 +11,13 @@
         @endif
     </label>
 
-    <div class="relative">
+    <div class="relative mt-1.5">
         <input type="{{ $type ?? 'text' }}" @if ($model ?? false) wire:model="{{ $model }}" @endif
             placeholder="{{ $placeholder ?? '' }}"
             {{ $attributes->merge([
                 'class' => '
                                 block w-full rounded-lg border-0 py-2 px-3 text-xs lg:text-sm leading-6 
-                                text-neutral-900 bg-white mt-2.5 shadow-xs placeholder-neutral-400 
+                                text-neutral-900 bg-white shadow-xs placeholder-neutral-400 
                                 focus:ring-1 focus:ring-inset focus:ring-indigo-600 
                                 transition-shadow duration-200 ease-in-out dark:border-neutral-600 border-1 border-neutral-200
                                 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:text-neutral-500 disabled:ring-neutral-200 
