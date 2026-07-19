@@ -218,7 +218,7 @@
     @auth('web')
         @php
             $user = auth()->user();
-            $isPro = $user->subscription && $user->subscription->status === 'active';
+            $isPro = $user->isPro();
         @endphp
         <div class="flex flex-col lg:flex-row min-h-screen dark:bg-neutral-900">
             <flux:sidebar sticky collapsible
@@ -444,60 +444,47 @@
             </div>
         </div>
 
-        <footer
-            class="bg-neutral-50 dark:bg-[#0a0a0a] border-t border-neutral-200/80 dark:border-neutral-800/60 py-8 transition-colors duration-300">
+        <footer class="bg-white dark:bg-[#0C0C0C] border-t border-slate-200 dark:border-white/10 py-5 transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
 
-                    <div class="flex flex-col md:flex-row items-center gap-x-8 gap-y-4">
-                        <div class="flex items-center gap-2.5 group cursor-default">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-neutral-900 dark:bg-white flex items-center justify-center text-[12px] font-black text-white dark:text-neutral-900 shadow-sm transition-transform group-hover:scale-105">
+                    {{-- Left: Brand & Links --}}
+                    <div class="flex flex-col md:flex-row items-center gap-x-6 gap-y-3">
+                        <div class="flex items-center gap-2 opacity-90 hover:opacity-100 transition-opacity cursor-default">
+                            <div class="w-5 h-5 rounded-md bg-[#172A23] dark:bg-white flex items-center justify-center text-[9px] font-bold text-white dark:text-[#0C0C0C]">
                                 CP
                             </div>
-                            <span
-                                class="text-sm md:text-base font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
+                            <span class="text-sm font-semibold tracking-tight text-slate-900 dark:text-white">
                                 ClientPivot
                             </span>
                         </div>
 
-                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2">
-                            <p
-                                class="text-[10px] md:text-[11px] font-semibold text-neutral-500 dark:text-neutral-500 uppercase tracking-widest">
-                                &copy; 2026 Internal Ops
-                            </p>
-                            <div class="hidden md:block h-3 w-px bg-neutral-300 dark:bg-neutral-800"></div>
-                            <a href="#"
-                                class="text-[11px] font-bold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors uppercase tracking-wider">
-                                Privacy
-                            </a>
-                            <a href="#"
-                                class="text-[11px] font-bold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors uppercase tracking-wider">
-                                Terms
-                            </a>
+                        <div class="hidden md:block h-3 w-px bg-slate-200 dark:bg-white/10"></div>
+
+                        <div class="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400">
+                            <span>&copy; {{ date('Y') }} Internal Ops</span>
+                            <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</a>
+                            <a href="#" class="hover:text-slate-900 dark:hover:text-white transition-colors">Terms</a>
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
-                        <div
-                            class="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 shadow-[0_1px_2px_rgba(0,0,0,0,05)]">
-                            <span class="relative flex h-2 w-2">
-                                <span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    {{-- Right: Status & Action --}}
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                        {{-- Status Indicator --}}
+                        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                            <span class="relative flex h-1.5 w-1.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                             </span>
-                            <span
-                                class="text-[10px] md:text-[11px] font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-tighter">
+                            <span class="text-[11px] font-medium text-slate-600 dark:text-slate-300">
                                 Systems: <span class="text-emerald-600 dark:text-emerald-400">Operational</span>
                             </span>
                         </div>
 
-                        <button
-                            class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 text-[11px] font-bold text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-full transition-all active:scale-95 shadow-sm hover:shadow-md">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                </path>
+                        {{-- Support Button --}}
+                        <button class="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5 bg-white dark:bg-transparent border border-slate-200 dark:border-white/10 rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white">
+                            <svg class="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             Support Center
                         </button>
