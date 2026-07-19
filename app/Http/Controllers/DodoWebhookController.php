@@ -33,6 +33,7 @@ class DodoWebhookController extends Controller
                     'billing_cycle' => $metadata['billing_cycle'],
                     'status' => 'active',
                     'current_period_start' => now(),
+                    'trial_ends_at' => null, // clear trial if they purchase
                     // Expiry date set kar rahe hain
                     'current_period_end' => $metadata['billing_cycle'] === 'yearly'
                         ? now()->addYear()

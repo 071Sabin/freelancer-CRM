@@ -66,7 +66,7 @@ class User extends Authenticatable
     // Shortcut to check if user has a specific plan
     public function isPro()
     {
-        return $this->subscription && $this->subscription->plan->slug === 'pro';
+        return $this->subscription && in_array($this->subscription->plan->slug, ['pro', 'agency']);
     }
 
     public function integration()

@@ -133,23 +133,18 @@
             {{ $slot }}
         </div>
 
-        <footer class="relative border-t border-zinc-200 bg-white pt-16 pb-8 dark:border-zinc-800 dark:bg-zinc-950">
-            <div
-                class="absolute inset-x-0 -top-px -z-10 h-px w-full bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent">
-            </div>
-
+        <footer class="border-t border-slate-200 dark:border-white/10 bg-white dark:bg-[#0C0C0C] pt-16 pb-8">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
                 <div class="xl:grid xl:grid-cols-3 xl:gap-8">
                     <div class="space-y-6">
                         <div class="flex items-center gap-2.5">
-                            <div
-                                class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                                <span class="text-white font-bold text-lg leading-none">C</span>
+                            {{-- Logo Mark --}}
+                            <div class="h-8 w-8 rounded-md bg-[#172A23] dark:bg-white flex items-center justify-center">
+                                <span class="text-white dark:text-[#0C0C0C] font-bold text-lg leading-none">CP</span>
                             </div>
-                            <span
-                                class="text-xl font-bold tracking-tight text-zinc-900 dark:text-white font-pricing">ClientPivot</span>
+                            <span class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">ClientPivot</span>
                         </div>
-                        <p class="max-w-xs text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                        <p class="max-w-xs text-sm leading-6 text-slate-500 dark:text-slate-400">
                             Intelligent client management for modern freelancers. Scale your business, not your overhead.
                         </p>
                     </div>
@@ -157,75 +152,63 @@
                     <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
                         <div class="md:grid md:grid-cols-2 md:gap-8">
                             <div>
-                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
-                                    Product</h3>
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-200">
+                                    Product
+                                </h3>
                                 <ul role="list" class="mt-6 space-y-4">
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Features</a>
-                                    </li>
-                                    <li><a href="{{ route('pricing') }}"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Pricing</a>
-                                    </li>
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Changelog</a>
-                                    </li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Features</a></li>
+                                    <li><a href="{{ route('pricing') }}" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Pricing</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Changelog</a></li>
                                 </ul>
                             </div>
                             <div class="mt-10 md:mt-0">
-                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
-                                    Resources</h3>
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-200">
+                                    Resources
+                                </h3>
                                 <ul role="list" class="mt-6 space-y-4">
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Documentation</a>
-                                    </li>
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Support</a>
-                                    </li>
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">API
-                                            Reference</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Documentation</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Support</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">API Reference</a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="md:grid md:grid-cols-2 md:gap-8">
                             <div>
-                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
-                                    Legal</h3>
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-200">
+                                    Legal
+                                </h3>
                                 <ul role="list" class="mt-6 space-y-4">
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Privacy
-                                            Policy</a></li>
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">Terms
-                                            of Service</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Privacy Policy</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Terms of Service</a></li>
                                 </ul>
                             </div>
                             <div class="mt-10 md:mt-0">
-                                <h3 class="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-100">
-                                    Social</h3>
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-slate-200">
+                                    Social
+                                </h3>
                                 <ul role="list" class="mt-6 space-y-4">
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">X
-                                            (Twitter)</a></li>
-                                    <li><a href="#"
-                                            class="text-sm text-zinc-500 transition-colors hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400">LinkedIn</a>
-                                    </li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">X (Twitter)</a></li>
+                                    <li><a href="#" class="block py-1 text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">LinkedIn</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div
-                    class="mt-16 border-t border-zinc-100 pt-8 dark:border-zinc-800/60 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <p class="text-xs text-zinc-400 dark:text-zinc-500">
-                        &copy; 2026 ClientPivot. Built for those who build.
+                <div class="mt-16 border-t border-slate-200 pt-8 dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        &copy; {{ date('Y') }} ClientPivot. Built for those who build.
                     </p>
 
-                    <div class="flex items-center gap-6">
-                        <span
-                            class="text-[10px] font-bold text-zinc-300 dark:text-zinc-700 uppercase tracking-widest">Global
-                            Node: Ashburn, VA</span>
+                    <div class="flex items-center gap-2">
+                        {{-- Live Status Indicator --}}
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                            Global Node: Ashburn, VA
+                        </span>
                     </div>
                 </div>
             </div>
@@ -289,8 +272,7 @@
 
 
                 @if (auth()->user()->isOnTrial())
-                    {{-- <button wire:click="upgrade">Upgrade Now</button> --}}
-                    <div x-data x-show="!$store.sidebar?.collapsed" x-transition.opacity.duration.200ms
+                    <div x-data x-show="true" x-transition.opacity.duration.200ms
                         class="hidden lg:block">
                         <div class="group relative overflow-hidden rounded-2xl p-[1px] transition-all duration-300">
 
@@ -352,8 +334,8 @@
                                     </p>
 
                                     <!-- CTA -->
-                                    <button
-                                        class="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-300 hover:shadow-lg">
+                                    <a href="{{ route('pricing') }}"
+                                        class="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-300 hover:shadow-lg flex items-center justify-center">
 
                                         <span class="relative z-10">Upgrade Now</span>
 
@@ -361,7 +343,7 @@
                                         <div
                                             class="absolute inset-0 translate-x-[-100%] bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-[100%]">
                                         </div>
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
