@@ -21,6 +21,9 @@ class DodoWebhookController extends Controller
         // 2. if it's metadata, that means it's our system payment. 
         if ($metadata && isset($metadata['user_id'])) {
 
+            $plan = \App\Models\Plan::find($metadata['plan_id']);
+            $planSlug = $plan ? $plan->slug : 'pro';
+
             // 3. inserting into db
             Subscription::updateOrCreate(
                 [
@@ -40,6 +43,12 @@ class DodoWebhookController extends Controller
                         : now()->addMonth(),
                 ]
             );
+
+            // 4. Update the users table to reflect subscription status
+            \App\Models\User::where('id', $metadata['user_id'])->update([
+                'subscription_plan' => $planSlug,
+                'subscription_status' => 'active'
+            ]);
 
             return response()->json(['status' => 'success'], 200);
         }

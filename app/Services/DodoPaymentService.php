@@ -82,5 +82,15 @@ class DodoPaymentService
         throw new \Exception('Could not generate the subscription checkout link.');
     }
 
-    
+    public function getSubscription($subscriptionId)
+    {
+        $response = Http::withToken(env('DODO_PAYMENTS_API_KEY'))
+            ->get(env('DODO_BASE_URL') . '/subscriptions/' . $subscriptionId);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return null;
+    }
 }
